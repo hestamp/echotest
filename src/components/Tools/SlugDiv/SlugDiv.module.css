@@ -1,0 +1,30 @@
+.simpleslug {
+  width: 100%;
+  border-radius: 5px;
+  height: 50px;
+  border: 1px solid var(--hint-color);
+  background-color: white;
+
+  background: linear-gradient(to right, lightgray, white, lightgray);
+  background-size: 600% 100%;
+  animation: gradientLoop 3s linear infinite;
+}
+
+.slugBG {
+  border-radius: 5px;
+  background: linear-gradient(to right, lightgray, white, lightgray);
+  background-size: 600% 100%;
+  animation: gradientLoop 0.3s linear infinite;
+}
+
+@keyframes gradientLoop {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

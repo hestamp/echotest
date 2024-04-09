@@ -1,0 +1,380 @@
+.mainPage {
+  width: 100%;
+  height: 100%;
+  background-color: none;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.miniblock {
+  display: flex;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  flex-direction: column;
+
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.linkblock {
+  display: flex;
+  flex-direction: row;
+  gap: 0.3rem;
+}
+
+.linkblock p {
+  color: gray;
+}
+
+.openbutt {
+  border: 1px solid var(--hint-color);
+  padding: 5px 10px;
+  border-radius: 5px;
+}
+
+.openlinks {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.linksvg {
+  background-color: var(--maincolor);
+  color: white;
+  padding: 3px;
+  border-radius: 5px;
+}
+
+.miniH {
+  margin-left: 2.5vw;
+}
+
+.paddingblock {
+  display: flex;
+  width: 95%;
+  min-width: 95%;
+  max-width: 95%;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.paddingblock2 {
+  display: flex;
+  padding: 0.3rem 0;
+  width: 95%;
+  min-width: 95%;
+  max-width: 95%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: left;
+  gap: 0.1rem;
+}
+
+.paddingblock2 p {
+  color: gray;
+}
+
+.echotype {
+  justify-self: center;
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: start;
+
+  gap: 0.5rem;
+}
+
+.main {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.mainImgBlock {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  border-radius: 5px;
+  gap: 10px;
+}
+
+.text {
+  width: 100%;
+}
+
+.echotype h4 {
+  color: var(--hint-color);
+}
+
+.createDiv {
+  position: fixed;
+  bottom: 0;
+  background: none;
+  height: 50px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+}
+
+.typebutt {
+  margin: 0;
+  font-weight: 400;
+  padding: 0;
+  /* transition: 0.3s ease all; */
+  color: gray;
+}
+.activetype {
+  font-weight: 500;
+  color: var(--maincolor);
+}
+
+.miniblock h3 {
+  align-self: flex-start;
+}
+
+.taskblock {
+  display: flex;
+  width: 100%;
+  max-width: 100%;
+  /* 
+  overflow-x: hidden;
+  overflow-y: auto; */
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.taskblock p {
+  font-size: 16px;
+}
+
+.taskListForDate {
+  /* Style for the container */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.readmore {
+  color: white;
+  background-color: var(--maincolor);
+  padding: 3px 6px;
+  font-weight: 400;
+  border-radius: 5px;
+}
+
+.todayechos {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.headerday {
+  font-size: 16px;
+  color: black;
+}
+
+.fullitem {
+  width: calc(100% - 22px);
+  max-width: calc(100% - 22px);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 0.66rem;
+  max-height: 50px;
+  overflow: hidden;
+  cursor: pointer;
+  padding: 10px;
+  border: 1px solid var(--hint-color);
+  background-color: white;
+  color: var(--text-color);
+  border-radius: 5px;
+  transition: 0.3s ease all;
+}
+
+.fullitem:hover {
+  background-color: var(--bg-side);
+}
+
+.icomode {
+  color: var(--maincolor);
+}
+
+.taskItem {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  flex-direction: row;
+
+  justify-content: space-between;
+}
+.minitask {
+  width: calc(100% - 22px);
+  /* background-color: white; */
+  border: 1px solid var(--hint-color);
+  border-radius: 5px;
+  padding: 10px;
+  font-weight: 400;
+
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  transition: 0.3s ease all;
+  border-radius: 5px;
+}
+
+@keyframes closeanime {
+  from {
+    height: fit-content;
+    max-height: 600px; /* Start from the initial collapsed state */
+  }
+  to {
+    max-height: 50px; /* Expand to the maximum height */
+  }
+}
+@keyframes expand {
+  from {
+    max-height: 50px; /* Start from the initial collapsed state */
+  }
+  to {
+    height: fit-content;
+    max-height: 600px; /* Expand to the maximum height */
+  }
+}
+
+.notactive {
+  animation: closeanime 1s ease forwards;
+}
+
+.activetask {
+  border: 1px solid var(--maincolor);
+  color: var(--text-color);
+  animation: expand 1s ease forwards;
+  max-height: fit-content;
+}
+.completedtask {
+  background-color: var(--maincolor);
+  color: white;
+}
+/* .activetask h4 {
+  font-weight: 500;
+} */
+
+.textecho {
+  font-weight: 400;
+}
+
+.somep {
+  font-size: 16px;
+}
+
+.margintop {
+  margin-top: 1rem;
+}
+
+.funcButt {
+  background-color: var(--bg-color);
+  width: 15px;
+  height: 15px;
+  padding: 5px;
+  border: 1px solid var(--hint-color);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+.funcButtActive {
+  color: white;
+  background-color: var(--maincolor);
+  width: 27px;
+  height: 27px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.repeat {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+}
+
+.waves {
+  width: 30px;
+}
+.activewaves {
+  color: white;
+  width: 30px;
+}
+
+.addbutt {
+  display: flex;
+  flex-direction: row;
+  /* border: 1px solid gray; */
+  width: 95%;
+  /* min-width: 95%; */
+  max-width: 700px;
+  font-size: 16px;
+  font-weight: 500;
+  gap: 0.5rem;
+  padding: 10px;
+  justify-content: center;
+  align-self: center;
+  border-radius: 5px;
+  background-color: var(--maincolor);
+  color: white;
+}
+
+.addbutt svg {
+  width: 24px;
+  height: 24px;
+}
+
+.stat {
+  text-decoration: none;
+  width: 95%;
+  align-self: center;
+}
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
+}
+
+.input {
+  width: calc(100% - 22px);
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  font-weight: 400;
+  color: var(--text-color);
+  background-color: var(--bg-color);
+  font-size: 16px;
+  border: 1px solid var(--hint-color);
+}

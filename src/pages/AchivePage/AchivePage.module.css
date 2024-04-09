@@ -1,0 +1,126 @@
+.achivePage {
+  width: 100%;
+  height: 100%;
+  background-color: none;
+  background: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+}
+
+.gridContainer {
+  display: grid;
+  width: 95%;
+  grid-template-columns: auto auto;
+  gap: 10px;
+  padding-bottom: 1rem;
+}
+
+.gridOk {
+  background-color: white;
+}
+
+.gridItem {
+  width: 45vw;
+  max-width: 220px;
+  height: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+  transition: 0.3s ease all;
+  border: 1px solid var(--hint-color);
+}
+
+.backhome {
+  background-color: var(--maincolor);
+  padding: 10px 30px;
+  text-decoration: none;
+  color: white;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: 0.3s all ease;
+}
+
+.backhome:hover {
+  opacity: 0.8;
+}
+
+.gray {
+  max-width: 80%;
+  text-align: center;
+  gap: 1rem;
+}
+
+.gridComplete {
+  background-color: var(--maincolor);
+  color: white;
+}
+
+.gridComplete p {
+  color: white;
+}
+
+.gridOk:hover {
+  background-color: #ececec;
+  border: 1px solid var(--maincolor);
+}
+
+.achiveOne {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: space-between;
+  gap: 0.5rem;
+  text-align: center;
+  cursor: pointer;
+}
+
+.achimage {
+  margin-top: 1rem;
+  max-width: 80%;
+  border-radius: 10px;
+  height: 100px;
+}
+
+.textblock {
+  display: flex;
+  max-width: 90%;
+  text-align: center;
+  flex-direction: column;
+  gap: 0.5rem;
+  line-height: 0.9;
+}
+
+.gridOk p {
+  color: gray;
+}
+.gridComplete p {
+  color: lightgray;
+}
+
+.donemark {
+  justify-self: center;
+  align-self: center;
+  width: 24px;
+  height: 24px;
+}
+
+.progressbar {
+  width: 100%;
+  max-width: 90%;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1rem;
+}
+
+.notDone {
+  filter: grayscale(100%);
+  filter: blur(3px);
+}

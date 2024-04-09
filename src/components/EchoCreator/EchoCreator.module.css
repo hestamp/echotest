@@ -1,0 +1,51 @@
+.echocreator {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+
+  margin: 1rem 0;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.gray {
+  padding: 1rem;
+  border-radius: 5px;
+  color: black;
+  background-color: var(--hint-color);
+}
+
+.inputDiv {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.inputblock {
+  max-width: 95%;
+  min-width: 95%;
+  width: 95%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.addbutt {
+  display: flex;
+  flex-direction: row;
+  /* border: 1px solid gray; */
+  width: 90%;
+  min-width: 90%;
+  font-size: 16px;
+  font-weight: 500;
+  gap: 0.5rem;
+  padding: 10px;
+  justify-content: center;
+  align-self: center;
+  border-radius: 5px;
+  background-color: var(--maincolor);
+  color: white;
+}

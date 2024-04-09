@@ -1,0 +1,46 @@
+.linkBlock {
+  text-decoration: none;
+
+  cursor: pointer;
+  height: 50px;
+  min-height: 50px;
+  margin: 0.2rem 0;
+  display: flex;
+
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.myBlock {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+
+  padding: 0 10px;
+  width: 100%;
+  border-radius: 5px;
+  /* background-color: var(--bgColor); */
+  border: 1px solid var(--hint-color);
+}
+
+.myBlock:hover {
+  background-color: var(--hint-color);
+  transition: 0.3s;
+}
+
+.pText {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--textColor);
+}
+
+.arrowIcon {
+  display: flex;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  color: gray;
+}

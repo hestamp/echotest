@@ -1,0 +1,45 @@
+.achive {
+  color: black;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  width: 100%;
+}
+.namecount {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.namecount p {
+  font-size: 12px;
+  color: gray;
+}
+.namecount h4 {
+  font-size: 14px;
+}
+
+.numbs {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: space-between;
+}
+.donemark {
+  width: 14px;
+  height: 14px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 100%;
+  background-color: var(--maincolor);
+}
+
+.donemark svg {
+  width: 10px;
+  height: 10px;
+  color: white;
+}

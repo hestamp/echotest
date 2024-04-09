@@ -1,0 +1,119 @@
+.quoteblock {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.quoteZone {
+  max-width: calc(95% - 1rem);
+  width: calc(95% - 1rem);
+  background-color: white;
+  border: 1px solid var(--hint-color);
+  border-radius: 5px;
+  display: flex;
+  font-size: 16px;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem;
+}
+
+.miniblock {
+  display: flex;
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.justask3 {
+  padding-bottom: 1rem;
+}
+
+.minihr {
+  min-width: 60%;
+  height: 1px;
+  align-self: center;
+  margin-bottom: 1rem;
+  background-color: var(--hint-color);
+}
+
+.miniblock h3 {
+  align-self: flex-start;
+}
+
+.author {
+  text-align: right;
+  font-style: italic;
+  color: gray;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease all;
+}
+
+.author:hover {
+  color: var(--maincolor);
+}
+
+.bottdiv {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.quote {
+  cursor: pointer;
+}
+
+.removebutt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+
+  border-radius: 5px;
+  width: 15px;
+  height: 15px;
+  padding: 5px;
+  color: black;
+  border: 1px solid var(--hint-color);
+}
+
+.removebutt svg {
+  color: var(--maincolor);
+  border: 1px solid var(--maincolor);
+  border-radius: 5px;
+}
+
+.quotefunc {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+}
+
+.quotefunc h4 {
+  color: gray;
+}
+
+.icodiv {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.somep {
+  font-size: 16px;
+}
+
+.svgs {
+  color: gray;
+  width: 20px;
+  height: 20px;
+}
+
+.svgs:hover {
+  opacity: 0.66;
+}

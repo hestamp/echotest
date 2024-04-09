@@ -1,0 +1,49 @@
+.progressContainer {
+  width: 99%;
+  min-width: 99%;
+  max-width: 99%;
+  background-color: var(--bg-color);
+
+  border-radius: 5px;
+  height: 3px;
+  position: relative;
+  display: flex;
+  border: 1px solid var(--maincolor);
+}
+
+.roundContainer {
+  border-radius: 50%;
+  border: none;
+}
+
+.progressBar {
+  height: 3px;
+  width: 100%;
+  background-color: var(--maincolor);
+  border-radius: 5px 0 0 5px;
+  transition: width 0.4s ease;
+}
+
+.roundBar {
+  border-radius: 50%;
+}
+
+.textProgress {
+  position: absolute;
+
+  width: 100%;
+  font-weight: 500;
+  color: gray;
+  text-align: center;
+  mix-blend-mode: difference;
+  pointer-events: none;
+}
+
+.marker {
+  position: absolute;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background-color: #fff;
+  z-index: 2;
+}

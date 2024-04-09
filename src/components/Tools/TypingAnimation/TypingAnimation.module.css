@@ -1,0 +1,9 @@
+.runcursor {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  display: inline-block;
+}
+.cursor {
+  color: black;
+  animation: flicker 0.5s infinite;
+}

@@ -1,0 +1,45 @@
+.tooldiv {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.onelink {
+  width: 100%;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+}
+
+.itemlink {
+  color: var(--maincolor);
+  text-decoration: underline;
+}
+
+.toolbutt svg {
+  color: gray;
+  width: 20px;
+  height: 20px;
+}
+
+.removebutt {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: fit-content;
+
+  border-radius: 5px;
+  width: 15px;
+  height: 15px;
+  padding: 5px;
+  color: black;
+  border: 1px solid var(--hint-color);
+}
+
+.removebutt svg {
+  color: var(--maincolor);
+  border: 1px solid var(--maincolor);
+  border-radius: 5px;
+}

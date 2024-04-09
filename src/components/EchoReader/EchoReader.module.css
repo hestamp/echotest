@@ -1,0 +1,132 @@
+.echocreator {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+  max-height: 100%;
+}
+
+.inputblock {
+  max-width: 90%;
+  min-width: 90%;
+  max-height: 100%;
+  width: 90%;
+  text-align: start;
+  display: flex;
+  flex-direction: column;
+
+  align-items: start;
+}
+
+.linkarrdiv {
+  display: flex;
+  width: 90%;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.linkdiv {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.66rem;
+}
+
+.linkdiv svg {
+  width: 20px;
+  height: 20px;
+}
+
+.itemlink {
+  color: var(--maincolor);
+  text-decoration: underline;
+}
+
+.addbutt {
+  display: flex;
+  flex-direction: row;
+  /* border: 1px solid gray; */
+  width: 90%;
+  min-width: 90%;
+  font-size: 16px;
+  font-weight: 500;
+  gap: 0.5rem;
+  padding: 10px;
+  justify-content: center;
+  align-self: center;
+  border-radius: 5px;
+  background-color: var(--maincolor);
+  color: white;
+}
+
+.icon {
+  background-color: white;
+  transition: 0.3s ease all;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.icon:hover {
+  background-color: var(--hint-color);
+}
+
+.gray {
+  padding: 1rem;
+  border-radius: 5px;
+  color: black;
+  background-color: var(--hint-color);
+}
+.blue {
+  padding: 1rem;
+  border-radius: 5px;
+  color: white;
+  background-color: var(--maincolor);
+}
+
+.content {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.lvledit {
+  width: 100%;
+  max-width: 90%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.echo {
+  color: var(--maincolor);
+}
+
+.funcButt {
+  background-color: white;
+  border: 1px solid var(--hint-color);
+  width: 15px;
+  height: 15px;
+  padding: 5px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 3px;
+}
+
+.doneToday {
+  background-color: var(--maincolor);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-weight: 500;
+}

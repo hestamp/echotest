@@ -1,0 +1,10 @@
+.textblock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.66rem;
+  margin-bottom: 1rem;
+}
+
+.gray {
+  color: gray;
+}

@@ -1,0 +1,51 @@
+.surveyContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.surveyQuestion {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.surveyArray {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-direction: column;
+  max-width: 90%;
+}
+
+.surveyOption {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  justify-content: start;
+}
+
+.surveyOption input[type='radio'] {
+  margin-right: 10px;
+
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--maincolor);
+  border-radius: 50%;
+  outline: none;
+}
+
+/* Style the radio input when checked */
+.surveyOption input[type='radio']:checked {
+  background-color: var(--maincolor);
+  border-color: var(--maincolor);
+}
+
+/* Style the radio label */
+.surveyOption label {
+  font-size: 1rem;
+  cursor: pointer;
+}

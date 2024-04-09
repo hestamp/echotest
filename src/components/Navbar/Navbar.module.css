@@ -1,0 +1,66 @@
+.navbar {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  /* min-width: 100vw; */
+  /* position: absolute; */
+  position: sticky;
+  height: 50px;
+  z-index: 1;
+  min-height: 50px;
+  max-height: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0;
+  margin: 0;
+  justify-content: center;
+  background-color: var(--bg-color);
+  border-bottom: 1px solid var(--hint-color);
+}
+
+.paddingblock2 {
+  display: flex;
+  /* padding: 0.3rem 0; */
+  width: 95%;
+  min-width: 95%;
+  max-width: 95%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+}
+
+.activebutt {
+  margin: 0;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  cursor: pointer;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 30px;
+  color: var(--text-color);
+  opacity: 0.8;
+}
+
+.menu {
+  width: 100%;
+  height: 100%;
+}
+.activebutt:hover {
+  opacity: 1;
+}
+
+.activebutt svg {
+  width: 24px;
+  height: 24px;
+}
+
+.rest {
+  width: 100%;
+  text-decoration: none;
+}

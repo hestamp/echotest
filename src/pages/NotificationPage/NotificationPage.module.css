@@ -1,0 +1,20 @@
+.textblock {
+  display: flex;
+  flex-direction: column;
+  gap: 1.66rem;
+  margin-bottom: 1rem;
+}
+
+.gray {
+  color: gray;
+}
+
+.setnotif {
+  background-color: var(--maincolor);
+  width: fit-content;
+  align-self: center;
+  padding: 10px 30px;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+}

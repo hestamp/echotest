@@ -1,0 +1,145 @@
+.timeScroller {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 300px;
+  gap: 1.5rem;
+}
+
+.scaleContainer {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+}
+
+.scale {
+  width: 100%;
+  background: none;
+  height: 4px;
+  position: relative;
+}
+
+.hidden {
+  position: absolute;
+  background: none;
+  width: 100%;
+  z-index: 1;
+  cursor: pointer;
+  height: 40px;
+  top: -15px;
+}
+
+.slider {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 4px;
+  z-index: 3;
+  background: transparent;
+  outline: none;
+  position: absolute;
+  top: 0px;
+  pointer-events: none;
+}
+
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 10px;
+  height: 30px;
+  border-radius: 3px;
+
+  background: var(--maincolor);
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.slider::-moz-range-thumb {
+  width: 15px;
+  height: 30px;
+  border-radius: 3px;
+  background: var(--maincolor);
+  cursor: pointer;
+}
+
+.scale:before,
+.scale:after {
+  content: '';
+  position: absolute;
+
+  height: 20px;
+  width: 2px;
+}
+
+.scale:before {
+  left: 3px;
+}
+
+.scale:after {
+  right: 3px;
+}
+
+.scale:after,
+.scale:before {
+  background: black;
+  height: 30px;
+  width: 3px;
+  border-radius: 30px;
+  position: absolute;
+  bottom: -15px;
+}
+
+.line {
+  position: absolute;
+  border-radius: 30px;
+  width: 3px;
+  bottom: -5px;
+  opacity: 0.1;
+  height: 10px;
+  background-color: black;
+}
+
+.scale div:nth-child(2n + 1) {
+  left: calc(4.166% * var(--i));
+}
+
+.scale div:nth-child(2n) {
+  left: calc(4.166% * var(--i));
+}
+
+.midd {
+  height: 20px;
+}
+
+.buttblock {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+.toggleButton {
+  padding: 5px 10px;
+  transition: 0.3s ease all;
+  border-radius: 5px;
+  text-align: center;
+  font-weight: 500;
+  color: black;
+}
+
+.activeButt {
+  background-color: var(--maincolor);
+  color: white;
+}
+
+.timeandbutt {
+  width: 100%;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  flex-direction: row;
+}
+
+.oneflex {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}

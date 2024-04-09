@@ -1,0 +1,57 @@
+.echocreator {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+
+  margin: 1rem 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.inputblock {
+  max-width: 90%;
+  min-width: 90%;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: start;
+}
+
+.addbutt {
+  display: flex;
+  flex-direction: row;
+  width: 90%;
+  min-width: 90%;
+  font-size: 16px;
+  font-weight: 500;
+  gap: 0.5rem;
+  padding: 10px;
+  justify-content: center;
+  align-self: center;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  background-color: var(--maincolor);
+  color: white;
+}
+
+.redbutt {
+  background-color: white;
+  border: 1px solid brown;
+  color: brown;
+}
+
+.waves {
+  color: var(--maincolor);
+  width: 30px;
+}
+
+.progress {
+  display: flex;
+  flex-direction: row;
+  gap: 0.3rem;
+  margin: 0;
+  padding: 0;
+}
