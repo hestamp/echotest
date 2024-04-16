@@ -1,8 +1,9 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import styles from './InfoPage.module.css'
 import { MyIcoNameArrow } from '@/components/'
 import { useNavigate } from 'react-router-dom'
 import { useTelegram } from '@/hooks/useTelegram'
+
 const InfoPage = () => {
   const settingArray = [
     {
@@ -21,9 +22,11 @@ const InfoPage = () => {
 
   const navigate = useNavigate()
   const { mountBtn } = useTelegram()
+  
   const createFunc = () => {
     navigate('/echo/create')
   }
+
   useEffect(() => {
     mountBtn(createFunc, 'Create echo')
   }, [])

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useEffect, useState } from 'react'
 import styles from './AchivePage.module.css'
 
 import { ProgressBar, MySpinner, MyNewModal, AchiveModal } from '@/components/'
@@ -9,7 +9,7 @@ import { useTelegram } from '@/hooks/useTelegram'
 
 import { Link, useNavigate } from 'react-router-dom'
 const AchivePage = () => {
-  const { uActiveAchive, allAchives, uAllAchives } = useMyAchive()
+  const { allAchives, uAllAchives } = useMyAchive()
   const { WEBAPP_URL } = useMyLogic()
 
   const { myUserData } = useMyUser()
@@ -67,9 +67,9 @@ const AchivePage = () => {
         throw new Error('Response not JSON')
       }
 
-      const data = await response.json()
+      await response.json()
     } catch (error) {
-      console.error()
+      // console.error()
     }
   }
 

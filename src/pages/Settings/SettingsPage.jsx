@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import styles from './SettingsPage.module.css'
 import { MyInput, MyToggle } from '@/components/'
 import {
@@ -142,6 +142,7 @@ const SettingsPage = () => {
       const data = await response.json()
 
       if (data?.success) {
+        // console.log(first)
       } else {
         errorToast('Something went wrong.\nPlease try again')
       }

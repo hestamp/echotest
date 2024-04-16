@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 import styles from './GuidePage.module.css'
 import { useNavigate } from 'react-router-dom'
 import { CustomSlider, SurveyComponent } from '@/components/'
@@ -56,9 +56,9 @@ const GuidePage = () => {
         throw new Error('Response not JSON')
       }
 
-      const data = await response.json()
+      await response.json()
     } catch (error) {
-      console.error()
+      // console.error()
     }
   }
 
@@ -112,7 +112,7 @@ const GuidePage = () => {
               <img className={styles.logoimg} src="/guide/guide.days.webp" />
               <p>
                 Interval timing in spaced repetition optimizes memory retention.
-                Longer intervals ensure material is revisited just before it's
+                Longer intervals ensure material is revisited just before it&apos;s
                 forgotten, strengthening recall and promoting durable learning.
               </p>
             </div>
@@ -132,7 +132,7 @@ const GuidePage = () => {
               <h2>Get notifications</h2>
               <img className={styles.logoimg} src="/guide/guide.notif.webp" />
               <p>
-                Choose a convenient time for you, and we'll send reminders to
+                Choose a convenient time for you, and we&apos;ll send reminders to
                 review all your echoes scheduled for that day.
               </p>
             </div>

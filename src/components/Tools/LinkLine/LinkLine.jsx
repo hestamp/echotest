@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './LinkLine.module.css'
 
 import MenuDropdown from '../MenuDropdown/MenuDropdown'
@@ -6,7 +5,7 @@ import { BsThreeDots } from 'react-icons/bs'
 import { useMyToaster } from '@/storage'
 import { copyToClipboard } from '@/utils/textUtils'
 
-const LinkLine = ({ item, id, editFunc, delFunc }) => {
+const LinkLine = ({ item, id, delFunc }) => {
   let truncatedContent = item
   if (item.length > 30) {
     truncatedContent = item.substring(0, 30) + '...'

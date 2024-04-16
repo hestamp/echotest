@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './EditEchoPage.module.css'
 
 import { EchoEditor } from '@/components/'

@@ -1,10 +1,9 @@
-import React from 'react'
 import Calendar from 'react-calendar'
 import './MyCalendar.css'
 
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md'
 import { LuWaves } from 'react-icons/lu'
-import { useMyMainContext, useMyToaster, useMyUser } from '@/storage'
+import { useMyMainContext, useMyUser } from '@/storage'
 import dayjs from 'dayjs'
 import { useMyRefs } from '../../../storage'
 
@@ -19,7 +18,7 @@ const MyCalendar = ({
   highlightDates,
   ...rest
 }) => {
-  const { taskArr, uTaskArr } = useMyMainContext()
+  const { taskArr } = useMyMainContext()
 
   const { userTz } = useMyUser()
   const { firstRef } = useMyRefs()
@@ -61,7 +60,7 @@ const MyCalendar = ({
 
   const handleDateChange = (date) => {
     activeTask(date)
-    console.log('handleDateChange', date)
+    // console.log('handleDateChange', date)
     setDate(date)
   }
 
@@ -95,7 +94,7 @@ const MyCalendar = ({
       value={valueDate}
       calendarType={sunOrMon}
       tileClassName={renderTileClass}
-      navigationLabel={({ date, label }) => `${label.split(' ')[0]}`}
+      navigationLabel={({ label }) => `${label.split(' ')[0]}`}
       {...rest}
     />
   )

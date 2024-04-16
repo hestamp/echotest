@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './NewEchoPage.module.css'
 import { EchoCreator } from '@/components'
 import { useMyGuide, useMyLogic } from '../../storage'

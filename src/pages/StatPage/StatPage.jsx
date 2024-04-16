@@ -1,11 +1,9 @@
-import React from 'react'
 import styles from './StatPage.module.css'
 import { Link } from 'react-router-dom'
-import { MySpinner } from '@/components/'
 import { useMyStats, useMyUser } from '../../storage'
 import { AchiveBar } from '@/components/'
 const StatPage = () => {
-  const { activeLevel, setActiveLvl } = useMyStats()
+  const { activeLevel } = useMyStats()
 
   const { myUserData } = useMyUser()
 

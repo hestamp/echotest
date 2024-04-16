@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import  { useCallback, useEffect, useMemo, useState } from 'react'
 import styles from './EchoChecker.module.css'
 import {
   useMyGuide,
@@ -16,7 +16,7 @@ const EchoChecker = () => {
   const { uTaskArr, taskArr, setTodayMode, activeEcho } = useMyMainContext()
 
   const { myUserData, uMyUserData } = useMyUser()
-  const { uEchoModal, uCrudMode, WEBAPP_URL } = useMyLogic()
+  const { uEchoModal, WEBAPP_URL } = useMyLogic()
 
   const { isCheckGuide, isTourGuideCache, uIsCheckGuide } = useMyGuide()
 
@@ -30,7 +30,7 @@ const EchoChecker = () => {
       const oneSent = getRandomSBD(activeEcho.content)
       setRenderText(oneSent)
     }
-  }, [activeEcho])
+  }, [activeEcho, renderText])
 
   const updateStatDates = (date, isStreak) => {
     const newDate = date || new Date().toISOString()
@@ -166,7 +166,7 @@ const EchoChecker = () => {
     uTaskArr(arrNewUpdated)
 
     if (updatedItem != null) {
-      const goupdateOnServer = await editServerEcho(
+      await editServerEcho(
         updatedItem,
         finish,
         newDate,
@@ -187,7 +187,6 @@ const EchoChecker = () => {
     const newDateStreak = newDate
     const newStatStreak = newStat
 
-    console.log(updatedEchoData)
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/echos/edit`, {
         method: 'PATCH',
@@ -215,7 +214,6 @@ const EchoChecker = () => {
       }
 
       const data = await response.json()
-      console.log(data)
       if (data && data.userStats) {
         if (data.userStats) {
           uMyUserData((prevUserData) => ({
@@ -237,12 +235,16 @@ const EchoChecker = () => {
 
   // completeRepetition(false)
 
-  const getNew = () => {
+  const getNew = useCallback(
+   () => {
     const oneSent = getRandomSBD(activeEcho.content, 1)
     setRenderText(oneSent)
-  }
+  },
+    [activeEcho.content],
+  )
+  
 
-  const newSteps = [
+  const newSteps = useMemo(() => [
     {
       id: 'step-1',
       canClickTarget: false,
@@ -298,7 +300,7 @@ const EchoChecker = () => {
       title: '2/2 Drag and drop',
       text: 'Pick a word an place it in appropriate place in sentence \n\n When you place correctly all of the words - press <strong>Check Answer</strong> button to finish the test',
     },
-  ]
+  ], [])
 
   return (
     <div className={styles.echochecker}>

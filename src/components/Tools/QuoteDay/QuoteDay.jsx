@@ -8,9 +8,10 @@ import { GrFormViewHide } from 'react-icons/gr'
 import { quotesDayArray } from '@/static/quotes'
 import { copyToClipboard, getRandomQuote } from '@/utils/textUtils'
 import TypingAnimation from '../TypingAnimation/TypingAnimation'
+
 const QuoteDay = () => {
   const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote()
-  console.log('quote rrr11111111111')
+  // console.log('quote rrr11111111111')
 
   const { successToast } = useMyToaster()
 
@@ -64,7 +65,7 @@ const QuoteDay = () => {
               <a
                 href={myQuote.link || 'https://en.wikipedia.org/'}
                 target="_blank"
-                rel="hestamp.me"
+                rel="hestamp.me noreferrer"
                 className={styles.author}
               >
                 {myQuote.author}

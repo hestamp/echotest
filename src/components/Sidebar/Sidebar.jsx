@@ -108,7 +108,7 @@ const MySidebar = ({ sidebarOpen, setSidebarOpen, children }) => {
               <a
                 className={styles.tom}
                 href="https://hestamp.com"
-                target="_blank"
+                target="_blank" rel="noreferrer"
               >
                 Tom Hestamp
               </a>

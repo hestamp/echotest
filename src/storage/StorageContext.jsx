@@ -1,4 +1,4 @@
-import { createContext, useContext, useMemo, useRef, useState } from 'react'
+import { createContext, useRef, useState } from 'react'
 import { Toaster, toast } from 'react-hot-toast'
 
 export const StorageContext = createContext()
