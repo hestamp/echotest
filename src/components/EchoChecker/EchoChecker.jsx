@@ -26,7 +26,7 @@ const EchoChecker = () => {
 
   useEffect(() => {
     if (activeEcho && renderText == null) {
-      console.log(activeEcho)
+      // console.log(activeEcho)
       const oneSent = getRandomSBD(activeEcho.content)
       setRenderText(oneSent)
     }
@@ -45,7 +45,7 @@ const EchoChecker = () => {
       newStat = myUserData.stats.repetitionEchoes.count + 1
     } else {
       newStat = 0
-      console.log('rest', isStreak)
+      // console.log('rest', isStreak)
     }
 
     uMyUserData((prevUserData) => ({
@@ -223,7 +223,7 @@ const EchoChecker = () => {
         }
       }
     } catch (error) {
-      console.error()
+      // console.error()
 
       errorToast(`Something went wrong. Please try again. ${error}`)
 

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import  { useCallback, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styles from './EchoCreator.module.css'
 
@@ -26,6 +26,7 @@ const EchoCreator = () => {
   const [editLink, setEditLink] = useState('')
   const [editMode, setEditMode] = useState('add')
   const [linkArr, setLinkArr] = useState([])
+  const [currentEdited, setCurrentEdited] = useState()
 
   const currentDate = new Date()
   const tomorrow = new Date(currentDate)
@@ -74,7 +75,7 @@ const EchoCreator = () => {
         errorToast('Problem with creating echo')
       }
     } catch (error) {
-      console.error()
+      // console.error()
 
       errorToast(`Something went wrong. Please try again. ${error}`)
 

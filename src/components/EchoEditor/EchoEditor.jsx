@@ -1,40 +1,40 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import styles from './EchoEditor.module.css'
-import { useNavigate } from 'react-router-dom'
+import React, { useCallback, useEffect, useState } from 'react';
+import styles from './EchoEditor.module.css';
+import { useNavigate } from 'react-router-dom';
 
-import { MyTextarea, AddLinksBlock, MyInput } from '@/components/'
+import { MyTextarea, AddLinksBlock, MyInput } from '@/components/';
 import {
   useMyLogic,
   useMyMainContext,
   useMyToaster,
   useMyUser,
-} from '@/storage'
+} from '@/storage';
 
-import { telegramApp, useTelegram } from '@/hooks/useTelegram'
+import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 
 const EchoEditor = () => {
-  const { taskArr, uTaskArr, activeEcho, uActiveEcho } = useMyMainContext()
-  const navigate = useNavigate()
-  const { myUserData, uMyUserData } = useMyUser()
-  const { echoModal, uEchoModal, WEBAPP_URL } = useMyLogic()
-  const { successToast, errorToast } = useMyToaster()
-  const { mountBtn } = useTelegram()
+  const { taskArr, uTaskArr, activeEcho, uActiveEcho } = useMyMainContext();
+  const navigate = useNavigate();
+  const { myUserData, uMyUserData } = useMyUser();
+  const { echoModal, uEchoModal, WEBAPP_URL } = useMyLogic();
+  const { successToast, errorToast } = useMyToaster();
+  const { mountBtn } = useTelegram();
 
-  const [tempName, setTempName] = useState('')
-  const [tempContent, setTempContent] = useState('')
-  const [isAddLink, setIsAddLink] = useState(false)
-  const [linkArr, setLinkArr] = useState([])
-  const [editLink, setEditLink] = useState('')
-  const [editMode, setEditMode] = useState('add')
-  const [currentEdited, setCurrentEdited] = useState(null)
+  const [tempName, setTempName] = useState('');
+  const [tempContent, setTempContent] = useState('');
+  const [isAddLink, setIsAddLink] = useState(false);
+  const [linkArr, setLinkArr] = useState([]);
+  const [editLink, setEditLink] = useState('');
+  const [editMode, setEditMode] = useState('add');
+  const [currentEdited, setCurrentEdited] = useState(null);
 
   useEffect(() => {
     if (activeEcho) {
-      setTempName(activeEcho.name)
-      setTempContent(activeEcho.content)
-      setLinkArr(activeEcho.links)
+      setTempName(activeEcho.name);
+      setTempContent(activeEcho.content);
+      setLinkArr(activeEcho.links);
     }
-  }, [])
+  }, []);
 
   const updateEcho = async () => {
     if (activeEcho) {
@@ -43,34 +43,34 @@ const EchoEditor = () => {
         name: tempName,
         content: tempContent,
         links: linkArr,
-      }
+      };
 
-      console.log(updatedEcho)
+      // console.log(updatedEcho)
 
-      const updatedTaskArr = [...taskArr]
+      const updatedTaskArr = [...taskArr];
 
       const indexToUpdate = updatedTaskArr.findIndex(
         (task) => task.id === activeEcho.id
-      )
+      );
 
       if (indexToUpdate !== -1) {
-        updatedTaskArr[indexToUpdate] = updatedEcho
-        uTaskArr(updatedTaskArr)
+        updatedTaskArr[indexToUpdate] = updatedEcho;
+        uTaskArr(updatedTaskArr);
       }
-      navigate('/main')
-      successToast('Echo updated')
+      navigate('/main');
+      successToast('Echo updated');
       if (myUserData?.authId) {
-        const data = await editServerEcho(updatedEcho)
+        const data = await editServerEcho(updatedEcho);
       }
 
-      uEchoModal(false)
-      uActiveEcho(null)
+      uEchoModal(false);
+      uActiveEcho(null);
     }
-  }
+  };
 
   const editServerEcho = async (newEchoData) => {
-    const echoId = newEchoData.id
-    const updatedEchoData = newEchoData
+    const echoId = newEchoData.id;
+    const updatedEchoData = newEchoData;
 
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/echos/edit`, {
@@ -83,125 +83,125 @@ const EchoEditor = () => {
           echoId: echoId,
           updatedEchoData: updatedEchoData,
         }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok.')
+        throw new Error('Network response was not ok.');
       }
 
-      const contentType = response.headers.get('content-type')
+      const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Response not JSON')
+        throw new Error('Response not JSON');
       }
 
-      const data = await response.json()
+      const data = await response.json();
       if (data && data.userStats) {
         if (data.userStats) {
           uMyUserData((prevUserData) => ({
             ...prevUserData,
             stats: data.userStats,
-          }))
+          }));
         }
       }
     } catch (error) {
-      console.error()
+      // console.error()
 
-      errorToast(`Something went wrong. Please try again. ${error}`)
+      errorToast(`Something went wrong. Please try again. ${error}`);
 
       if (error?.response?.status === 429) {
-        errorToast('Too many requests. Please wait a little bit.')
+        errorToast('Too many requests. Please wait a little bit.');
       }
     }
-  }
+  };
 
   const removeFunction = (id) => {
-    const filteredLinks = linkArr.filter((item) => item != linkArr[id])
-    setLinkArr(filteredLinks)
-  }
+    const filteredLinks = linkArr.filter((item) => item != linkArr[id]);
+    setLinkArr(filteredLinks);
+  };
 
   const functionForButt = async () => {
-    await updateEcho()
-  }
+    await updateEcho();
+  };
 
   const editFunction = (id) => {
-    setEditMode('edit')
-    setCurrentEdited(id)
-    const currentLink = linkArr[id]
-    setEditLink(currentLink)
-    setIsAddLink(true)
-  }
+    setEditMode('edit');
+    setCurrentEdited(id);
+    const currentLink = linkArr[id];
+    setEditLink(currentLink);
+    setIsAddLink(true);
+  };
 
   const addcurrentLink = () => {
-    const urlRegex = /^(https?:\/\/)/
+    const urlRegex = /^(https?:\/\/)/;
 
     if (urlRegex.test(editLink)) {
       try {
-        new URL(editLink)
+        new URL(editLink);
 
         setLinkArr((prevLinkArr) => {
-          const newLinkArr = [...prevLinkArr, editLink]
-          return newLinkArr
-        })
-        setEditLink('')
-        setIsAddLink(false)
-        successToast('Link is added')
+          const newLinkArr = [...prevLinkArr, editLink];
+          return newLinkArr;
+        });
+        setEditLink('');
+        setIsAddLink(false);
+        successToast('Link is added');
       } catch (error) {
-        errorToast('Link is not correct')
+        errorToast('Link is not correct');
       }
     } else {
-      errorToast('The provided link is not a valid URL')
+      errorToast('The provided link is not a valid URL');
     }
-  }
+  };
 
   const closeEdit = () => {
-    setEditMode('add')
-    setEditLink('')
-    setIsAddLink(false)
-  }
+    setEditMode('add');
+    setEditLink('');
+    setIsAddLink(false);
+  };
 
   const saveEditedLink = () => {
-    const newArr = [...linkArr]
+    const newArr = [...linkArr];
 
-    const urlRegex = /^(https?:\/\/)/
+    const urlRegex = /^(https?:\/\/)/;
 
     if (urlRegex.test(editLink)) {
       try {
-        new URL(editLink)
+        new URL(editLink);
 
-        newArr[currentEdited] = editLink
-        setLinkArr(newArr)
-        setEditLink('')
-        setEditMode('add')
-        setCurrentEdited(null)
-        setIsAddLink(false)
-        successToast('Link is edited')
+        newArr[currentEdited] = editLink;
+        setLinkArr(newArr);
+        setEditLink('');
+        setEditMode('add');
+        setCurrentEdited(null);
+        setIsAddLink(false);
+        successToast('Link is edited');
 
-        setEditLink('')
+        setEditLink('');
       } catch (error) {
-        errorToast('Link is not correct')
+        errorToast('Link is not correct');
       }
     } else {
-      errorToast('The provided link is not a valid URL')
+      errorToast('The provided link is not a valid URL');
     }
-  }
+  };
 
   useEffect(() => {
-    telegramApp.BackButton.show()
-    mountBtn(processFormButt, 'Edit echo')
-  }, [])
+    telegramApp.BackButton.show();
+    mountBtn(processFormButt, 'Edit echo');
+  }, []);
 
   const processFormButt = useCallback(async () => {
-    await functionForButt()
-  }, [tempName, tempContent, linkArr])
+    await functionForButt();
+  }, [tempName, tempContent, linkArr]);
 
   useEffect(() => {
-    mountBtn(processFormButt, 'Edit echo')
-  }, [processFormButt])
+    mountBtn(processFormButt, 'Edit echo');
+  }, [processFormButt]);
 
-  const nextDay = new Date(activeEcho.next)
+  const nextDay = new Date(activeEcho.next);
 
-  const options = { day: 'numeric', month: 'long' }
-  const formattedDate = nextDay.toLocaleDateString('en-US', options)
+  const options = { day: 'numeric', month: 'long' };
+  const formattedDate = nextDay.toLocaleDateString('en-US', options);
 
   return (
     <div className={styles.echocreator}>
@@ -248,7 +248,7 @@ const EchoEditor = () => {
         <span> Save echo</span>
       </button> */}
     </div>
-  )
-}
+  );
+};
 
-export default EchoEditor
+export default EchoEditor;

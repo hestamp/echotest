@@ -1,13 +1,13 @@
-import React, { useEffect, useState } from 'react'
-import TimePicker from '../TimePicker/TimePicker'
+import React, { useEffect, useState } from "react";
+import TimePicker from "../TimePicker/TimePicker";
 
-import styles from './NotificationPicker.module.css'
+import styles from "./NotificationPicker.module.css";
 import {
   useMyLogic,
   useMyNotification,
   useMyToaster,
   useMyUser,
-} from '@/storage'
+} from "@/storage";
 
 const NotificationPicker = () => {
   const {
@@ -21,83 +21,83 @@ const NotificationPicker = () => {
     uUserNotifMode,
     firstTimeNotif,
     uFirstTimeNotif,
-  } = useMyNotification()
+  } = useMyNotification();
 
-  const [fulltime, setFulltime] = useState('')
+  const [fulltime, setFulltime] = useState("");
 
-  const { WEBAPP_URL } = useMyLogic()
+  const { WEBAPP_URL } = useMyLogic();
 
-  const { myUserData, uMyUserData } = useMyUser()
+  const { myUserData, uMyUserData } = useMyUser();
 
-  const { successToast, errorToast } = useMyToaster()
+  const { successToast, errorToast } = useMyToaster();
 
   const noThanks = () => {
-    uIsTimeModal(false)
-    uShowModalTime(false)
-    uFirstTimeNotif(false)
-    localStorage.setItem('notif1', 'true')
-  }
+    uIsTimeModal(false);
+    uShowModalTime(false);
+    uFirstTimeNotif(false);
+    localStorage.setItem("notif1", "true");
+  };
 
   const setNewTime = async (newTime) => {
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/setting/notiftime`, {
-        method: 'PATCH',
+        method: "PATCH",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           newtime: newTime,
           authId: myUserData.authId,
         }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok.')
+        throw new Error("Network response was not ok.");
       }
 
-      const contentType = response.headers.get('content-type')
-      if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Response not JSON')
+      const contentType = response.headers.get("content-type");
+      if (!contentType || !contentType.includes("application/json")) {
+        throw new Error("Response not JSON");
       }
 
-      const data = await response.json() // Convert response to JSON
-      console.log(data)
+      const data = await response.json(); // Convert response to JSON
+      // console.log(data)
 
       if (data?.success) {
-        successToast('Time for notifications was set')
+        successToast("Time for notifications was set");
       } else {
-        errorToast('Something went wrong.\nPlease try again')
+        errorToast("Something went wrong.\nPlease try again");
       }
     } catch (error) {
-      errorToast('Something went wrong.\nPlease try again')
+      errorToast("Something went wrong.\nPlease try again");
       if (error?.response?.status === 429) {
-        errorToast('Too many requests.\nWait a little bit')
+        errorToast("Too many requests.\nWait a little bit");
       } else {
-        console.error(error)
+        // console.error(error)
 
-        errorToast('Something went wrong.\nPlease reload the page')
+        errorToast("Something went wrong.\nPlease reload the page");
       }
     }
-  }
+  };
 
   const convertValueToTime = (value) => {
-    const hours = Math.floor(value)
-    const minutes = (value % 1) * 60
-    return `${hours === 0 ? '12' : hours}:${minutes === 0 ? '00' : '30'}`
-  }
+    const hours = Math.floor(value);
+    const minutes = (value % 1) * 60;
+    return `${hours === 0 ? "12" : hours}:${minutes === 0 ? "00" : "30"}`;
+  };
 
   const userPickNotifTime = async () => {
-    noThanks()
-    const time = convertValueToTime(userNotifTime)
-    const newNotifTime = `${time} ${userNotifMode}`
+    noThanks();
+    const time = convertValueToTime(userNotifTime);
+    const newNotifTime = `${time} ${userNotifMode}`;
 
     uMyUserData((prevUserData) => ({
       ...prevUserData,
       notifications: { ...prevUserData.notifications, time: newNotifTime },
-    }))
+    }));
 
-    await setNewTime(newNotifTime)
-  }
+    await setNewTime(newNotifTime);
+  };
 
   return (
     <div className={styles.notifPicker}>
@@ -136,7 +136,7 @@ const NotificationPicker = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default NotificationPicker
+export default NotificationPicker;

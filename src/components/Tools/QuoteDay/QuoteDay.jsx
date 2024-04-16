@@ -1,43 +1,43 @@
-import React from 'react'
-import styles from './QuoteDay.module.css'
-import { useMyQuote, useMyToaster } from '@/storage'
+import React from 'react';
+import styles from './QuoteDay.module.css';
+import { useMyQuote, useMyToaster } from '@/storage';
 
-import { MdNavigateNext } from 'react-icons/md'
-import { GrFormViewHide } from 'react-icons/gr'
+import { MdNavigateNext } from 'react-icons/md';
+import { GrFormViewHide } from 'react-icons/gr';
 
-import { quotesDayArray } from '@/static/quotes'
-import { copyToClipboard, getRandomQuote } from '@/utils/textUtils'
-import TypingAnimation from '../TypingAnimation/TypingAnimation'
+import { quotesDayArray } from '@/static/quotes';
+import { copyToClipboard, getRandomQuote } from '@/utils/textUtils';
+import TypingAnimation from '../TypingAnimation/TypingAnimation';
 
 const QuoteDay = () => {
-  const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote()
+  const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote();
   // console.log('quote rrr11111111111')
 
-  const { successToast } = useMyToaster()
+  const { successToast } = useMyToaster();
 
   const copyQuote = () => {
-    const context = myQuote.quote + ' ' + myQuote.author
+    const context = myQuote.quote + ' ' + myQuote.author;
 
     copyToClipboard(context)
       .then(() => {
-        console.log('Content copied to clipboard successfully')
-        successToast('Quote copied to clipboard')
+        // console.log('Content copied to clipboard successfully')
+        successToast('Quote copied to clipboard');
       })
       .catch((error) => {
-        console.error('Failed to copy content: ', error)
+        // console.error('Failed to copy content: ', error)
         // Handle error if necessary
-      })
-  }
+      });
+  };
 
   const nextFunc = () => {
-    const newQuote = getRandomQuote(quotesDayArray)
-    uMyQuote(newQuote)
-  }
+    const newQuote = getRandomQuote(quotesDayArray);
+    uMyQuote(newQuote);
+  };
   const hideFunc = () => {
-    localStorage.setItem('quotes', 'false')
-    successToast('Quotes is hidden for now \n You can change it in settings')
-    uIsQuotes(false)
-  }
+    localStorage.setItem('quotes', 'false');
+    successToast('Quotes is hidden for now \n You can change it in settings');
+    uIsQuotes(false);
+  };
 
   return (
     <div className={`${styles.miniblock}  ${styles.justask3}`}>
@@ -77,7 +77,7 @@ const QuoteDay = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default React.memo(QuoteDay)
+export default React.memo(QuoteDay);

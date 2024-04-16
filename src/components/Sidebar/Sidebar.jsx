@@ -1,67 +1,78 @@
-import React, { useState } from 'react'
-import Sidebar from 'react-sidebar'
-import styles from './Sidebar.module.css'
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
-import { TbSettings2 } from 'react-icons/tb'
-import { MdKeyboardArrowLeft } from 'react-icons/md'
-import { AiOutlineTrophy } from 'react-icons/ai'
-import { VscGraph } from 'react-icons/vsc'
-import { LuWaves } from 'react-icons/lu'
-import { CgInfo } from 'react-icons/cg'
+import React, { useCallback, useState } from 'react';
+import Sidebar from 'react-sidebar';
+import styles from './Sidebar.module.css';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { TbSettings2 } from 'react-icons/tb';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { AiOutlineTrophy } from 'react-icons/ai';
+import { VscGraph } from 'react-icons/vsc';
+import { LuWaves } from 'react-icons/lu';
+import { CgInfo } from 'react-icons/cg';
+
+const menuLinks = [
+  {
+    name: 'My Echos',
+    link: '/main',
+    icon: <LuWaves />,
+  },
+
+  {
+    name: 'Achivements',
+    link: '/achivements',
+    icon: <AiOutlineTrophy />,
+  },
+  {
+    name: 'Statistics',
+    link: '/stats',
+    icon: <VscGraph />,
+  },
+  {
+    name: 'Settings',
+    link: '/settings',
+    icon: <TbSettings2 />,
+  },
+  {
+    name: 'Info',
+    link: '/info',
+    icon: <CgInfo />,
+  },
+];
+let count = 0;
 const MySidebar = ({ sidebarOpen, setSidebarOpen, children }) => {
-  const [shouldUpdateSidebar, setShouldUpdateSidebar] = useState(true)
+  const [shouldUpdateSidebar, setShouldUpdateSidebar] = useState(true);
 
-  const menuLinks = [
-    {
-      name: 'My Echos',
-      link: '/main',
-      icon: <LuWaves />,
+  // const navigate = useNavigate();
+
+  const onSetSidebarOpen = useCallback(() => {
+    setSidebarOpen(false);
+  }, []);
+
+  // const mainPageClick = () => {
+  //   navigate("/main");
+  // };
+
+  // const shouldUpdateMainContent = () => {
+  //   return shouldUpdateSidebar;
+  // };
+
+  const location = useLocation();
+
+  const isActive = useCallback(
+    (to) => {
+      if (to === location.pathname) return true;
+
+      if (location.pathname.startsWith(to) && to !== '/') return true;
+      return false;
     },
+    [location.pathname]
+  );
 
-    {
-      name: 'Achivements',
-      link: '/achivements',
-      icon: <AiOutlineTrophy />,
-    },
-    {
-      name: 'Statistics',
-      link: '/stats',
-      icon: <VscGraph />,
-    },
-    {
-      name: 'Settings',
-      link: '/settings',
-      icon: <TbSettings2 />,
-    },
-    {
-      name: 'Info',
-      link: '/info',
-      icon: <CgInfo />,
-    },
-  ]
+  const handleSetOpen = useCallback((open) => {
+    setShouldUpdateSidebar(true);
+    onSetSidebarOpen(open);
+  }, []);
 
-  const navigate = useNavigate()
-
-  const onSetSidebarOpen = () => {
-    setSidebarOpen(false)
-  }
-
-  const mainPageClick = () => {
-    navigate('/main')
-  }
-
-  const shouldUpdateMainContent = () => {
-    return shouldUpdateSidebar
-  }
-
-  const location = useLocation()
-
-  const isActive = (to) => {
-    if (to === location.pathname) return true
-
-    if (location.pathname.startsWith(to) && to !== '/') return true
-    return false
-  }
+  console.log(count++);
 
   return (
     <Sidebar
@@ -99,7 +110,7 @@ const MySidebar = ({ sidebarOpen, setSidebarOpen, children }) => {
                   </div>
                   {link.new && <span className={styles.newDiv}>New</span>}
                 </NavLink>
-              )
+              );
             })}
           </nav>
           <div>
@@ -108,7 +119,8 @@ const MySidebar = ({ sidebarOpen, setSidebarOpen, children }) => {
               <a
                 className={styles.tom}
                 href="https://hestamp.com"
-                target="_blank" rel="noreferrer"
+                target="_blank"
+                rel="noreferrer"
               >
                 Tom Hestamp
               </a>
@@ -121,15 +133,12 @@ const MySidebar = ({ sidebarOpen, setSidebarOpen, children }) => {
       sidebarClassName={styles.sidebar}
       contentClassName={styles.content}
       overlayClassName={styles.overlay}
-      onSetOpen={(open) => {
-        setShouldUpdateSidebar(true)
-        onSetSidebarOpen(open)
-      }}
+      onSetOpen={handleSetOpen}
       styles={{ sidebar: { background: 'white' } }}
     >
       {children}
     </Sidebar>
-  )
-}
+  );
+};
 
-export default MySidebar
+export default MySidebar;

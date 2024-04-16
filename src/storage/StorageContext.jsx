@@ -1,23 +1,23 @@
-import { createContext, useRef, useState } from 'react'
-import { Toaster, toast } from 'react-hot-toast'
+import { createContext, useRef, useState } from "react";
+import { Toaster, toast } from "react-hot-toast";
 
-export const StorageContext = createContext()
+export const StorageContext = createContext();
 
 export const MyStorageProvider = ({ children }) => {
   //Tour guide
 
   //Toasters
   const successToast = (message) => {
-    console.log('trigger success toast')
-    return toast.success(message)
-  }
+    // console.log('trigger success toast')
+    return toast.success(message);
+  };
   const noteToast = (message, durex) =>
-    toast(`${message || 'message'}`, {
-      icon: '👏',
+    toast(`${message || "message"}`, {
+      icon: "👏",
       duration: durex || 1000,
-    })
+    });
 
-  const errorToast = (message) => toast.error(message)
+  const errorToast = (message) => toast.error(message);
   const customToast = (content) =>
     toast.custom((t) => (
       <div className="toast-custom">
@@ -44,73 +44,73 @@ export const MyStorageProvider = ({ children }) => {
           </button>
         </div>
       </div>
-    ))
+    ));
 
   const initialFunction = () => {
-    successToast('empty func')
-  }
+    successToast("empty func");
+  };
 
   //MainPage // Array of echos
-  const [taskArr, uTaskArr] = useState([])
-  const WEBAPP_URL = 'https://c6a0-31-144-132-209.ngrok-free.app'
+  const [taskArr, uTaskArr] = useState([]);
+  const WEBAPP_URL = "https://c6a0-31-144-132-209.ngrok-free.app";
 
-  const [todayMode, setTodayMode] = useState('all')
-  const [selectedDate, setSelectedDate] = useState(null)
+  const [todayMode, setTodayMode] = useState("all");
+  const [selectedDate, setSelectedDate] = useState(null);
 
   //MainPage // Active item
-  const [activeEcho, uActiveEcho] = useState(null)
-  const [pickedDateEchos, setPickedDateEchos] = useState([])
+  const [activeEcho, uActiveEcho] = useState(null);
+  const [pickedDateEchos, setPickedDateEchos] = useState([]);
 
   //Main Button
-  const [mainButtFunc, uMainButtFunc] = useState(null)
-  const [activeMainFunc, uActiveMainFunc] = useState(() => initialFunction)
+  const [mainButtFunc, uMainButtFunc] = useState(null);
+  const [activeMainFunc, uActiveMainFunc] = useState(() => initialFunction);
 
   //Achivement Storage
-  const [allAchives, uAllAchives] = useState(null)
-  const [activeAchive, uActiveAchive] = useState(null)
+  const [allAchives, uAllAchives] = useState(null);
+  const [activeAchive, uActiveAchive] = useState(null);
 
   //UserData
-  const [getUserData, uGetUserData] = useState(null)
-  const [myUserData, uMyUserData] = useState(null)
-  const [userTz, uUserTz] = useState('UTC')
+  const [getUserData, uGetUserData] = useState(null);
+  const [myUserData, uMyUserData] = useState(null);
+  const [userTz, uUserTz] = useState("UTC");
 
   // Logic
-  const [isSendData, setIsSendData] = useState(false)
-  const [echoModal, uEchoModal] = useState(false)
-  const [isLoading, uIsLoading] = useState(false)
-  const [isSidebar, uIsSidebar] = useState(false)
-  const [crudMode, uCrudMode] = useState(null)
-  const [platformCheck, uPlatformCheck] = useState('unknown')
-  const [backButtMounted, uBackButtMounted] = useState(false)
-  const [settingButtMounted, uSettingButtMounted] = useState(false)
+  const [isSendData, setIsSendData] = useState(false);
+  const [echoModal, uEchoModal] = useState(false);
+  const [isLoading, uIsLoading] = useState(false);
+  const [isSidebar, uIsSidebar] = useState(false);
+  const [crudMode, uCrudMode] = useState(null);
+  const [platformCheck, uPlatformCheck] = useState("unknown");
+  const [backButtMounted, uBackButtMounted] = useState(false);
+  const [settingButtMounted, uSettingButtMounted] = useState(false);
 
   //Quotes
-  const [isQuotes, uIsQuotes] = useState(null)
-  const [myQuote, uMyQuote] = useState(null)
+  const [isQuotes, uIsQuotes] = useState(null);
+  const [myQuote, uMyQuote] = useState(null);
 
   // Notifications
-  const [isTimeModal, uIsTimeModal] = useState(false)
-  const [showModalTime, uShowModalTime] = useState(false)
-  const [firstTimeNotif, uFirstTimeNotif] = useState(false)
-  const [userNotifTime, uUserNotifTime] = useState(null)
-  const [userNotifMode, uUserNotifMode] = useState('am')
-  const [getAllNotif, uGetAllNotif] = useState(true)
-  const [getEchoNotif, uGetEchoNotif] = useState(true)
-  const [emptyReminder, uEmptyReminder] = useState(false)
+  const [isTimeModal, uIsTimeModal] = useState(false);
+  const [showModalTime, uShowModalTime] = useState(false);
+  const [firstTimeNotif, uFirstTimeNotif] = useState(false);
+  const [userNotifTime, uUserNotifTime] = useState(null);
+  const [userNotifMode, uUserNotifMode] = useState("am");
+  const [getAllNotif, uGetAllNotif] = useState(true);
+  const [getEchoNotif, uGetEchoNotif] = useState(true);
+  const [emptyReminder, uEmptyReminder] = useState(false);
 
   //Tour giude
-  const [isTourGuideCache, uIsTourGuideCache] = useState(false)
-  const [mainPageGuide, uMainPageGuide] = useState(false)
-  const [createEchoGuide, uCreateEchoGuide] = useState(false)
-  const [isReadGuide, uIsReadGuide] = useState(false)
-  const [isCheckGuide, uIsCheckGuide] = useState(false)
+  const [isTourGuideCache, uIsTourGuideCache] = useState(false);
+  const [mainPageGuide, uMainPageGuide] = useState(false);
+  const [createEchoGuide, uCreateEchoGuide] = useState(false);
+  const [isReadGuide, uIsReadGuide] = useState(false);
+  const [isCheckGuide, uIsCheckGuide] = useState(false);
 
-  const firstRef = useRef()
-  const secondRef = useRef()
-  const thirdRef = useRef()
+  const firstRef = useRef();
+  const secondRef = useRef();
+  const thirdRef = useRef();
 
   // Statistics
-  const [activeLevel, setActiveLvl] = useState(null)
+  const [activeLevel, setActiveLvl] = useState(null);
 
   const storageContextData = {
     stats: { activeLevel, setActiveLvl },
@@ -188,12 +188,12 @@ export const MyStorageProvider = ({ children }) => {
     quote: { myQuote, uMyQuote, isQuotes, uIsQuotes },
     achivements: { allAchives, uAllAchives, activeAchive, uActiveAchive },
     toaster: { successToast, errorToast, customToast, noteToast },
-  }
+  };
 
   return (
     <StorageContext.Provider value={storageContextData}>
       <Toaster />
       <div className={`theme `}>{children}</div>
     </StorageContext.Provider>
-  )
-}
+  );
+};

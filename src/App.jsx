@@ -208,7 +208,7 @@ function App() {
       }
       if (responseData.user) {
         const userObj = responseData.user
-        console.log(userObj)
+        // console.log(userObj)
         setIsSendData(true)
         uTaskArr(userObj.echos)
         uMyUserData(userObj)
@@ -228,7 +228,7 @@ function App() {
           uCreateEchoGuide(true)
         }
       }
-      console.log(responseData)
+      // console.log(responseData)
     } catch (error) {
       errorToast(`Something went wrong \n Please, reload the app`)
     } finally {
@@ -253,7 +253,7 @@ function App() {
       const platform = telegramApp.platform
 
       authUser(tgid, initDataUnsafe, platform)
-      console.log('trigger auth data')
+      // console.log('trigger auth data')
     } else {
       uGetUserData(true)
       uTaskArr(slugData.echos)
