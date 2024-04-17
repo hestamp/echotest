@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import React, { memo, useCallback, useState } from 'react';
 import Sidebar from 'react-sidebar';
 import styles from './Sidebar.module.css';
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
@@ -37,8 +37,10 @@ const menuLinks = [
     icon: <CgInfo />,
   },
 ];
+
 let count = 0;
-const MySidebar = ({ sidebarOpen, setSidebarOpen, children }) => {
+
+const MySidebar = memo(({ sidebarOpen, setSidebarOpen, children }) => {
   const [shouldUpdateSidebar, setShouldUpdateSidebar] = useState(true);
 
   // const navigate = useNavigate();
@@ -139,6 +141,8 @@ const MySidebar = ({ sidebarOpen, setSidebarOpen, children }) => {
       {children}
     </Sidebar>
   );
-};
+});
+
+MySidebar.displayName = 'MySidebar';
 
 export default MySidebar;

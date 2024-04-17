@@ -1,15 +1,15 @@
-import { useEffect, useState } from 'react'
-import 'balloon-css'
-import styles from './App.module.css'
+import { useEffect, useState } from 'react';
+import 'balloon-css';
+import styles from './App.module.css';
 
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
+import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
 
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
-dayjs.extend(utc)
-dayjs.extend(timezone)
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 import {
   EditEchoPage,
@@ -23,9 +23,9 @@ import {
   GuidePage,
   SettingsPage,
   MainPage,
-} from '@/pages'
+} from '@/pages';
 
-import { telegramApp, useTelegram } from './hooks/useTelegram'
+import { telegramApp, useTelegram } from './hooks/useTelegram';
 import {
   useMyGuide,
   useMyLogic,
@@ -35,11 +35,11 @@ import {
   useMyStats,
   useMyToaster,
   useMyUser,
-} from './storage'
+} from './storage';
 
-import { levelNamesBar, staticAchiveNames } from './slug/data'
+import { levelNamesBar, staticAchiveNames } from './slug/data';
 
-import { quotesDayArray } from './static/quotes'
+import { quotesDayArray } from './static/quotes';
 
 import {
   EchoReader,
@@ -49,24 +49,24 @@ import {
   MySidebar,
   MyNewModal,
   MyLoader,
-} from '@/components/'
+} from '@/components/';
 
-import { getRandomQuote } from './utils/textUtils'
-import EchoChecker from './components/EchoChecker/EchoChecker'
-import { slugData } from './utils/slugdata'
+import { getRandomQuote } from './utils/textUtils';
+import EchoChecker from './components/EchoChecker/EchoChecker';
+import { slugData } from './utils/slugdata';
 
 function App() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const locationCheck = useLocation()
+  const locationCheck = useLocation();
 
-  const isMainPage = locationCheck.pathname === '/'
-  const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote()
-  const { checkrunAndExpand } = useTelegram()
+  const isMainPage = locationCheck.pathname === '/';
+  const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote();
+  const { checkrunAndExpand } = useTelegram();
 
-  const { uTaskArr, uActiveEcho } = useMyMainContext()
+  const { uTaskArr, uActiveEcho } = useMyMainContext();
 
-  const { myUserData, uMyUserData, uUserTz, uGetUserData } = useMyUser()
+  const { myUserData, uMyUserData, uUserTz, uGetUserData } = useMyUser();
 
   const {
     echoModal,
@@ -77,13 +77,6 @@ function App() {
     uBackButtMounted,
     settingButtMounted,
     uSettingButtMounted,
-  } = useMyLogic()
-
-  const { successToast, errorToast } = useMyToaster()
-
-  const { setActiveLvl } = useMyStats()
-
-  const {
     uEchoModal,
     uCrudMode,
     crudMode,
@@ -93,7 +86,11 @@ function App() {
     uIsSidebar,
     isSendData,
     setIsSendData,
-  } = useMyLogic()
+  } = useMyLogic();
+
+  const { successToast, errorToast } = useMyToaster();
+
+  const { setActiveLvl } = useMyStats();
 
   const {
     isTimeModal,
@@ -101,7 +98,7 @@ function App() {
     userNotifTime,
     firstTimeNotif,
     uFirstTimeNotif,
-  } = useMyNotification()
+  } = useMyNotification();
 
   const {
     isTourGuideCache,
@@ -110,84 +107,84 @@ function App() {
     uMainPageGuide,
     uCreateEchoGuide,
     uIsReadGuide,
-  } = useMyGuide()
+  } = useMyGuide();
 
   useEffect(() => {
-    checkrunAndExpand()
+    checkrunAndExpand();
 
-    const isGuideDone = localStorage.getItem('guide')
-    const isActiveQuote = localStorage.getItem('quotes')
-    const isTourGuideMain = localStorage.getItem('maintour')
-    const isTourGuideCreate = localStorage.getItem('createtour')
-    const isReadGuide = localStorage.getItem('readtour')
-    const isCheckGuide = localStorage.getItem('checktour')
+    const isGuideDone = localStorage.getItem('guide');
+    const isActiveQuote = localStorage.getItem('quotes');
+    const isTourGuideMain = localStorage.getItem('maintour');
+    const isTourGuideCreate = localStorage.getItem('createtour');
+    const isReadGuide = localStorage.getItem('readtour');
+    const isCheckGuide = localStorage.getItem('checktour');
 
-    const localLaunch = localStorage.getItem('notif1')
+    const localLaunch = localStorage.getItem('notif1');
 
     if (localLaunch != 'true') {
-      uFirstTimeNotif(true)
+      uFirstTimeNotif(true);
     }
 
     if (isGuideDone) {
-      navigate('/main')
+      navigate('/main');
     }
 
     if (isReadGuide == 'true') {
-      uIsReadGuide(true)
+      uIsReadGuide(true);
     } else {
-      uIsReadGuide(false)
+      uIsReadGuide(false);
     }
     if (isCheckGuide == 'true') {
-      uIsCheckGuide(true)
+      uIsCheckGuide(true);
     } else {
-      uIsCheckGuide(false)
+      uIsCheckGuide(false);
     }
 
     if (isTourGuideMain == 'true') {
-      uMainPageGuide(true)
+      uMainPageGuide(true);
     } else {
-      uMainPageGuide(false)
+      uMainPageGuide(false);
     }
     if (isTourGuideCreate == 'true') {
-      uCreateEchoGuide(true)
+      uCreateEchoGuide(true);
     } else {
-      uCreateEchoGuide(false)
+      uCreateEchoGuide(false);
     }
-    uIsTourGuideCache(true)
+    uIsTourGuideCache(true);
     if (isActiveQuote == 'false') {
-      uIsQuotes(false)
+      uIsQuotes(false);
     } else {
-      uIsQuotes(true)
+      uIsQuotes(true);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    const newTz = dayjs.tz.guess()
+    const newTz = dayjs.tz.guess();
 
     const userTimeZone =
-      newTz || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
+      newTz || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
 
-    localStorage.setItem('timezone', userTimeZone)
+    localStorage.setItem('timezone', userTimeZone);
 
-    uUserTz(newTz)
-  }, [])
+    uUserTz(newTz);
+  }, []);
 
   useEffect(() => {
     if (echoModal && isSidebar) {
-      uIsSidebar(false)
+      uIsSidebar(false);
     }
-  }, [echoModal, isSidebar])
+  }, [echoModal, isSidebar]);
 
   const authUser = async (tgid, initDataUnsafe, platform) => {
-    let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
+    let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     if (!userTimeZone || userTimeZone === 'undefined') {
-      userTimeZone = 'UTC'
+      userTimeZone = 'UTC';
     }
 
     try {
-      uIsLoading(true)
-      uGetUserData(false)
+      uIsLoading(true);
+      uGetUserData(false);
       const response = await fetch(`${WEBAPP_URL}/api/auth/userdata`, {
         method: 'POST',
         headers: {
@@ -199,81 +196,81 @@ function App() {
           platform: platform || 'unknown',
           timezone: userTimeZone || 'UTC',
         }),
-      })
+      });
 
-      const responseData = await response.json()
+      const responseData = await response.json();
 
       if (responseData.error) {
-        errorToast(`${responseData.message}`)
+        errorToast(`${responseData.message}`);
       }
       if (responseData.user) {
-        const userObj = responseData.user
+        const userObj = responseData.user;
         // console.log(userObj)
-        setIsSendData(true)
-        uTaskArr(userObj.echos)
-        uMyUserData(userObj)
+        setIsSendData(true);
+        uTaskArr(userObj.echos);
+        uMyUserData(userObj);
         if (userObj.notifications.time) {
-          localStorage.setItem('notif1', 'true')
+          localStorage.setItem('notif1', 'true');
         }
         if (userObj.guides.start) {
-          localStorage.setItem('guide', 'true')
-          navigate('/main')
+          localStorage.setItem('guide', 'true');
+          navigate('/main');
         }
         if (userObj.guides.main) {
-          localStorage.setItem('maintour', 'true')
-          uMainPageGuide(true)
+          localStorage.setItem('maintour', 'true');
+          uMainPageGuide(true);
         }
         if (userObj.guides.create) {
-          localStorage.setItem('createtour', 'true')
-          uCreateEchoGuide(true)
+          localStorage.setItem('createtour', 'true');
+          uCreateEchoGuide(true);
         }
       }
       // console.log(responseData)
     } catch (error) {
-      errorToast(`Something went wrong \n Please, reload the app`)
+      errorToast(`Something went wrong \n Please, reload the app`);
     } finally {
-      uIsLoading(false)
-      uGetUserData(true)
+      uIsLoading(false);
+      uGetUserData(true);
     }
-  }
+  };
 
   const backButt = () => {
-    navigate(-1)
-    uIsSidebar(false)
-  }
+    navigate(-1);
+    uIsSidebar(false);
+  };
 
   const goSetting = () => {
-    navigate('/settings')
-  }
+    navigate('/settings');
+  };
 
   useEffect(() => {
     if (telegramApp?.initDataUnsafe?.user?.id && !isSendData) {
-      const initDataUnsafe = telegramApp.initDataUnsafe
-      const tgid = telegramApp.initDataUnsafe.user.id
-      const platform = telegramApp.platform
+      const initDataUnsafe = telegramApp.initDataUnsafe;
+      const tgid = telegramApp.initDataUnsafe.user.id;
+      const platform = telegramApp.platform;
 
-      authUser(tgid, initDataUnsafe, platform)
+      authUser(tgid, initDataUnsafe, platform);
       // console.log('trigger auth data')
     } else {
-      uGetUserData(true)
-      uTaskArr(slugData.echos)
-      uMyUserData(slugData)
+      uGetUserData(true);
+      uTaskArr(slugData.echos);
+      uMyUserData(slugData);
     }
 
     if (!backButtMounted) {
-      telegramApp.BackButton.onClick(() => backButt())
-      uBackButtMounted(true)
+      telegramApp.BackButton.onClick(() => backButt());
+      uBackButtMounted(true);
     }
 
     if (!settingButtMounted) {
-      telegramApp.SettingsButton.onClick(() => goSetting())
+      telegramApp.SettingsButton.onClick(() => goSetting());
 
-      uSettingButtMounted(true)
+      uSettingButtMounted(true);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    const localLaunchNotif = localStorage.getItem('notif1')
+    const localLaunchNotif = localStorage.getItem('notif1');
 
     if (
       myUserData &&
@@ -284,37 +281,37 @@ function App() {
       localLaunchNotif != 'true'
     ) {
       const timeout = setTimeout(() => {
-        uIsTimeModal(true)
-        uFirstTimeNotif(true)
-      }, 3000)
+        uIsTimeModal(true);
+        uFirstTimeNotif(true);
+      }, 3000);
 
       // Clear the timeout after it triggers
-      return () => clearTimeout(timeout)
+      return () => clearTimeout(timeout);
     }
-  }, [myUserData])
+  }, [myUserData]);
 
   useEffect(() => {
     if (telegramApp.platform != 'unknown') {
-      uPlatformCheck(telegramApp.platform)
+      uPlatformCheck(telegramApp.platform);
     } else {
-      uPlatformCheck('unknown')
+      uPlatformCheck('unknown');
     }
-  }, [telegramApp?.platform])
+  }, [telegramApp?.platform]);
 
   useEffect(() => {
     if (!myQuote && quotesDayArray) {
-      const newQuote = getRandomQuote(quotesDayArray)
-      uMyQuote(newQuote)
+      const newQuote = getRandomQuote(quotesDayArray);
+      uMyQuote(newQuote);
     }
 
-    telegramApp.SettingsButton.show()
-  }, [])
+    telegramApp.SettingsButton.show();
+  }, [myQuote]);
 
   const closeFullModal = () => {
-    uEchoModal(false)
-    uCrudMode(null)
-    uActiveEcho(null)
-  }
+    uEchoModal(false);
+    uCrudMode(null);
+    uActiveEcho(null);
+  };
 
   useEffect(() => {
     if (myUserData) {
@@ -324,10 +321,10 @@ function App() {
         }`,
         current: myUserData.stats.exp,
         goal: (myUserData.stats.level + 1) * 100,
-      }
-      setActiveLvl(activeL)
+      };
+      setActiveLvl(activeL);
     }
-  }, [myUserData?.stats])
+  }, [myUserData]);
 
   return (
     <div className={styles.App}>
@@ -357,7 +354,7 @@ function App() {
             <NotificationPicker />
           </MyNewModal>
           <MySidebar sidebarOpen={isSidebar} setSidebarOpen={uIsSidebar}>
-            {!isMainPage ? <Navbar /> : <></>}
+            {!isMainPage && <Navbar />}
             <div className={styles.routewrap}>
               <Routes>
                 <Route exact path="/main" element={<MainPage />} />
@@ -383,7 +380,7 @@ function App() {
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

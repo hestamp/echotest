@@ -1,13 +1,13 @@
-import { useEffect, useState } from "react";
-import styles from "./AchivePage.module.css";
+import { useCallback, useEffect, useState } from 'react';
+import styles from './AchivePage.module.css';
 
-import { ProgressBar, MySpinner, MyNewModal, AchiveModal } from "@/components/";
-import { MdDone } from "react-icons/md";
-import { useMyAchive, useMyLogic, useMyUser } from "@/storage";
+import { ProgressBar, MySpinner, MyNewModal, AchiveModal } from '@/components/';
+import { MdDone } from 'react-icons/md';
+import { useMyAchive, useMyLogic, useMyUser } from '@/storage';
 
-import { useTelegram } from "@/hooks/useTelegram";
+import { useTelegram } from '@/hooks/useTelegram';
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from 'react-router-dom';
 const AchivePage = () => {
   const { allAchives, uAllAchives } = useMyAchive();
   const { WEBAPP_URL } = useMyLogic();
@@ -19,12 +19,16 @@ const AchivePage = () => {
 
   const navigate = useNavigate();
   const { mountBtn } = useTelegram();
+
+
   const createFunc = () => {
-    navigate("/echo/create");
+    navigate('/echo/create');
   };
+
   useEffect(() => {
-    mountBtn(createFunc, "Create echo");
+    mountBtn(createFunc, 'Create echo');
   }, []);
+  
   useEffect(() => {
     if (allAchives) {
       const firstDoneArr = allAchives.filter(
@@ -47,9 +51,9 @@ const AchivePage = () => {
   const checkOnServer = async (checkId) => {
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/achive/update`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           authId: myUserData.authId,
@@ -59,12 +63,12 @@ const AchivePage = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok.");
+        throw new Error('Network response was not ok.');
       }
 
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Response not JSON");
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response not JSON');
       }
 
       await response.json();
@@ -73,7 +77,7 @@ const AchivePage = () => {
     }
   };
 
-  const recieveFunc = async () => {
+  const recieveFunc = useCallback(async () => {
     const updateAchive = notCheckedAchive;
     updateAchive.checked = true;
 
@@ -97,7 +101,7 @@ const AchivePage = () => {
     }
 
     await checkOnServer(updateAchive.id);
-  };
+  }, [allAchives, notCheckedAchive, notCheckedArr]);
 
   return (
     <div className={styles.achivePage}>
@@ -121,7 +125,7 @@ const AchivePage = () => {
                   <div className={styles.achiveOne}>
                     <img
                       className={`${styles.achimage} ${
-                        !isDone ? styles.notDone : ""
+                        !isDone ? styles.notDone : ''
                       }`}
                       alt={item.name}
                       src={item.img}
@@ -154,9 +158,9 @@ const AchivePage = () => {
       <p className={styles.gray}>
         Under construction... <br></br>
         <br></br>You will recieve all achivements after this page will be
-        completed!{" "}
+        completed!{' '}
       </p>
-      <Link to={"/main"} className={styles.backhome}>
+      <Link to={'/main'} className={styles.backhome}>
         Main page
       </Link>
     </div>

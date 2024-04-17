@@ -1,7 +1,7 @@
-import React from 'react'
 import styles from './AchiveBar.module.css'
 import ProgressBar from '../ProgressBar/ProgressBar'
 import { MdDone } from 'react-icons/md'
+
 const AchiveBar = ({ activeAchive, nonames, numbs }) => {
   return (
     <>

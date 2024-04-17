@@ -40,7 +40,7 @@ const EchoRemover = () => {
       setTempContent(activeEcho.content);
       setLinkArr(activeEcho.links);
     }
-  }, []);
+  }, [activeEcho]);
 
   const removeFunc = async () => {
     const newArr = taskArr.filter((item) => item.id !== activeEcho.id);

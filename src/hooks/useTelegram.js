@@ -1,35 +1,37 @@
-export const telegramApp = window.Telegram.WebApp
+import { useCallback } from 'react';
+
+export const telegramApp = window.Telegram.WebApp;
 
 export function useTelegram() {
-  const checkrunAndExpand = () => {
-    telegramApp.ready()
-    telegramApp.expand()
-  }
+  const checkrunAndExpand = useCallback(() => {
+    telegramApp.ready();
+    telegramApp.expand();
+  }, []);
 
-  const onClose = () => {
-    telegramApp.close()
-  }
+  const onClose = useCallback(() => {
+    telegramApp.close();
+  }, []);
 
-  const setMainBtnText = (text) => {
+  const setMainBtnText = useCallback((text) => {
     if (telegramApp?.MainButton) {
-      telegramApp.MainButton.setText(text)
+      telegramApp.MainButton.setText(text);
     }
-  }
-
-  const mountBtn = (callback, name) => {
+  }, []);
+  
+  const mountBtn = useCallback((callback, name) => {
     if (telegramApp.platform != 'unknown') {
       if (window.mainButtonFunction) {
-        telegramApp.MainButton.offClick(window.mainButtonFunction)
+        telegramApp.MainButton.offClick(window.mainButtonFunction);
       }
 
-      telegramApp.MainButton.onClick(callback)
-      window.mainButtonFunction = callback
-      telegramApp.MainButton.show()
-      telegramApp.MainButton.enable()
+      telegramApp.MainButton.onClick(callback);
+      window.mainButtonFunction = callback;
+      telegramApp.MainButton.show();
+      telegramApp.MainButton.enable();
     }
 
-    setMainBtnText(`${name}`)
-  }
+    setMainBtnText(`${name}`);
+  }, [setMainBtnText]);
 
   return {
     onClose,
@@ -39,5 +41,5 @@ export function useTelegram() {
     user: telegramApp?.initData,
     userUnsafe: telegramApp?.initDataUnsafe,
     queryId: telegramApp.initDataUnsafe?.query_id,
-  }
+  };
 }

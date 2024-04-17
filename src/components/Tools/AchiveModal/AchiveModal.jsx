@@ -1,7 +1,7 @@
-import React from 'react'
-import styles from './AchiveModal.module.css'
+import React, { memo } from 'react';
+import styles from './AchiveModal.module.css';
 
-const AchiveModal = ({ achiveObj, recieveFunc }) => {
+const AchiveModal = memo(({ achiveObj, recieveFunc }) => {
   return (
     <div className={styles.achivemodal}>
       <h3>New achivement</h3>
@@ -22,7 +22,9 @@ const AchiveModal = ({ achiveObj, recieveFunc }) => {
         Recieve
       </button>
     </div>
-  )
-}
+  );
+});
 
-export default AchiveModal
+AchiveModal.displayName = 'AchiveModal';
+
+export default AchiveModal;
