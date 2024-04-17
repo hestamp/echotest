@@ -1,14 +1,14 @@
-import React, { useEffect, useState } from "react";
-import styles from "./EchoRemover.module.css";
+import React, { memo, useEffect, useState } from 'react';
+import styles from './EchoRemover.module.css';
 
 import {
   useMyLogic,
   useMyMainContext,
   useMyToaster,
   useMyUser,
-} from "@/storage";
+} from '@/storage';
 
-const EchoRemover = () => {
+const EchoRemover = memo(() => {
   const {
     taskArr,
     uTaskArr,
@@ -29,8 +29,8 @@ const EchoRemover = () => {
     platformCheck,
   } = useMyLogic();
   const { successToast, errorToast } = useMyToaster();
-  const [tempName, setTempName] = useState("");
-  const [tempContent, setTempContent] = useState("");
+  const [tempName, setTempName] = useState('');
+  const [tempContent, setTempContent] = useState('');
 
   const [linkArr, setLinkArr] = useState([]);
 
@@ -54,7 +54,7 @@ const EchoRemover = () => {
   };
 
   const closeModal = () => {
-    uCrudMode("create");
+    uCrudMode('create');
     uEchoModal(false);
     uActiveEcho(null);
   };
@@ -62,9 +62,9 @@ const EchoRemover = () => {
   const removeEcho = async (echoid) => {
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/echos/remove`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           authId: myUserData.authId,
@@ -73,20 +73,20 @@ const EchoRemover = () => {
       });
 
       if (!response.ok) {
-        errorToast("Network response was not ok.");
-        throw new Error("Network response was not ok.");
+        errorToast('Network response was not ok.');
+        throw new Error('Network response was not ok.');
       }
 
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        errorToast("Response not JSON");
-        throw new Error("Response not JSON");
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        errorToast('Response not JSON');
+        throw new Error('Response not JSON');
       }
 
       const data = await response.json();
 
       if (data.success) {
-        successToast("Your echo was removed!");
+        successToast('Your echo was removed!');
         if (data.userStats) {
           uMyUserData((prevUserData) => ({
             ...prevUserData,
@@ -94,7 +94,7 @@ const EchoRemover = () => {
           }));
         }
       } else {
-        errorToast("Problem with deleting echo");
+        errorToast('Problem with deleting echo');
       }
     } catch (error) {
       // console.error()
@@ -102,7 +102,7 @@ const EchoRemover = () => {
       errorToast(`Something went wrong. Please try again. ${error}`);
 
       if (error?.response?.status === 429) {
-        errorToast("Too many requests. Please wait a little bit.");
+        errorToast('Too many requests. Please wait a little bit.');
       }
     }
   };
@@ -111,9 +111,8 @@ const EchoRemover = () => {
     <div className={styles.echocreator}>
       <h3>Remove this echo?</h3>
 
-      <h2>{activeEcho.name || "Echo name"}</h2>
+      <h2>{activeEcho.name || 'Echo name'}</h2>
       <h4 className={styles.progress}>
-        {" "}
         Echo level progress:
         <span className={`${styles.waves} `}>{activeEcho.lvl || 1}</span>
       </h4>
@@ -129,6 +128,8 @@ const EchoRemover = () => {
       </button>
     </div>
   );
-};
+});
+
+EchoRemover.displayName = 'EchoRemover';
 
 export default EchoRemover;

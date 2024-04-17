@@ -1,7 +1,7 @@
 import React, { memo, useCallback, useState } from 'react';
 import Sidebar from 'react-sidebar';
 import styles from './Sidebar.module.css';
-import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
+import { Link, NavLink, useLocation } from 'react-router-dom';
 import { TbSettings2 } from 'react-icons/tb';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
 import { AiOutlineTrophy } from 'react-icons/ai';
@@ -41,21 +41,11 @@ const menuLinks = [
 let count = 0;
 
 const MySidebar = memo(({ sidebarOpen, setSidebarOpen, children }) => {
-  const [shouldUpdateSidebar, setShouldUpdateSidebar] = useState(true);
-
-  // const navigate = useNavigate();
+  // const [shouldUpdateSidebar, setShouldUpdateSidebar] = useState(true);
 
   const onSetSidebarOpen = useCallback(() => {
     setSidebarOpen(false);
   }, []);
-
-  // const mainPageClick = () => {
-  //   navigate("/main");
-  // };
-
-  // const shouldUpdateMainContent = () => {
-  //   return shouldUpdateSidebar;
-  // };
 
   const location = useLocation();
 
@@ -70,7 +60,7 @@ const MySidebar = memo(({ sidebarOpen, setSidebarOpen, children }) => {
   );
 
   const handleSetOpen = useCallback((open) => {
-    setShouldUpdateSidebar(true);
+    // setShouldUpdateSidebar(true);
     onSetSidebarOpen(open);
   }, []);
 

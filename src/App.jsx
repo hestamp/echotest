@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect } from 'react';
 import 'balloon-css';
 import styles from './App.module.css';
 
@@ -101,7 +101,7 @@ function App() {
   } = useMyNotification();
 
   const {
-    isTourGuideCache,
+    // isTourGuideCache,
     uIsCheckGuide,
     uIsTourGuideCache,
     uMainPageGuide,
@@ -307,11 +307,11 @@ function App() {
     telegramApp.SettingsButton.show();
   }, [myQuote]);
 
-  const closeFullModal = () => {
+  const closeFullModal = useCallback(() => {
     uEchoModal(false);
     uCrudMode(null);
     uActiveEcho(null);
-  };
+  }, []);
 
   useEffect(() => {
     if (myUserData) {
