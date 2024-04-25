@@ -1,11 +1,12 @@
-import Calendar from "react-calendar";
-import "./MyCalendar.css";
+import Calendar from 'react-calendar';
+import './MyCalendar.css';
 
-import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from "react-icons/md";
-import { LuWaves } from "react-icons/lu";
-import { useMyMainContext, useMyUser } from "@/storage";
-import dayjs from "dayjs";
-import { useMyRefs } from "../../../storage";
+import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
+import { LuWaves } from 'react-icons/lu';
+import { useMyMainContext, useMyUser } from '@/storage';
+import dayjs from 'dayjs';
+import { useMyRefs } from '../../../storage';
+import { useCallback } from 'react';
 
 const MyCalendar = ({
   sunOrMon,
@@ -24,56 +25,55 @@ const MyCalendar = ({
   const { firstRef } = useMyRefs();
 
   const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  // console.log('calendar rerendeeeeeeeeeeer')
 
   const finalTz = userLocalTz || userTz;
 
-  const formatDate = (date) => {
-    return dayjs(date).tz(finalTz).format("YYYY-MM-DD");
-  };
+  const formatDate = useCallback((date) => {
+    return dayjs(date).tz(finalTz).format('YYYY-MM-DD');
+  }, []);
 
-  const renderTileClass = ({ date, view }) => {
-    if (view === "month") {
+  const renderTileClass = useCallback(({ date, view }) => {
+    if (view === 'month') {
       const formattedDate = formatDate(date);
       if (
         highlightDates &&
         highlightDates.some((d) => {
           // Use dayjs to parse and format the highlight date in the user's timezone
-          const highlightDate = dayjs(d).tz(finalTz).format("YYYY-MM-DD");
+          const highlightDate = dayjs(d).tz(finalTz).format('YYYY-MM-DD');
           return highlightDate === formattedDate;
         })
       ) {
-        return "highlighted-date"; // Using CSS module style
+        return 'highlighted-date'; // Using CSS module style
       }
     }
-  };
+  }, []);
 
   // Function to check if a date has tasks
-  const dateHasTasks = (date) => {
+  const dateHasTasks = useCallback((date) => {
     const formattedDate = formatDate(date);
     return taskArr.some((task) =>
       task.dates.some(
         (taskDate) => formatDate(new Date(taskDate)) === formattedDate
       )
     );
-  };
+  }, []);
 
-  const handleDateChange = (date) => {
+  const handleDateChange = useCallback((date) => {
     activeTask(date);
     // console.log('handleDateChange', date)
     setDate(date);
-  };
+  }, []);
 
-  const renderTileContent = ({ date, view }) => {
-    if (view === "month" && dateHasTasks(date)) {
+  const renderTileContent = useCallback(({ date, view }) => {
+    if (view === 'month' && dateHasTasks(date)) {
       return (
         <span className="waves">
           <LuWaves />
         </span>
       );
     }
-  };
-
+  }, []);
+  
   return (
     <Calendar
       nextLabel={<MdKeyboardArrowRight />}
@@ -94,7 +94,7 @@ const MyCalendar = ({
       value={valueDate}
       calendarType={sunOrMon}
       tileClassName={renderTileClass}
-      navigationLabel={({ label }) => `${label.split(" ")[0]}`}
+      navigationLabel={({ label }) => `${label.split(' ')[0]}`}
       {...rest}
     />
   );

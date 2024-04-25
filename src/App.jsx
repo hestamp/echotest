@@ -82,8 +82,6 @@ function App() {
     crudMode,
     platformCheck,
     uPlatformCheck,
-    isSidebar,
-    uIsSidebar,
     isSendData,
     setIsSendData,
   } = useMyLogic();
@@ -169,12 +167,6 @@ function App() {
     uUserTz(newTz);
   }, []);
 
-  useEffect(() => {
-    if (echoModal && isSidebar) {
-      uIsSidebar(false);
-    }
-  }, [echoModal, isSidebar]);
-
   const authUser = async (tgid, initDataUnsafe, platform) => {
     let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
@@ -232,11 +224,6 @@ function App() {
       uIsLoading(false);
       uGetUserData(true);
     }
-  };
-
-  const backButt = () => {
-    navigate(-1);
-    uIsSidebar(false);
   };
 
   const goSetting = () => {

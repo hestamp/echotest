@@ -78,7 +78,7 @@ export const MyStorageProvider = ({ children }) => {
   const [isSendData, setIsSendData] = useState(false);
   const [echoModal, uEchoModal] = useState(false);
   const [isLoading, uIsLoading] = useState(false);
-  const [isSidebar, uIsSidebar] = useState(false);
+
   const [crudMode, uCrudMode] = useState(null);
   const [platformCheck, uPlatformCheck] = useState('unknown');
   const [backButtMounted, uBackButtMounted] = useState(false);
@@ -184,8 +184,7 @@ export const MyStorageProvider = ({ children }) => {
         uIsLoading,
         platformCheck,
         uPlatformCheck,
-        isSidebar,
-        uIsSidebar,
+
         backButtMounted,
         uBackButtMounted,
         settingButtMounted,
@@ -199,7 +198,6 @@ export const MyStorageProvider = ({ children }) => {
       activeAchive,
       activeEcho,
       activeLevel,
-      activeMainFunc,
       allAchives,
       backButtMounted,
       createEchoGuide,
@@ -215,7 +213,7 @@ export const MyStorageProvider = ({ children }) => {
       isQuotes,
       isReadGuide,
       isSendData,
-      isSidebar,
+
       isTimeModal,
       isTourGuideCache,
       mainButtFunc,

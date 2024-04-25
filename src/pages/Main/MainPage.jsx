@@ -1,32 +1,37 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
-import styles from "./MainPage.module.css";
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styles from './MainPage.module.css';
 
-import { useNavigate } from "react-router-dom";
-import { BsThreeDots } from "react-icons/bs";
-import { MyCalendar, MenuDropdown, QuoteDay, SlugDiv } from "@/components/";
-import { GoDotFill } from "react-icons/go";
-import { MdEventRepeat, MdDone, MdOutlineLink } from "react-icons/md";
-import { FaRegCalendarCheck } from "react-icons/fa6";
-import { useMyLogic, useMyMainContext, useMyUser } from "@/storage";
+import { useNavigate } from 'react-router-dom';
+import { BsThreeDots } from 'react-icons/bs';
+import { MyCalendar, MenuDropdown, QuoteDay, SlugDiv } from '@/components/';
+import { GoDotFill } from 'react-icons/go';
+import { MdEventRepeat, MdDone, MdOutlineLink } from 'react-icons/md';
+import { FaRegCalendarCheck } from 'react-icons/fa6';
+import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
 
-import { renderContentWithLineBreaks } from "@/utils/textUtils";
+import { renderContentWithLineBreaks } from '@/utils/textUtils';
 
-import { telegramApp, useTelegram } from "@/hooks/useTelegram";
+import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 
-import { isTodayMatchingLevelDate } from "@/utils/objUtils";
+import { isTodayMatchingLevelDate } from '@/utils/objUtils';
 
-import dayjs from "dayjs";
-import utc from "dayjs/plugin/utc";
-import timezone from "dayjs/plugin/timezone";
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
-import { TourGuide } from "@/components/Tools/TourGuide/TourGuide";
-import { useMyGuide } from "../../storage";
-import ToggleManu from "./ToggleManu";
+import { TourGuide } from '@/components/Tools/TourGuide/TourGuide';
+import { useMyGuide } from '../../storage';
+import ToggleManu from './ToggleManu';
+
+const newEchoName = 'First echo. What is spaced repetition?';
+const newEchoContext = `
+    The method of spaced repetition was first conceived of in the 1880s by German scientist Hermann Ebbinghaus. Ebbinghaus created the forgetting curve - a graph portraying the loss of learned information over time - and postulated that it can be curbed by reviewing such information at several intervals over a period of time.`;
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
+let count = 0;
 const MainPage = () => {
+  console.log({ mainPage: count++ });
   const navigate = useNavigate();
 
   const { getUserData } = useMyUser();
@@ -49,14 +54,12 @@ const MainPage = () => {
   const [activeTask, setActiveTask] = useState(null);
   const { mountBtn } = useTelegram();
 
-  const formatDate = (date) => {
+  const formatDate = useCallback((date) => {
     const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    return dayjs(date).tz(userLocalTz).format("YYYY-MM-DD");
-  };
+    return dayjs(date).tz(userLocalTz).format('YYYY-MM-DD');
+  }, []);
 
-  // const stringDate = formatDate(Date.now())
   const stringDate = useCallback(() => {
-    // console.log('triggered stringDate')
     return formatDate(Date.now());
   }, []);
 
@@ -81,6 +84,7 @@ const MainPage = () => {
       setActiveTaskDates(selectedTask.dates);
     }
   };
+
   const goActiveTaskDay = (index) => {
     const selectedTaskDay = sortedArray[index];
     if (index == activeTaskDay) {
@@ -92,13 +96,13 @@ const MainPage = () => {
     }
   };
 
-  const toggleMode = (param) => {
+  const toggleMode = useCallback((param) => {
     if (param) {
       setTodayMode(param);
       setActiveTaskDay(null);
       setActiveTask(null);
     }
-  };
+  }, []);
 
   const sortedArray = useMemo(() => {
     const today = new Date();
@@ -122,8 +126,8 @@ const MainPage = () => {
 
     // Sort the mapped array based on the local state
     return mappedArray.sort((a, b) => {
-      const isAToComplete = a.localState === "tocomplite";
-      const isBToComplete = b.localState === "tocomplite";
+      const isAToComplete = a.localState === 'tocomplite';
+      const isBToComplete = b.localState === 'tocomplite';
 
       if (isAToComplete === isBToComplete) return 0;
       else if (isAToComplete) return -1;
@@ -158,19 +162,19 @@ const MainPage = () => {
   const filteredTasks = useMemo(() => {
     // Filter tasks based on todayMode and local state
     // console.log('filterTask rerender')
-    if (todayMode === "all") {
+    if (todayMode === 'all') {
       // console.log('filter task all')
       mappedTasks.reverse();
       mappedTasks.sort((a, b) => {
-        const isAToComplete = a.localState === "tocomplite";
-        const isBToComplete = b.localState === "tocomplite";
+        const isAToComplete = a.localState === 'tocomplite';
+        const isBToComplete = b.localState === 'tocomplite';
         if (isAToComplete === isBToComplete) return 0;
         else if (isAToComplete) return -1;
         else return 1;
       });
       let mappedTasks2 = mappedTasks.filter((task) => !task.completed);
       return mappedTasks2;
-    } else if (todayMode === "completed") {
+    } else if (todayMode === 'completed') {
       // console.log('completed')
       let tasks2 = mappedTasks.filter((task) => task.completed);
       return tasks2;
@@ -180,52 +184,59 @@ const MainPage = () => {
     // return mappedTasks
   }, [todayMode, mappedTasks]);
 
-  const createFunc = () => {
-    navigate("/echo/create");
+  const createFunc = useCallback(() => {
+    navigate('/echo/create');
     uEchoModal(false);
-  };
+  }, []);
 
-  const readfunc = (obj) => {
+  const readfunc = useCallback((obj) => {
     uActiveEcho(obj);
-    uCrudMode("read");
+    uCrudMode('read');
     uEchoModal(true);
-  };
-  const updateFunc = (obj) => {
+  }, []);
+
+  const updateFunc = useCallback((obj) => {
     uActiveEcho(obj);
     uEchoModal(false);
-    navigate("/echo/edit");
-  };
+    navigate('/echo/edit');
+  }, []);
 
-  const delfunc = (obj) => {
-    uCrudMode("remove");
+  const delfunc = useCallback((obj) => {
+    uCrudMode('remove');
     uEchoModal(true);
     uActiveEcho(obj);
-  };
+  }, []);
 
-  const arrFunc = [
-    { name: "Open", func: readfunc },
-    { name: "Edit", func: updateFunc },
-    { name: "Remove", func: delfunc },
-  ];
+  const arrFunc = useMemo(
+    () => [
+      { name: 'Open', func: readfunc },
+      { name: 'Edit', func: updateFunc },
+      { name: 'Remove', func: delfunc },
+    ],
+    []
+  );
 
-  const activeDateFunc = (activedate) => {
-    // console.log('33333333333333')
-    setActiveTask(null);
-    toggleMode("day");
-    setActiveTaskDates([]);
-    const filteredTasks = taskArr.filter((task) =>
-      task.dates.some((date) => isDateInTaskDates(date, activedate))
-    );
+  const activeDateFunc = useCallback(
+    (activedate) => {
+      console.log({ activedate });
+      setActiveTask(null);
+      toggleMode('day');
+      setActiveTaskDates([]);
+      const filteredTasks = taskArr.filter((task) =>
+        task.dates.some((date) => isDateInTaskDates(date, activedate))
+      );
 
-    setPickedDateEchos(filteredTasks);
-  };
+      setPickedDateEchos(filteredTasks);
+    },
+    [taskArr]
+  );
 
   useEffect(() => {
-    const isTourGuideMain = localStorage.getItem("maintour");
+    const isTourGuideMain = localStorage.getItem('maintour');
     if (isTourGuideMain) {
       telegramApp.MainButton.show();
     }
-    mountBtn(createFunc, "Create echo");
+    mountBtn(createFunc, 'Create echo');
     telegramApp.BackButton.hide();
 
     if (selectedDate == null) {
@@ -239,7 +250,7 @@ const MainPage = () => {
     }
   }, [taskArr, selectedDate]);
 
-  const pushFakeEcho = () => {
+  const pushFakeEcho = useCallback(() => {
     const currentDate = new Date();
     currentDate.setDate(currentDate.getDate() - 1);
     const intervals = [0, 1, 3, 10, 30, 60];
@@ -249,10 +260,6 @@ const MainPage = () => {
       date.setDate(currentDate.getDate() + interval);
       return date.toISOString();
     });
-
-    const newEchoName = "First echo. What is spaced repetition?";
-    const newEchoContext = `
-    The method of spaced repetition was first conceived of in the 1880s by German scientist Hermann Ebbinghaus. Ebbinghaus created the forgetting curve - a graph portraying the loss of learned information over time - and postulated that it can be curbed by reviewing such information at several intervals over a period of time.`;
 
     const iddate = new Date().toISOString();
 
@@ -276,107 +283,109 @@ const MainPage = () => {
     setActiveTaskDay(0);
 
     setActiveTaskDates(dates);
-  };
+  }, [selectedDate, uTaskArr]);
 
-  const newSteps = [
-    {
-      id: "step-1",
-      canClickTarget: false,
+  const newSteps = useMemo(
+    () => [
+      {
+        id: 'step-1',
+        canClickTarget: false,
 
-      beforeShowPromise: function () {
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            window.scrollTo(0, 0);
-            resolve();
-          }, 500);
-        });
-      },
-      when: {
-        show: () => {
-          localStorage.setItem("maintour", "true");
-          uMainPageGuide(true);
-          pushFakeEcho();
+        beforeShowPromise: function () {
+          return new Promise(function (resolve) {
+            setTimeout(function () {
+              window.scrollTo(0, 0);
+              resolve();
+            }, 500);
+          });
         },
-      },
-      buttons: [
-        {
-          classes: "shepherd-button-primary",
-          text: "Start",
-          type: "next",
+        when: {
+          show: () => {
+            localStorage.setItem('maintour', 'true');
+            uMainPageGuide(true);
+            pushFakeEcho();
+          },
         },
-      ],
-      title: "1/4 Quick tour",
-      text: "Let me guide you with main functionality",
-    },
-    {
-      id: "step-2",
-      canClickTarget: false,
-      attachTo: { element: ".tasklist", on: "top" },
+        buttons: [
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Start',
+            type: 'next',
+          },
+        ],
+        title: '1/4 Quick tour',
+        text: 'Let me guide you with main functionality',
+      },
+      {
+        id: 'step-2',
+        canClickTarget: false,
+        attachTo: { element: '.tasklist', on: 'top' },
 
-      buttons: [
-        {
-          classes: "shepherd-button-secondary",
-          text: "Back",
-          type: "back",
-        },
-        {
-          classes: "shepherd-button-primary",
-          text: "Next",
-          type: "next",
-        },
-      ],
-      title: "2/4 Echo list",
-      text: "Here will be all of your created echoes. \n \nYou can track if there is something to repeat for today or visit rest of them.",
-    },
-    {
-      id: "step-3",
-      canClickTarget: false,
-      attachTo: { element: ".mycalendar", on: "top" },
-      buttons: [
-        {
-          classes: "shepherd-button-secondary",
-          text: "Back",
-          type: "back",
-        },
-        {
-          classes: "shepherd-button-primary",
-          text: "Next",
-          type: "next",
-        },
-      ],
-      title: "3/4 Learning plan",
-      text: "All of your created echoes have repetitions intervals and will be displayed on a calendar plan",
-    },
-    {
-      id: "step-4",
-      canClickTarget: false,
-      attachTo: {
-        element: platformCheck == "unknown" ? ".createchobutt" : ".onepix",
-        on: "top",
+        buttons: [
+          {
+            classes: 'shepherd-button-secondary',
+            text: 'Back',
+            type: 'back',
+          },
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Next',
+            type: 'next',
+          },
+        ],
+        title: '2/4 Echo list',
+        text: 'Here will be all of your created echoes. \n \nYou can track if there is something to repeat for today or visit rest of them.',
       },
-      buttons: [
-        {
-          classes: "shepherd-button-secondary",
-          text: "Back",
-          type: "back",
-        },
-        {
-          classes: "shepherd-button-primary",
-          text: "Finish",
-          type: "next",
-        },
-      ],
-      when: {
-        show: () => {
-          telegramApp.MainButton.show();
-        },
+      {
+        id: 'step-3',
+        canClickTarget: false,
+        attachTo: { element: '.mycalendar', on: 'top' },
+        buttons: [
+          {
+            classes: 'shepherd-button-secondary',
+            text: 'Back',
+            type: 'back',
+          },
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Next',
+            type: 'next',
+          },
+        ],
+        title: '3/4 Learning plan',
+        text: 'All of your created echoes have repetitions intervals and will be displayed on a calendar plan',
       },
-      title: "4/4 First step",
-      text: "Simply click Create echo and  add some information you want to learn with spaced repetition.",
-    },
-  ];
+      {
+        id: 'step-4',
+        canClickTarget: false,
+        attachTo: {
+          element: platformCheck == 'unknown' ? '.createchobutt' : '.onepix',
+          on: 'top',
+        },
+        buttons: [
+          {
+            classes: 'shepherd-button-secondary',
+            text: 'Back',
+            type: 'back',
+          },
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Finish',
+            type: 'next',
+          },
+        ],
+        when: {
+          show: () => {
+            telegramApp.MainButton.show();
+          },
+        },
+        title: '4/4 First step',
+        text: 'Simply click Create echo and  add some information you want to learn with spaced repetition.',
+      },
+    ],
+    [platformCheck, pushFakeEcho]
+  );
 
-  // console.log("main comp RERENDER!");
 
   return (
     <div className={styles.mainPage}>
@@ -421,7 +430,7 @@ const MainPage = () => {
             </div>
           ) : (
             <>
-              {todayMode == "day" ? (
+              {todayMode == 'day' ? (
                 <>
                   {selectedDate ? (
                     <>
@@ -436,7 +445,7 @@ const MainPage = () => {
 
                             if (item.content.length > maxChar) {
                               truncatedContent =
-                                item.content.substring(0, maxChar) + "...";
+                                item.content.substring(0, maxChar) + '...';
                             }
 
                             const localState = item.localState;
@@ -452,10 +461,10 @@ const MainPage = () => {
                                 key={index}
                               >
                                 <div className={styles.taskItem}>
-                                  {" "}
+                                  {' '}
                                   <div className={styles.repeat}>
                                     <h4 className={`${styles.waves} `}>
-                                      {localState == "tocomplite" ? (
+                                      {localState == 'tocomplite' ? (
                                         <MdEventRepeat />
                                       ) : (
                                         <FaRegCalendarCheck
@@ -499,10 +508,10 @@ const MainPage = () => {
                                           className={styles.linksvg}
                                         />
                                         <p>
-                                          {item.links.length}{" "}
+                                          {item.links.length}{' '}
                                           {item.links.length == 1
-                                            ? "link"
-                                            : "links"}{" "}
+                                            ? 'link'
+                                            : 'links'}{' '}
                                         </p>
                                       </div>
                                     ) : (
@@ -526,10 +535,10 @@ const MainPage = () => {
                           })
                         ) : (
                           <p>
-                            You don’t have echos for{" "}
+                            You don’t have echos for{' '}
                             {formatDate(selectedDate) == stringDate
-                              ? "today"
-                              : "this day"}
+                              ? 'today'
+                              : 'this day'}
                             .
                           </p>
                         )}
@@ -550,7 +559,7 @@ const MainPage = () => {
 
                       if (item.content.length > maxChar) {
                         truncatedContent =
-                          item.content.substring(0, maxChar) + "...";
+                          item.content.substring(0, maxChar) + '...';
                       }
 
                       const localState = item.localState;
@@ -566,10 +575,10 @@ const MainPage = () => {
                           key={index}
                         >
                           <div className={styles.taskItem}>
-                            {" "}
+                            {' '}
                             <div className={styles.repeat}>
                               <h4 className={`${styles.waves} `}>
-                                {localState == "tocomplite" ? (
+                                {localState == 'tocomplite' ? (
                                   <MdEventRepeat />
                                 ) : (
                                   <GoDotFill className={styles.icomode} />
@@ -622,12 +631,12 @@ const MainPage = () => {
                     })
                   ) : (
                     <p className={styles.somep}>
-                      {todayMode == "all" &&
+                      {todayMode == 'all' &&
                         'You don’t have echos now. \n Click "Create echo" to start.'}
-                      {todayMode == "today" &&
-                        "You don’t have echos for today. \n\n Learn something new and then Create echo"}
-                      {todayMode == "completed" &&
-                        "You don’t have completed echos yet."}
+                      {todayMode == 'today' &&
+                        'You don’t have echos for today. \n\n Learn something new and then Create echo'}
+                      {todayMode == 'completed' &&
+                        'You don’t have completed echos yet.'}
                     </p>
                   )}
                 </div>
@@ -638,7 +647,7 @@ const MainPage = () => {
       </div>
       <QuoteDay />
 
-      {!echoModal && platformCheck == "unknown" ? (
+      {!echoModal && platformCheck == 'unknown' ? (
         <div className={styles.createDiv}>
           <button
             onClick={createFunc}
