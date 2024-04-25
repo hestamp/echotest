@@ -26,7 +26,6 @@ const EchoChecker = () => {
 
   useEffect(() => {
     if (activeEcho && renderText == null) {
-      // console.log(activeEcho)
       const oneSent = getRandomSBD(activeEcho.content)
       setRenderText(oneSent)
     }
@@ -45,7 +44,6 @@ const EchoChecker = () => {
       newStat = myUserData.stats.repetitionEchoes.count + 1
     } else {
       newStat = 0
-      // console.log('rest', isStreak)
     }
 
     uMyUserData((prevUserData) => ({

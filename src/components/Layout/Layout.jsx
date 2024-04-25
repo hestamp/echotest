@@ -5,9 +5,6 @@ import { Navbar } from '..';
 import Sidebar from './Sidebar';
 import styles from './Sidebar.module.css';
 
-
-let count = 0;
-
 const Layout = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -18,7 +15,7 @@ const Layout = memo(() => {
   const closeSidebar = useCallback(() => {
     setIsOpen(false);
   }, []);
-  console.log({ sidebar: count++ });
+
 
   return (
     <ReactSidebar
@@ -37,6 +34,7 @@ const Layout = memo(() => {
       <div className={styles.routewrap}>
         <Outlet />
       </div>
+      <div className="onepix"></div>
     </ReactSidebar>
   );
 });

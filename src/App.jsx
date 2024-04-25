@@ -1,29 +1,13 @@
 import { useCallback, useEffect } from 'react';
 import 'balloon-css';
 import styles from './App.module.css';
-
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
-
+import { useNavigate, useRoutes } from 'react-router-dom';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-import {
-  EditEchoPage,
-  NewEchoPage,
-  EchoSystemPage,
-  NotificationPage,
-  HowToUsePage,
-  InfoPage,
-  StatPage,
-  AchivePage,
-  GuidePage,
-  SettingsPage,
-  MainPage,
-} from '@/pages';
 
 import { telegramApp, useTelegram } from './hooks/useTelegram';
 import {
@@ -37,16 +21,14 @@ import {
   useMyUser,
 } from './storage';
 
-import { levelNamesBar, staticAchiveNames } from './slug/data';
+import { levelNamesBar } from './slug/data';
 
 import { quotesDayArray } from './static/quotes';
 
 import {
   EchoReader,
   EchoRemover,
-  Navbar,
   NotificationPicker,
-  MySidebar,
   MyNewModal,
   MyLoader,
 } from '@/components/';
@@ -54,14 +36,12 @@ import {
 import { getRandomQuote } from './utils/textUtils';
 import EchoChecker from './components/EchoChecker/EchoChecker';
 import { slugData } from './utils/slugdata';
+import router from './pages/router';
 
 function App() {
   const navigate = useNavigate();
 
-  const locationCheck = useLocation();
-
-  const isMainPage = locationCheck.pathname === '/';
-  const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote();
+  const { myQuote, uMyQuote, uIsQuotes } = useMyQuote();
   const { checkrunAndExpand } = useTelegram();
 
   const { uTaskArr, uActiveEcho } = useMyMainContext();
@@ -86,7 +66,7 @@ function App() {
     setIsSendData,
   } = useMyLogic();
 
-  const { successToast, errorToast } = useMyToaster();
+  const { errorToast } = useMyToaster();
 
   const { setActiveLvl } = useMyStats();
 
@@ -99,7 +79,6 @@ function App() {
   } = useMyNotification();
 
   const {
-    // isTourGuideCache,
     uIsCheckGuide,
     uIsTourGuideCache,
     uMainPageGuide,
@@ -197,7 +176,6 @@ function App() {
       }
       if (responseData.user) {
         const userObj = responseData.user;
-        // console.log(userObj)
         setIsSendData(true);
         uTaskArr(userObj.echos);
         uMyUserData(userObj);
@@ -217,7 +195,6 @@ function App() {
           uCreateEchoGuide(true);
         }
       }
-      // console.log(responseData)
     } catch (error) {
       errorToast(`Something went wrong \n Please, reload the app`);
     } finally {
@@ -230,6 +207,10 @@ function App() {
     navigate('/settings');
   };
 
+  const backButt = () => {
+    navigate(-1);
+  };
+
   useEffect(() => {
     if (telegramApp?.initDataUnsafe?.user?.id && !isSendData) {
       const initDataUnsafe = telegramApp.initDataUnsafe;
@@ -237,7 +218,6 @@ function App() {
       const platform = telegramApp.platform;
 
       authUser(tgid, initDataUnsafe, platform);
-      // console.log('trigger auth data')
     } else {
       uGetUserData(true);
       uTaskArr(slugData.echos);
@@ -313,6 +293,8 @@ function App() {
     }
   }, [myUserData]);
 
+  const routes = useRoutes(router);
+
   return (
     <div className={styles.App}>
       <MyLoader isLoading={isLoading} />
@@ -340,30 +322,7 @@ function App() {
           <MyNewModal noClose isOpen={isTimeModal && firstTimeNotif}>
             <NotificationPicker />
           </MyNewModal>
-          <MySidebar sidebarOpen={isSidebar} setSidebarOpen={uIsSidebar}>
-            {!isMainPage && <Navbar />}
-            <div className={styles.routewrap}>
-              <Routes>
-                <Route exact path="/main" element={<MainPage />} />
-                <Route exact path="/settings" element={<SettingsPage />} />
-                <Route exact path="/" element={<GuidePage />} />
-                <Route exact path="/achivements" element={<AchivePage />} />
-                <Route exact path="/stats" element={<StatPage />} />
-                <Route exact path="/info" element={<InfoPage />} />
-                <Route exact path="/info/howto" element={<HowToUsePage />} />
-                <Route exact path="/info/system" element={<EchoSystemPage />} />
-                <Route
-                  exact
-                  path="/info/notif"
-                  element={<NotificationPage />}
-                />
-                <Route exact path="/echo/create" element={<NewEchoPage />} />
-                <Route exact path="/echo/edit" element={<EditEchoPage />} />
-              </Routes>
-            </div>
-
-            <div className="onepix"></div>
-          </MySidebar>
+          {routes}
         </div>
       </div>
     </div>
