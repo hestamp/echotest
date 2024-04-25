@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 import styles from './EchoRemover.module.css';
 
 import {
@@ -20,27 +20,8 @@ const EchoRemover = memo(() => {
 
   const { myUserData, uMyUserData } = useMyUser();
 
-  const {
-    crudMode,
-    uCrudMode,
-    echoModal,
-    uEchoModal,
-    WEBAPP_URL,
-    platformCheck,
-  } = useMyLogic();
+  const { uCrudMode, uEchoModal, WEBAPP_URL } = useMyLogic();
   const { successToast, errorToast } = useMyToaster();
-  const [tempName, setTempName] = useState('');
-  const [tempContent, setTempContent] = useState('');
-
-  const [linkArr, setLinkArr] = useState([]);
-
-  useEffect(() => {
-    if (activeEcho) {
-      setTempName(activeEcho.name);
-      setTempContent(activeEcho.content);
-      setLinkArr(activeEcho.links);
-    }
-  }, [activeEcho]);
 
   const removeFunc = async () => {
     const newArr = taskArr.filter((item) => item.id !== activeEcho.id);

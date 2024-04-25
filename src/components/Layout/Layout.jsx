@@ -3,6 +3,7 @@ import ReactSidebar from 'react-sidebar';
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '..';
 import Sidebar from './Sidebar';
+import AppStyles from '../../App.module.css';
 import styles from './Sidebar.module.css';
 
 const Layout = memo(() => {
@@ -15,7 +16,6 @@ const Layout = memo(() => {
   const closeSidebar = useCallback(() => {
     setIsOpen(false);
   }, []);
-
 
   return (
     <ReactSidebar
@@ -31,7 +31,7 @@ const Layout = memo(() => {
       styles={{ sidebar: { background: 'white' } }}
     >
       <Navbar openSidebar={openSidebar} closeSidebar={closeSidebar} />
-      <div className={styles.routewrap}>
+      <div className={AppStyles.routewrap}>
         <Outlet />
       </div>
       <div className="onepix"></div>
