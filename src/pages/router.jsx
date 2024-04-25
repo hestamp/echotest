@@ -15,12 +15,12 @@ import Layout from '@/components/Layout/Layout';
 
 const router = [
   {
-    path: '/',
-    element: <GuidePage />,
-  },
-  {
     element: <Layout />,
     children: [
+      {
+        path: '/',
+        element: <GuidePage />,
+      },
       {
         path: '/main',
         element: <MainPage />,

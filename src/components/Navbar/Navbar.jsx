@@ -15,12 +15,10 @@ const Navbar = memo(({ openSidebar, closeSidebar }) => {
         <button onClick={openSidebar} className={styles.activebutt}>
           <TbMenu2 className={styles.menu} />
         </button>
-        {activeLevel ? (
-          <Link onClick={closeSidebar} className={styles.rest} to={'/stats'}>
+        {activeLevel && (
+          <Link onClick={closeSidebar} className={styles.rest} to="/stats">
             <AchiveBar activeAchive={activeLevel} />
           </Link>
-        ) : (
-          <></>
         )}
         <Link
           onClick={closeSidebar}

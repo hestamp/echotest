@@ -213,7 +213,6 @@ export const MyStorageProvider = ({ children }) => {
       isQuotes,
       isReadGuide,
       isSendData,
-
       isTimeModal,
       isTourGuideCache,
       mainButtFunc,

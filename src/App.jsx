@@ -137,12 +137,9 @@ function App() {
 
   useEffect(() => {
     const newTz = dayjs.tz.guess();
-
     const userTimeZone =
       newTz || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-
     localStorage.setItem('timezone', userTimeZone);
-
     uUserTz(newTz);
   }, []);
 

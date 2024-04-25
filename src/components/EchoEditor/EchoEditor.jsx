@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import styles from './EchoEditor.module.css';
 import { useNavigate } from 'react-router-dom';
 
@@ -16,7 +16,7 @@ const EchoEditor = () => {
   const { taskArr, uTaskArr, activeEcho, uActiveEcho } = useMyMainContext();
   const navigate = useNavigate();
   const { myUserData, uMyUserData } = useMyUser();
-  const { echoModal, uEchoModal, WEBAPP_URL } = useMyLogic();
+  const { uEchoModal, WEBAPP_URL } = useMyLogic();
   const { successToast, errorToast } = useMyToaster();
   const { mountBtn } = useTelegram();
 
@@ -60,7 +60,7 @@ const EchoEditor = () => {
       navigate('/main');
       successToast('Echo updated');
       if (myUserData?.authId) {
-        const data = await editServerEcho(updatedEcho);
+        await editServerEcho(updatedEcho);
       }
 
       uEchoModal(false);
