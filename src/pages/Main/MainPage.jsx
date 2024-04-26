@@ -32,7 +32,7 @@ dayjs.extend(timezone);
 
 const MainPage = () => {
   const navigate = useNavigate();
-  console.log('main page');
+
   const { getUserData } = useMyUser();
 
   const {
@@ -217,7 +217,6 @@ const MainPage = () => {
 
   const activeDateFunc = useCallback(
     (activedate) => {
-      console.log({ activedate });
       setActiveTask(null);
       toggleMode('day');
       setActiveTaskDates([]);
