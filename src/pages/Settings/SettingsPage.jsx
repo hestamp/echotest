@@ -1,19 +1,13 @@
 import { useCallback, useEffect, useState } from 'react';
 import styles from './SettingsPage.module.css';
 import { MyInput, MyToggle } from '@/components/';
-import {
-  useMyLogic,
-  useMyNotification,
-  useMyQuote,
-  useMyUser,
-} from '@/storage';
+import { useMyLogic, useMyNotification, useMyUser } from '@/storage';
 
 import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 import { errorToast, successToast } from '@/utils/toast';
 
 const SettingsPage = () => {
   const { myUserData, uMyUserData } = useMyUser();
-  const { uIsQuotes } = useMyQuote();
   const { WEBAPP_URL } = useMyLogic();
   const [tempName, setTempName] = useState('');
   const [tempQuoteBool, setTempQuoteBool] = useState(true);
@@ -36,16 +30,6 @@ const SettingsPage = () => {
     uFirstTimeNotif(true);
   };
 
-  const toggleMyQuote = () => {
-    const newStat = !tempQuoteBool;
-    if (newStat == false) {
-      localStorage.setItem('quotes', 'false');
-    } else {
-      localStorage.setItem('quotes', 'true');
-    }
-    uIsQuotes(newStat);
-    setTempQuoteBool(newStat);
-  };
   const toggleMyBasicNotif = () => {
     const newStat = !getAllNotif;
 
@@ -68,7 +52,7 @@ const SettingsPage = () => {
 
       if (myUserData.quotes) {
         const userQuotes = myUserData.quotes == 'false' ? false : true;
-        uIsQuotes(userQuotes);
+        // uIsQuotes(userQuotes);
         setTempQuoteBool(userQuotes);
       }
     }
@@ -246,7 +230,7 @@ const SettingsPage = () => {
                   <h4>Show quotes</h4>
                   <MyToggle
                     toggleStatus={tempQuoteBool}
-                    toggleChange={toggleMyQuote}
+                    // toggleChange={toggleMyQuote}
                     toggleId="quote-toggle"
                     toggleName=""
                   />

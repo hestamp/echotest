@@ -24,12 +24,10 @@ const TypingAnimation = ({ text }) => {
   const CursorSVG = () => <p className={styles.cursor}> </p>
 
   return (
-    <>
       <span className={styles.runcursor}>
         {displayResponse}
         {!completedTyping && <CursorSVG />}
       </span>
-    </>
   )
 }
 

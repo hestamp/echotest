@@ -15,14 +15,11 @@ import {
   useMyLogic,
   useMyMainContext,
   useMyNotification,
-  useMyQuote,
   useMyStats,
   useMyUser,
 } from './storage';
 
 import { levelNamesBar } from './slug/data';
-
-import { quotesDayArray } from './static/quotes';
 
 import {
   EchoReader,
@@ -32,7 +29,6 @@ import {
   MyLoader,
 } from '@/components/';
 
-import { getRandomQuote } from './utils/textUtils';
 import EchoChecker from './components/EchoChecker/EchoChecker';
 import { slugData } from './utils/slugdata';
 import router from './pages/router';
@@ -41,7 +37,6 @@ import { errorToast } from './utils/toast';
 function App() {
   const navigate = useNavigate();
 
-  const { myQuote, uMyQuote, uIsQuotes } = useMyQuote();
   const { checkrunAndExpand } = useTelegram();
 
   const { uTaskArr, uActiveEcho } = useMyMainContext();
@@ -88,7 +83,6 @@ function App() {
     checkrunAndExpand();
 
     const isGuideDone = localStorage.getItem('guide');
-    const isActiveQuote = localStorage.getItem('quotes');
     const isTourGuideMain = localStorage.getItem('maintour');
     const isTourGuideCreate = localStorage.getItem('createtour');
     const isReadGuide = localStorage.getItem('readtour');
@@ -126,11 +120,6 @@ function App() {
       uCreateEchoGuide(false);
     }
     uIsTourGuideCache(true);
-    if (isActiveQuote == 'false') {
-      uIsQuotes(false);
-    } else {
-      uIsQuotes(true);
-    }
   }, []);
 
   useEffect(() => {
@@ -259,15 +248,6 @@ function App() {
       uPlatformCheck('unknown');
     }
   }, [telegramApp?.platform]);
-
-  useEffect(() => {
-    if (!myQuote && quotesDayArray) {
-      const newQuote = getRandomQuote(quotesDayArray);
-      uMyQuote(newQuote);
-    }
-
-    telegramApp.SettingsButton.show();
-  }, [myQuote]);
 
   const closeFullModal = useCallback(() => {
     uEchoModal(false);

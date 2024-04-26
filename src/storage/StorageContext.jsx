@@ -50,9 +50,6 @@ export const MyStorageProvider = ({ children }) => {
   const [backButtMounted, uBackButtMounted] = useState(false);
   const [settingButtMounted, uSettingButtMounted] = useState(false);
 
-  //Quotes
-  const [isQuotes, uIsQuotes] = useState(null);
-  const [myQuote, uMyQuote] = useState(null);
 
   // Notifications
   const [isTimeModal, uIsTimeModal] = useState(false);
@@ -156,7 +153,7 @@ export const MyStorageProvider = ({ children }) => {
         settingButtMounted,
         uSettingButtMounted,
       },
-      quote: { myQuote, uMyQuote, isQuotes, uIsQuotes },
+
       achivements: { allAchives, uAllAchives, activeAchive, uActiveAchive },
       // toaster: { successToast, errorToast, customToast, noteToast },
     }),
@@ -176,14 +173,12 @@ export const MyStorageProvider = ({ children }) => {
       getUserData,
       isCheckGuide,
       isLoading,
-      isQuotes,
       isReadGuide,
       isSendData,
       isTimeModal,
       isTourGuideCache,
       mainButtFunc,
       mainPageGuide,
-      myQuote,
       myUserData,
       pickedDateEchos,
       platformCheck,

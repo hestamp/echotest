@@ -1,18 +1,17 @@
-import { memo } from 'react';
+import { memo,  } from 'react';
 import styles from './QuoteDay.module.css';
-import { useMyQuote } from '@/storage';
-
 import { MdNavigateNext } from 'react-icons/md';
 import { GrFormViewHide } from 'react-icons/gr';
-
 import { quotesDayArray } from '@/static/quotes';
 import { copyToClipboard, getRandomQuote } from '@/utils/textUtils';
 import TypingAnimation from '../TypingAnimation/TypingAnimation';
 import { successToast } from '@/utils/toast';
+import useQuotes from '@/hooks/quotes/useQuotes';
 
 const QuoteDay = memo(() => {
-  const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote();
-  console.log('quoteday');
+
+  //Quotes
+  const { myQuote, uMyQuote, setIsQuote, isQuotes } = useQuotes();
 
   const copyQuote = () => {
     const context = myQuote.quote + ' ' + myQuote.author;
@@ -32,10 +31,10 @@ const QuoteDay = memo(() => {
     const newQuote = getRandomQuote(quotesDayArray);
     uMyQuote(newQuote);
   };
+
   const hideFunc = () => {
-    localStorage.setItem('quotes', 'false');
+    setIsQuote(false);
     successToast('Quotes is hidden for now \n You can change it in settings');
-    uIsQuotes(false);
   };
 
   return (
@@ -53,9 +52,7 @@ const QuoteDay = memo(() => {
               </div>
             </div>
             <blockquote onClick={copyQuote} className={styles.quote}>
-              <>
-                <TypingAnimation text={`${myQuote.quote} `} />
-              </>
+              <TypingAnimation text={`${myQuote.quote} `} />
             </blockquote>
             <div className={styles.bottdiv}>
               <button onClick={hideFunc} aria-label="Hide">

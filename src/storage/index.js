@@ -15,15 +15,6 @@ export function useMyNotification() {
   }
   return notification
 }
-export function useMyQuote() {
-  const { quote } = useContext(StorageContext)
-
-  if (!quote) {
-    throw new Error('No Quote')
-  }
-
-  return quote
-}
 
 export function useMyMainContext() {
   const { mainpage } = useContext(StorageContext)
