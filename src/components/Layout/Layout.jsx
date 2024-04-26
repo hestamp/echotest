@@ -17,7 +17,7 @@ const Layout = memo(() => {
   const closeSidebar = useCallback(() => {
     setIsOpen(false);
   }, []);
-
+  console.log('Layout');
   return (
     <ReactSidebar
       sidebar={

@@ -45,8 +45,6 @@ const EchoEditor = () => {
         links: linkArr,
       };
 
-      // console.log(updatedEcho)
-
       const updatedTaskArr = [...taskArr];
 
       const indexToUpdate = updatedTaskArr.findIndex(

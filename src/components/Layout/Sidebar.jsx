@@ -6,7 +6,7 @@ import styles from './Sidebar.module.css';
 
 const Sidebar = ({ closeSidebar }) => {
   const location = useLocation();
-
+  console.log('sidebar');
   const isActive = useCallback(
     (to) => {
       if (to === location.pathname) return true;

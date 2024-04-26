@@ -29,11 +29,10 @@ const newEchoContext = `
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
-let count = 0;
-const MainPage = () => {
-  console.log({ mainPage: count++ });
-  const navigate = useNavigate();
 
+const MainPage = () => {
+  const navigate = useNavigate();
+  console.log('main page');
   const { getUserData } = useMyUser();
 
   const {
@@ -385,7 +384,6 @@ const MainPage = () => {
     ],
     [platformCheck, pushFakeEcho]
   );
-
 
   return (
     <div className={styles.mainPage}>

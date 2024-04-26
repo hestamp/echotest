@@ -1,4 +1,4 @@
-import React from 'react';
+import { memo } from 'react';
 import styles from './QuoteDay.module.css';
 import { useMyQuote, useMyToaster } from '@/storage';
 
@@ -9,9 +9,9 @@ import { quotesDayArray } from '@/static/quotes';
 import { copyToClipboard, getRandomQuote } from '@/utils/textUtils';
 import TypingAnimation from '../TypingAnimation/TypingAnimation';
 
-const QuoteDay = () => {
+const QuoteDay = memo(() => {
   const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote();
-  // console.log('quote rrr11111111111')
+  console.log('quoteday');
 
   const { successToast } = useMyToaster();
 
@@ -78,6 +78,8 @@ const QuoteDay = () => {
       </div>
     </div>
   );
-};
+});
 
-export default React.memo(QuoteDay);
+QuoteDay.displayName = 'QuoteDay';
+
+export default QuoteDay;
