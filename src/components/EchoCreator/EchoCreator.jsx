@@ -1,44 +1,40 @@
-import  { useCallback, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import styles from './EchoCreator.module.css'
+import { useCallback, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styles from './EchoCreator.module.css';
 
-import { MyInput, MyTextarea, AddLinksBlock } from '@/components/'
-import { isDayStreakDone } from '@/utils/objUtils'
-import { telegramApp, useTelegram } from '@/hooks/useTelegram'
+import { MyInput, MyTextarea, AddLinksBlock } from '@/components/';
+import { isDayStreakDone } from '@/utils/objUtils';
+import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 
-import {
-  useMyLogic,
-  useMyMainContext,
-  useMyToaster,
-  useMyUser,
-} from '@/storage'
+import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
+import { errorToast, noteToast, successToast } from '@/utils/toast';
 
 const EchoCreator = () => {
-  const { taskArr, uTaskArr } = useMyMainContext()
-  const { myUserData, uMyUserData } = useMyUser()
-  const { uEchoModal, WEBAPP_URL, platformCheck } = useMyLogic()
-  const { successToast, errorToast, noteToast } = useMyToaster()
-  const { mountBtn } = useTelegram()
-  const navigate = useNavigate()
-  const [newEchoName, uNewEchoName] = useState('')
-  const [newEchoContext, uNewEchoContext] = useState('')
-  const [isAddLink, setIsAddLink] = useState(false)
-  const [editLink, setEditLink] = useState('')
-  const [editMode, setEditMode] = useState('add')
-  const [linkArr, setLinkArr] = useState([])
-  const [currentEdited, setCurrentEdited] = useState()
+  const { taskArr, uTaskArr } = useMyMainContext();
+  const { myUserData, uMyUserData } = useMyUser();
+  const { uEchoModal, WEBAPP_URL, platformCheck } = useMyLogic();
 
-  const currentDate = new Date()
-  const tomorrow = new Date(currentDate)
-  tomorrow.setDate(currentDate.getDate() + 1)
+  const { mountBtn } = useTelegram();
+  const navigate = useNavigate();
+  const [newEchoName, uNewEchoName] = useState('');
+  const [newEchoContext, uNewEchoContext] = useState('');
+  const [isAddLink, setIsAddLink] = useState(false);
+  const [editLink, setEditLink] = useState('');
+  const [editMode, setEditMode] = useState('add');
+  const [linkArr, setLinkArr] = useState([]);
+  const [currentEdited, setCurrentEdited] = useState();
 
-  const options = { day: 'numeric', month: 'long' }
-  const formattedDate = tomorrow.toLocaleDateString('en-US', options)
+  const currentDate = new Date();
+  const tomorrow = new Date(currentDate);
+  tomorrow.setDate(currentDate.getDate() + 1);
 
-  let newerr = null
+  const options = { day: 'numeric', month: 'long' };
+  const formattedDate = tomorrow.toLocaleDateString('en-US', options);
+
+  let newerr = null;
   const createEcho = async (newEchoData, newDate, newStat) => {
-    const streakStat = newStat
-    const streakDate = newDate
+    const streakStat = newStat;
+    const streakDate = newDate;
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/echos/create`, {
         method: 'PATCH',
@@ -51,53 +47,53 @@ const EchoCreator = () => {
           repStat: streakStat,
           repDate: streakDate,
         }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok.')
+        throw new Error('Network response was not ok.');
       }
 
-      const contentType = response.headers.get('content-type')
+      const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Response not JSON')
+        throw new Error('Response not JSON');
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data) {
         if (data.userStats) {
           uMyUserData((prevUserData) => ({
             ...prevUserData,
             stats: data.userStats,
-          }))
+          }));
         }
       } else {
-        errorToast('Problem with creating echo')
+        errorToast('Problem with creating echo');
       }
     } catch (error) {
       // console.error()
 
-      errorToast(`Something went wrong. Please try again. ${error}`)
+      errorToast(`Something went wrong. Please try again. ${error}`);
 
       if (error?.response?.status === 429) {
-        errorToast('Too many requests. Please wait a little bit.')
+        errorToast('Too many requests. Please wait a little bit.');
       }
     }
-  }
+  };
 
   const updateStatDates = (date, isStreak) => {
-    const newDate = date || new Date().toISOString()
+    const newDate = date || new Date().toISOString();
 
-    let newStat
+    let newStat;
     if (isStreak == 0) {
-      newStat = myUserData.stats.repetitionEchoes.count
+      newStat = myUserData.stats.repetitionEchoes.count;
       if (myUserData.stats.repetitionEchoes.last == null) {
-        newStat = 1
+        newStat = 1;
       }
     } else if (isStreak == 1) {
-      newStat = myUserData.stats.repetitionEchoes.count + 1
+      newStat = myUserData.stats.repetitionEchoes.count + 1;
     } else {
-      newStat = 0
+      newStat = 0;
     }
 
     uMyUserData((prevUserData) => ({
@@ -109,22 +105,22 @@ const EchoCreator = () => {
           last: newDate,
         },
       },
-    }))
+    }));
 
-    return { newDate, newStat }
-  }
+    return { newDate, newStat };
+  };
 
   const handleAddTask = async () => {
-    const currentDate = new Date()
-    const intervals = [0, 1, 3, 10, 30, 60]
+    const currentDate = new Date();
+    const intervals = [0, 1, 3, 10, 30, 60];
 
     const dates = intervals.map((interval) => {
-      const date = new Date(currentDate)
-      date.setDate(currentDate.getDate() + interval)
-      return date.toISOString()
-    })
+      const date = new Date(currentDate);
+      date.setDate(currentDate.getDate() + interval);
+      return date.toISOString();
+    });
 
-    const iddate = new Date().toISOString()
+    const iddate = new Date().toISOString();
 
     const newTask = {
       name: newEchoName,
@@ -143,23 +139,23 @@ const EchoCreator = () => {
         5: { totalWords: 0, answers: 0, correct: 0, perc: 0, tries: 0 },
       },
       id: iddate,
-    }
+    };
 
-    let linkRecord = null
-    let contentRecord = null
+    let linkRecord = null;
+    let contentRecord = null;
 
     if (newEchoContext.length >= 300) {
-      contentRecord = true
+      contentRecord = true;
     }
     if (linkArr.length >= 5) {
-      linkRecord = true
+      linkRecord = true;
     }
-    const newArrTaksker = [...taskArr, newTask]
+    const newArrTaksker = [...taskArr, newTask];
     uTaskArr((prevTaskArr) => {
-      const newTaskArr = [...prevTaskArr, newTask]
+      const newTaskArr = [...prevTaskArr, newTask];
 
-      return newTaskArr
-    })
+      return newTaskArr;
+    });
     uMyUserData((prevUserData) => ({
       ...prevUserData,
       echos: newArrTaksker,
@@ -168,115 +164,115 @@ const EchoCreator = () => {
         totalEchos: prevUserData.stats.totalEchos + 1,
         learnedTimes: prevUserData.stats.learnedTimes + 1,
       },
-    }))
-    uNewEchoName('')
-    uNewEchoContext('')
-    uEchoModal(false)
-    successToast('New echo created')
-    navigate('/main')
-    const userTimezone = myUserData.timezone
+    }));
+    uNewEchoName('');
+    uNewEchoContext('');
+    uEchoModal(false);
+    successToast('New echo created');
+    navigate('/main');
+    const userTimezone = myUserData.timezone;
 
     const lastDate =
       myUserData.stats.repetitionEchoes.last != null
         ? myUserData.stats.repetitionEchoes.last
-        : new Date().toISOString()
+        : new Date().toISOString();
 
-    const dateNow = new Date().toISOString()
+    const dateNow = new Date().toISOString();
 
-    const resultIsStreak = isDayStreakDone(dateNow, lastDate, userTimezone)
+    const resultIsStreak = isDayStreakDone(dateNow, lastDate, userTimezone);
 
-    const { newDate, newStat } = updateStatDates(dateNow, resultIsStreak)
+    const { newDate, newStat } = updateStatDates(dateNow, resultIsStreak);
 
-    const data = await createEcho(newTask, newDate, newStat)
-  }
+    const data = await createEcho(newTask, newDate, newStat);
+  };
 
   const processForm = async () => {
     if (newEchoName.length > 1) {
-      await handleAddTask()
+      await handleAddTask();
     } else {
-      noteToast('Fill echo name')
+      noteToast('Fill echo name');
     }
-  }
+  };
 
   const processFormButt = useCallback(async () => {
-    await processForm()
-  }, [newEchoName, newEchoContext, linkArr])
+    await processForm();
+  }, [newEchoName, newEchoContext, linkArr]);
 
   useEffect(() => {
-    telegramApp.BackButton.show()
-    mountBtn(processFormButt, 'Create')
-  }, [])
+    telegramApp.BackButton.show();
+    mountBtn(processFormButt, 'Create');
+  }, []);
 
   useEffect(() => {
-    mountBtn(processFormButt, 'Create')
-  }, [processFormButt])
+    mountBtn(processFormButt, 'Create');
+  }, [processFormButt]);
 
   const closeEdit = () => {
-    setEditMode('add')
-    setEditLink('')
-    setIsAddLink(false)
-  }
+    setEditMode('add');
+    setEditLink('');
+    setIsAddLink(false);
+  };
 
   const addcurrentLink = () => {
-    const urlRegex = /^(https?:\/\/)/
+    const urlRegex = /^(https?:\/\/)/;
 
     if (urlRegex.test(editLink)) {
       try {
-        new URL(editLink)
+        new URL(editLink);
 
         setLinkArr((prevLinkArr) => {
-          const newLinkArr = [...prevLinkArr, editLink]
-          return newLinkArr
-        })
-        setEditLink('')
-        setIsAddLink(false)
-        successToast('Link is added')
+          const newLinkArr = [...prevLinkArr, editLink];
+          return newLinkArr;
+        });
+        setEditLink('');
+        setIsAddLink(false);
+        successToast('Link is added');
       } catch (error) {
-        errorToast('Link is not correct')
+        errorToast('Link is not correct');
       }
     } else {
-      errorToast('The provided link is not a valid URL')
+      errorToast('The provided link is not a valid URL');
     }
-  }
+  };
 
   const removeFunction = (id) => {
-    const filteredLinks = linkArr.filter((item) => item != linkArr[id])
-    setLinkArr(filteredLinks)
-  }
+    const filteredLinks = linkArr.filter((item) => item != linkArr[id]);
+    setLinkArr(filteredLinks);
+  };
 
   const editFunction = (id) => {
-    setEditMode('edit')
-    setCurrentEdited(id)
-    const currentLink = linkArr[id]
-    setEditLink(currentLink)
-    setIsAddLink(true)
-  }
+    setEditMode('edit');
+    setCurrentEdited(id);
+    const currentLink = linkArr[id];
+    setEditLink(currentLink);
+    setIsAddLink(true);
+  };
 
   const saveEditedLink = () => {
-    const newArr = [...linkArr]
+    const newArr = [...linkArr];
 
-    const urlRegex = /^(https?:\/\/)/
+    const urlRegex = /^(https?:\/\/)/;
 
     if (urlRegex.test(editLink)) {
       try {
-        new URL(editLink)
+        new URL(editLink);
 
-        newArr[currentEdited] = editLink
-        setLinkArr(newArr)
-        setEditLink('')
-        setEditMode('add')
-        setCurrentEdited(null)
-        setIsAddLink(false)
-        successToast('Link is edited')
+        newArr[currentEdited] = editLink;
+        setLinkArr(newArr);
+        setEditLink('');
+        setEditMode('add');
+        setCurrentEdited(null);
+        setIsAddLink(false);
+        successToast('Link is edited');
 
-        setEditLink('')
+        setEditLink('');
       } catch (error) {
-        errorToast('Link is not correct')
+        errorToast('Link is not correct');
       }
     } else {
-      errorToast('The provided link is not a valid URL')
+      errorToast('The provided link is not a valid URL');
     }
-  }
+  };
 
   return (
     <div className={styles.echocreator}>
@@ -335,7 +331,7 @@ const EchoCreator = () => {
         <></>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default EchoCreator
+export default EchoCreator;

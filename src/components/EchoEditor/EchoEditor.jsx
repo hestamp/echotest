@@ -3,21 +3,16 @@ import styles from './EchoEditor.module.css';
 import { useNavigate } from 'react-router-dom';
 
 import { MyTextarea, AddLinksBlock, MyInput } from '@/components/';
-import {
-  useMyLogic,
-  useMyMainContext,
-  useMyToaster,
-  useMyUser,
-} from '@/storage';
+import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
 
 import { telegramApp, useTelegram } from '@/hooks/useTelegram';
+import { errorToast, successToast } from '@/utils/toast';
 
 const EchoEditor = () => {
   const { taskArr, uTaskArr, activeEcho, uActiveEcho } = useMyMainContext();
   const navigate = useNavigate();
   const { myUserData, uMyUserData } = useMyUser();
   const { uEchoModal, WEBAPP_URL } = useMyLogic();
-  const { successToast, errorToast } = useMyToaster();
   const { mountBtn } = useTelegram();
 
   const [tempName, setTempName] = useState('');

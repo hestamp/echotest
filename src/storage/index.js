@@ -24,13 +24,7 @@ export function useMyQuote() {
 
   return quote
 }
-export function useMyToaster() {
-  const { toaster } = useContext(StorageContext)
-  if (!toaster) {
-    throw new Error('No Toaster Context')
-  }
-  return toaster
-}
+
 export function useMyMainContext() {
   const { mainpage } = useContext(StorageContext)
   if (!mainpage) {

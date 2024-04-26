@@ -1,12 +1,8 @@
 import { memo } from 'react';
 import styles from './EchoRemover.module.css';
 
-import {
-  useMyLogic,
-  useMyMainContext,
-  useMyToaster,
-  useMyUser,
-} from '@/storage';
+import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
+import { errorToast, successToast } from '@/utils/toast';
 
 const EchoRemover = memo(() => {
   const {
@@ -21,7 +17,6 @@ const EchoRemover = memo(() => {
   const { myUserData, uMyUserData } = useMyUser();
 
   const { uCrudMode, uEchoModal, WEBAPP_URL } = useMyLogic();
-  const { successToast, errorToast } = useMyToaster();
 
   const removeFunc = async () => {
     const newArr = taskArr.filter((item) => item.id !== activeEcho.id);

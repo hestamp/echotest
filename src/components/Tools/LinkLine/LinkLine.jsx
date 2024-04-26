@@ -1,24 +1,21 @@
-import styles from "./LinkLine.module.css";
-
-import MenuDropdown from "../MenuDropdown/MenuDropdown";
-import { BsThreeDots } from "react-icons/bs";
-import { useMyToaster } from "@/storage";
-import { copyToClipboard } from "@/utils/textUtils";
+import styles from './LinkLine.module.css';
+import MenuDropdown from '../MenuDropdown/MenuDropdown';
+import { BsThreeDots } from 'react-icons/bs';
+import { copyToClipboard } from '@/utils/textUtils';
+import { successToast } from '@/utils/toast';
 
 const LinkLine = ({ item, id, delFunc }) => {
   let truncatedContent = item;
   if (item.length > 30) {
-    truncatedContent = item.substring(0, 30) + "...";
+    truncatedContent = item.substring(0, 30) + '...';
   }
-
-  const { successToast } = useMyToaster();
 
   const copyLink = () => {
     const context = item;
     copyToClipboard(context)
       .then(() => {
         // console.log('Content copied to clipboard successfully')
-        successToast("Link copied to clipboard");
+        successToast('Link copied to clipboard');
       })
       .catch((error) => {
         // console.error('Failed to copy content: ', error)
@@ -27,8 +24,8 @@ const LinkLine = ({ item, id, delFunc }) => {
   };
 
   const arrFunc = [
-    { name: "Copy", func: copyLink },
-    { name: "Remove", func: delFunc },
+    { name: 'Copy', func: copyLink },
+    { name: 'Remove', func: delFunc },
   ];
 
   return (

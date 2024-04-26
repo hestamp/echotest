@@ -1,6 +1,6 @@
 import { memo } from 'react';
 import styles from './QuoteDay.module.css';
-import { useMyQuote, useMyToaster } from '@/storage';
+import { useMyQuote } from '@/storage';
 
 import { MdNavigateNext } from 'react-icons/md';
 import { GrFormViewHide } from 'react-icons/gr';
@@ -8,12 +8,11 @@ import { GrFormViewHide } from 'react-icons/gr';
 import { quotesDayArray } from '@/static/quotes';
 import { copyToClipboard, getRandomQuote } from '@/utils/textUtils';
 import TypingAnimation from '../TypingAnimation/TypingAnimation';
+import { successToast } from '@/utils/toast';
 
 const QuoteDay = memo(() => {
   const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote();
   console.log('quoteday');
-
-  const { successToast } = useMyToaster();
 
   const copyQuote = () => {
     const context = myQuote.quote + ' ' + myQuote.author;

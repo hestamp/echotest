@@ -1,22 +1,21 @@
-import { useCallback, useEffect, useState } from "react";
-import styles from "./SettingsPage.module.css";
-import { MyInput, MyToggle } from "@/components/";
+import { useCallback, useEffect, useState } from 'react';
+import styles from './SettingsPage.module.css';
+import { MyInput, MyToggle } from '@/components/';
 import {
   useMyLogic,
   useMyNotification,
   useMyQuote,
-  useMyToaster,
   useMyUser,
-} from "@/storage";
+} from '@/storage';
 
-import { telegramApp, useTelegram } from "@/hooks/useTelegram";
+import { telegramApp, useTelegram } from '@/hooks/useTelegram';
+import { errorToast, successToast } from '@/utils/toast';
 
 const SettingsPage = () => {
   const { myUserData, uMyUserData } = useMyUser();
   const { uIsQuotes } = useMyQuote();
   const { WEBAPP_URL } = useMyLogic();
-  const { successToast, errorToast } = useMyToaster();
-  const [tempName, setTempName] = useState("");
+  const [tempName, setTempName] = useState('');
   const [tempQuoteBool, setTempQuoteBool] = useState(true);
 
   const {
@@ -40,9 +39,9 @@ const SettingsPage = () => {
   const toggleMyQuote = () => {
     const newStat = !tempQuoteBool;
     if (newStat == false) {
-      localStorage.setItem("quotes", "false");
+      localStorage.setItem('quotes', 'false');
     } else {
-      localStorage.setItem("quotes", "true");
+      localStorage.setItem('quotes', 'true');
     }
     uIsQuotes(newStat);
     setTempQuoteBool(newStat);
@@ -65,10 +64,10 @@ const SettingsPage = () => {
 
   useEffect(() => {
     if (myUserData) {
-      setTempName(myUserData?.fullName || "");
+      setTempName(myUserData?.fullName || '');
 
       if (myUserData.quotes) {
-        const userQuotes = myUserData.quotes == "false" ? false : true;
+        const userQuotes = myUserData.quotes == 'false' ? false : true;
         uIsQuotes(userQuotes);
         setTempQuoteBool(userQuotes);
       }
@@ -79,12 +78,12 @@ const SettingsPage = () => {
     localStorage.clear();
 
     if (window.location && window.location.reload) {
-      successToast("Cache was cleared! \n App reloading...");
+      successToast('Cache was cleared! \n App reloading...');
       setTimeout(() => {
         window.location.reload();
       }, 1000);
     } else {
-      successToast("Cache was cleared! \n Please reload app");
+      successToast('Cache was cleared! \n Please reload app');
     }
   };
 
@@ -93,7 +92,7 @@ const SettingsPage = () => {
   }, []);
 
   const setSettings = async () => {
-    const valueQuote = tempQuoteBool == true ? "true" : "false";
+    const valueQuote = tempQuoteBool == true ? 'true' : 'false';
 
     const newTime = myUserData.notifications.time
       ? myUserData.notifications.time
@@ -110,12 +109,12 @@ const SettingsPage = () => {
         empty: emptyReminder,
       },
     }));
-    successToast("Settings was saved");
+    successToast('Settings was saved');
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/setting/`, {
-        method: "PATCH",
+        method: 'PATCH',
         headers: {
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           fullName: tempName,
@@ -131,12 +130,12 @@ const SettingsPage = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Network response was not ok.");
+        throw new Error('Network response was not ok.');
       }
 
-      const contentType = response.headers.get("content-type");
-      if (!contentType || !contentType.includes("application/json")) {
-        throw new Error("Response not JSON");
+      const contentType = response.headers.get('content-type');
+      if (!contentType || !contentType.includes('application/json')) {
+        throw new Error('Response not JSON');
       }
 
       const data = await response.json();
@@ -144,16 +143,16 @@ const SettingsPage = () => {
       if (data?.success) {
         // console.log(first)
       } else {
-        errorToast("Something went wrong.\nPlease try again");
+        errorToast('Something went wrong.\nPlease try again');
       }
     } catch (error) {
-      errorToast("Something went wrong.\nPlease try again");
+      errorToast('Something went wrong.\nPlease try again');
       if (error?.response?.status === 429) {
-        errorToast("Too many requests.\nWait a little bit");
+        errorToast('Too many requests.\nWait a little bit');
       } else {
         // console.error(error)
 
-        errorToast("Something went wrong.\nPlease reload the page");
+        errorToast('Something went wrong.\nPlease reload the page');
       }
     }
   };
@@ -170,11 +169,11 @@ const SettingsPage = () => {
   ]);
 
   useEffect(() => {
-    mountBtn(processFormButt2, "Save");
+    mountBtn(processFormButt2, 'Save');
   }, []);
 
   useEffect(() => {
-    mountBtn(processFormButt2, "Save");
+    mountBtn(processFormButt2, 'Save');
   }, [processFormButt2]);
 
   return (
@@ -221,10 +220,10 @@ const SettingsPage = () => {
                       <p>
                         {myUserData.notifications.time
                           ? myUserData.notifications.time
-                          : "No time"}
+                          : 'No time'}
                       </p>
                       <button className={styles.editButt}>
-                        {myUserData.notifications.time ? "Edit" : "Set"}
+                        {myUserData.notifications.time ? 'Edit' : 'Set'}
                       </button>
                     </div>
                     <div className={styles.toggleBlock}>

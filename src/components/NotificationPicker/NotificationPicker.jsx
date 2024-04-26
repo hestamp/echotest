@@ -2,12 +2,8 @@ import { useState } from 'react';
 import TimePicker from '../TimePicker/TimePicker';
 
 import styles from './NotificationPicker.module.css';
-import {
-  useMyLogic,
-  useMyNotification,
-  useMyToaster,
-  useMyUser,
-} from '@/storage';
+import { useMyLogic, useMyNotification, useMyUser } from '@/storage';
+import { errorToast, successToast } from '@/utils/toast';
 
 const NotificationPicker = () => {
   const {
@@ -28,8 +24,6 @@ const NotificationPicker = () => {
   const { WEBAPP_URL } = useMyLogic();
 
   const { myUserData, uMyUserData } = useMyUser();
-
-  const { successToast, errorToast } = useMyToaster();
 
   const noThanks = () => {
     uIsTimeModal(false);

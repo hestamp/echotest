@@ -17,7 +17,6 @@ import {
   useMyNotification,
   useMyQuote,
   useMyStats,
-  useMyToaster,
   useMyUser,
 } from './storage';
 
@@ -37,6 +36,7 @@ import { getRandomQuote } from './utils/textUtils';
 import EchoChecker from './components/EchoChecker/EchoChecker';
 import { slugData } from './utils/slugdata';
 import router from './pages/router';
+import { errorToast } from './utils/toast';
 
 function App() {
   const navigate = useNavigate();
@@ -65,8 +65,6 @@ function App() {
     isSendData,
     setIsSendData,
   } = useMyLogic();
-
-  const { errorToast } = useMyToaster();
 
   const { setActiveLvl } = useMyStats();
 

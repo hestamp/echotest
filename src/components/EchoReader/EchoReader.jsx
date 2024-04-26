@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { MdOutlineLink } from 'react-icons/md';
 import { BsThreeDots } from 'react-icons/bs';
 import { TourGuide } from '@/components/';
-import { useMyLogic, useMyMainContext, useMyToaster } from '@/storage';
+import { useMyLogic, useMyMainContext } from '@/storage';
 import {
   copyToClipboard,
   renderContentWithLineBreaks,
@@ -14,6 +14,7 @@ import { MenuDropdown } from '@/components/';
 import { isTodayMatchingLevelDate } from '@/utils/objUtils';
 import { useMyGuide } from '../../storage';
 import { formatDateNow } from '@/utils/dateUtils';
+import { successToast } from '@/utils/toast';
 
 const EchoReader = memo(() => {
   const { activeEcho } = useMyMainContext();
@@ -21,8 +22,6 @@ const EchoReader = memo(() => {
   const { isReadGuide, isTourGuideCache, uIsReadGuide } = useMyGuide();
 
   const { uEchoModal, uCrudMode } = useMyLogic();
-
-  const { successToast } = useMyToaster();
 
   const updateFunc = () => {
     uCrudMode('update');
