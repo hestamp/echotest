@@ -13,10 +13,7 @@ export const QuotesContext = createContext();
 
 const getQuotes = () => {
   const stored = localStorage.getItem('quotes');
-  if (stored) {
-    return JSON.parse(stored);
-  }
-  return false;
+  return stored !== 'false';
 };
 
 const QuotesProvider = ({ children }) => {

@@ -36,7 +36,8 @@ const QuoteDay = memo(() => {
     setIsQuote(false);
     successToast('Quotes is hidden for now \n You can change it in settings');
   };
-
+  
+ console.log({ myQuote, isQuotes });
   return (
     <div className={`${styles.miniblock}  ${styles.justask3}`}>
       <div className={styles.minihr} />
