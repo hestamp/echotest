@@ -34,11 +34,9 @@ dayjs.extend(timezone);
 const MainPage = () => {
   const navigate = useNavigate();
 
-  const { getUserData } = useAuth();
+  const { userData, taskArr, uTaskArr } = useAuth();
 
   const {
-    taskArr,
-    uTaskArr,
     uActiveEcho,
     todayMode,
     setTodayMode,
@@ -135,9 +133,7 @@ const MainPage = () => {
   }, [pickedDateEchos]);
 
   const mappedTasks = useMemo(() => {
-    // console.log('mappedTask rerendder')
     const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    // console.log(userLocalTz)
     const today = new Date();
 
     // Function to calculate local state for a task
@@ -146,7 +142,7 @@ const MainPage = () => {
     };
 
     // Map through taskArr and calculate local state for each task
-    return taskArr.map((task) => {
+    return taskArr?.map((task) => {
       // Calculate local state for the current task
       const localState = calculateLocalState(task);
 
@@ -160,9 +156,7 @@ const MainPage = () => {
 
   const filteredTasks = useMemo(() => {
     // Filter tasks based on todayMode and local state
-    // console.log('filterTask rerender')
     if (todayMode === 'all') {
-      // console.log('filter task all')
       mappedTasks.reverse();
       mappedTasks.sort((a, b) => {
         const isAToComplete = a.localState === 'tocomplite';
@@ -174,7 +168,6 @@ const MainPage = () => {
       let mappedTasks2 = mappedTasks.filter((task) => !task.completed);
       return mappedTasks2;
     } else if (todayMode === 'completed') {
-      // console.log('completed')
       let tasks2 = mappedTasks.filter((task) => task.completed);
       return tasks2;
     }
@@ -419,7 +412,7 @@ const MainPage = () => {
             stringDate={stringDate}
           />
 
-          {getUserData == false || getUserData == null ? (
+          {!userData ? (
             <div className={styles.taskblock}>
               <SlugDiv />
               <SlugDiv />

@@ -11,9 +11,9 @@ import { WEBAPP_URL } from '@/config/constants';
 import useAuth from '@/hooks/Auth/useAuth';
 
 const EchoEditor = () => {
-  const { taskArr, uTaskArr, activeEcho, uActiveEcho } = useMyMainContext();
+  const { activeEcho, uActiveEcho } = useMyMainContext();
   const navigate = useNavigate();
-  const { userData, setUserData } = useAuth();
+  const { userData, setUserData, taskArr, uTaskArr,  } = useAuth();
   const { uEchoModal } = useMyLogic();
   const { mountBtn } = useTelegram();
 

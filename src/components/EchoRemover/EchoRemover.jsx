@@ -7,16 +7,10 @@ import { WEBAPP_URL } from '@/config/constants';
 import useAuth from '@/hooks/Auth/useAuth';
 
 const EchoRemover = memo(() => {
-  const {
-    taskArr,
-    uTaskArr,
-    activeEcho,
-    uActiveEcho,
-    pickedDateEchos,
-    setPickedDateEchos,
-  } = useMyMainContext();
+  const { activeEcho, uActiveEcho, pickedDateEchos, setPickedDateEchos } =
+    useMyMainContext();
 
-  const { userData, setUserData } = useAuth();
+  const { userData, setUserData, taskArr, uTaskArr } = useAuth();
 
   const { uCrudMode, uEchoModal } = useMyLogic();
 

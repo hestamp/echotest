@@ -95,6 +95,7 @@ const AuthProvider = ({ children }) => {
       setUserData,
       userTz,
       taskArr,
+      uTaskArr,
       isLoading,
     }),
     [userData, userTz, taskArr, isLoading]

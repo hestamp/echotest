@@ -10,9 +10,9 @@ import { WEBAPP_URL } from '@/config/constants';
 import useAuth from '@/hooks/Auth/useAuth';
 
 const EchoChecker = () => {
-  const { uTaskArr, taskArr, setTodayMode, activeEcho } = useMyMainContext();
+  const { uTaskArr, setTodayMode, activeEcho } = useMyMainContext();
 
-  const { userData, setUserData } = useAuth();
+  const { userData, setUserData, taskArr } = useAuth();
   const { uEchoModal } = useMyLogic();
 
   const { isCheckGuide, isTourGuideCache, uIsCheckGuide } = useMyGuide();

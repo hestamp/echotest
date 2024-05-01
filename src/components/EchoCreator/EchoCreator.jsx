@@ -6,14 +6,14 @@ import { MyInput, MyTextarea, AddLinksBlock } from '@/components/';
 import { isDayStreakDone } from '@/utils/objUtils';
 import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 
-import { useMyLogic, useMyMainContext } from '@/storage';
+import { useMyLogic } from '@/storage';
 import { errorToast, noteToast, successToast } from '@/utils/toast';
 import { WEBAPP_URL } from '@/config/constants';
 import useAuth from '@/hooks/Auth/useAuth';
 
 const EchoCreator = () => {
-  const { taskArr, uTaskArr } = useMyMainContext();
-  const { userData, setUserData } = useAuth();
+
+  const { userData, setUserData, taskArr, uTaskArr } = useAuth();
   const { uEchoModal, platformCheck } = useMyLogic();
 
   const { mountBtn } = useTelegram();
