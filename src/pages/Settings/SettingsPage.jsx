@@ -2,16 +2,15 @@ import { useCallback, useEffect, useState } from 'react';
 import styles from './SettingsPage.module.css';
 import { MyInput, MyToggle } from '@/components/';
 import { useMyNotification } from '@/storage';
-
 import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 import { errorToast, successToast } from '@/utils/toast';
 import { WEBAPP_URL } from '@/config/constants';
 import useAuth from '@/hooks/Auth/useAuth';
+import useQuotes from '@/hooks/quotes/useQuotes';
 
 const SettingsPage = () => {
   const { userData, setUserData } = useAuth();
   const [tempName, setTempName] = useState('');
-  const [tempQuoteBool, setTempQuoteBool] = useState(true);
 
   const {
     getAllNotif,
@@ -23,6 +22,8 @@ const SettingsPage = () => {
     emptyReminder,
     uEmptyReminder,
   } = useMyNotification();
+
+  const { toggleMyQuote, isQuotes, setIsQuote } = useQuotes();
 
   const { mountBtn } = useTelegram();
 
@@ -53,15 +54,14 @@ const SettingsPage = () => {
 
       if (userData.quotes) {
         const userQuotes = userData.quotes == 'false' ? false : true;
-        // uIsQuotes(userQuotes);
-        setTempQuoteBool(userQuotes);
+        console.log({ userQuotes });
+        setIsQuote(userQuotes);
       }
     }
   }, [userData]);
 
   const clearStorage = () => {
     localStorage.clear();
-
     if (window.location && window.location.reload) {
       successToast('Cache was cleared! \n App reloading...');
       setTimeout(() => {
@@ -77,7 +77,7 @@ const SettingsPage = () => {
   }, []);
 
   const setSettings = async () => {
-    const valueQuote = tempQuoteBool == true ? 'true' : 'false';
+    const valueQuote = isQuotes;
 
     const newTime = userData.notifications.time
       ? userData.notifications.time
@@ -146,7 +146,7 @@ const SettingsPage = () => {
     await setSettings();
   }, [
     tempName,
-    tempQuoteBool,
+    isQuotes,
     getAllNotif,
     getEchoNotif,
     emptyReminder,
@@ -189,7 +189,6 @@ const SettingsPage = () => {
                     toggleName=""
                   />
                 </div>
-                {/* <div className={styles.somehr} /> */}
                 <div className={styles.toggleBlock}>
                   <h4>Echo repeat</h4>
                   <MyToggle
@@ -230,14 +229,13 @@ const SettingsPage = () => {
                 <div className={styles.toggleBlock}>
                   <h4>Show quotes</h4>
                   <MyToggle
-                    toggleStatus={tempQuoteBool}
-                    // toggleChange={toggleMyQuote}
+                    toggleStatus={isQuotes}
+                    toggleChange={toggleMyQuote}
                     toggleId="quote-toggle"
                     toggleName=""
                   />
                 </div>
               </div>
-              {/* <p>Name error</p> */}
             </div>
 
             <button
