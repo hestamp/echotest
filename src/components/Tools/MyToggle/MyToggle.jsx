@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './MyToggle.module.css'
 
 import * as Switch from '@radix-ui/react-switch'

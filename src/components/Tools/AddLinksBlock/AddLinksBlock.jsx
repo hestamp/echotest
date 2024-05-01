@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import LinkLine from '../LinkLine/LinkLine'
 import MyInput from '../MyInput/MyInput'
 import { MdOutlineClose } from 'react-icons/md'

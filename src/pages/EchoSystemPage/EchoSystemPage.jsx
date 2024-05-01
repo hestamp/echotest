@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import styles from './EchoSystemPage.module.css'
 import { PageStructure } from '@/components/'
 import { useNavigate } from 'react-router-dom'
@@ -21,7 +21,7 @@ const EchoSystemPage = () => {
           <img className={styles.logoimg} src="/guide/guide.graph.webp" />
           <p className={styles.gray}>
             Our app uses a spaced repetition system to help you remember
-            information effectively. Here's how it works:
+            information effectively. Here&apos;s how it works:
           </p>
 
           <p>
@@ -33,7 +33,7 @@ const EchoSystemPage = () => {
           <p>
             <strong>Repetition Intervals: </strong> Echoes are repeated at
             scheduled intervals to reinforce memory. As you complete
-            repetitions, the echo's level increases, and new repetition dates
+            repetitions, the echo&apos;s level increases, and new repetition dates
             are calculated based on the current level.
           </p>
           <p>

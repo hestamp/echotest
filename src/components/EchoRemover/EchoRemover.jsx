@@ -1,63 +1,35 @@
-import React, { useEffect, useState } from 'react'
-import styles from './EchoRemover.module.css'
+import { memo } from 'react';
+import styles from './EchoRemover.module.css';
 
-import {
-  useMyLogic,
-  useMyMainContext,
-  useMyToaster,
-  useMyUser,
-} from '@/storage'
+import { useMyLogic, useMyMainContext } from '@/storage';
+import { errorToast, successToast } from '@/utils/toast';
+import { WEBAPP_URL } from '@/config/constants';
+import useAuth from '@/hooks/Auth/useAuth';
 
-const EchoRemover = () => {
-  const {
-    taskArr,
-    uTaskArr,
-    activeEcho,
-    uActiveEcho,
-    pickedDateEchos,
-    setPickedDateEchos,
-  } = useMyMainContext()
+const EchoRemover = memo(() => {
+  const { activeEcho, uActiveEcho, pickedDateEchos, setPickedDateEchos } =
+    useMyMainContext();
 
-  const { myUserData, uMyUserData } = useMyUser()
+  const { userData, setUserData, taskArr, uTaskArr } = useAuth();
 
-  const {
-    crudMode,
-    uCrudMode,
-    echoModal,
-    uEchoModal,
-    WEBAPP_URL,
-    platformCheck,
-  } = useMyLogic()
-  const { successToast, errorToast } = useMyToaster()
-  const [tempName, setTempName] = useState('')
-  const [tempContent, setTempContent] = useState('')
-
-  const [linkArr, setLinkArr] = useState([])
-
-  useEffect(() => {
-    if (activeEcho) {
-      setTempName(activeEcho.name)
-      setTempContent(activeEcho.content)
-      setLinkArr(activeEcho.links)
-    }
-  }, [])
+  const { uCrudMode, uEchoModal } = useMyLogic();
 
   const removeFunc = async () => {
-    const newArr = taskArr.filter((item) => item.id !== activeEcho.id)
+    const newArr = taskArr.filter((item) => item.id !== activeEcho.id);
     const newArrPicked = pickedDateEchos.filter(
       (item) => item.id !== activeEcho.id
-    )
-    uTaskArr(newArr)
-    setPickedDateEchos(newArrPicked)
-    closeModal()
-    await removeEcho(activeEcho.id)
-  }
+    );
+    uTaskArr(newArr);
+    setPickedDateEchos(newArrPicked);
+    closeModal();
+    await removeEcho(activeEcho.id);
+  };
 
   const closeModal = () => {
-    uCrudMode('create')
-    uEchoModal(false)
-    uActiveEcho(null)
-  }
+    uCrudMode('create');
+    uEchoModal(false);
+    uActiveEcho(null);
+  };
 
   const removeEcho = async (echoid) => {
     try {
@@ -67,45 +39,45 @@ const EchoRemover = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          authId: myUserData.authId,
+          authId: userData.authId,
           echoId: echoid,
         }),
-      })
+      });
 
       if (!response.ok) {
-        errorToast('Network response was not ok.')
-        throw new Error('Network response was not ok.')
+        errorToast('Network response was not ok.');
+        throw new Error('Network response was not ok.');
       }
 
-      const contentType = response.headers.get('content-type')
+      const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        errorToast('Response not JSON')
-        throw new Error('Response not JSON')
+        errorToast('Response not JSON');
+        throw new Error('Response not JSON');
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data.success) {
-        successToast('Your echo was removed!')
+        successToast('Your echo was removed!');
         if (data.userStats) {
-          uMyUserData((prevUserData) => ({
+          setUserData((prevUserData) => ({
             ...prevUserData,
             stats: data.userStats,
-          }))
+          }));
         }
       } else {
-        errorToast('Problem with deleting echo')
+        errorToast('Problem with deleting echo');
       }
     } catch (error) {
-      console.error()
+      // console.error()
 
-      errorToast(`Something went wrong. Please try again. ${error}`)
+      errorToast(`Something went wrong. Please try again. ${error}`);
 
       if (error?.response?.status === 429) {
-        errorToast('Too many requests. Please wait a little bit.')
+        errorToast('Too many requests. Please wait a little bit.');
       }
     }
-  }
+  };
 
   return (
     <div className={styles.echocreator}>
@@ -113,7 +85,6 @@ const EchoRemover = () => {
 
       <h2>{activeEcho.name || 'Echo name'}</h2>
       <h4 className={styles.progress}>
-        {' '}
         Echo level progress:
         <span className={`${styles.waves} `}>{activeEcho.lvl || 1}</span>
       </h4>
@@ -128,7 +99,9 @@ const EchoRemover = () => {
         <span> Cancel</span>
       </button>
     </div>
-  )
-}
+  );
+});
 
-export default EchoRemover
+EchoRemover.displayName = 'EchoRemover';
+
+export default EchoRemover;

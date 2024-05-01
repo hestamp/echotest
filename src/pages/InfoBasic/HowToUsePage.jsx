@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import styles from './HowToUsePage.module.css'
 import { PageStructure } from '@/components/'
 import { useNavigate } from 'react-router-dom'
@@ -21,19 +21,19 @@ const HowToUsePage = () => {
           <p className={styles.gray}>
             Welcome to MindEcho, your personal spaced repetition web app
             designed to help you learn and remember important information
-            efficiently. Here's a simple guide on how to use it:{' '}
+            efficiently. Here&apos;s a simple guide on how to use it:
           </p>
           <p>
             <strong>Creating Echoes:</strong> To get started, create your first
-            echo by clicking on the "Create Echo" button. Fill in the name,
+            echo by clicking on the &quot;Create Echo&quot; button. Fill in the name,
             content (description of what you want to learn or remember), and
-            optionally add any relevant links. Click "Create" to create your
+            optionally add any relevant links. Click &quot;Create&quot; to create your
             echo.
           </p>
           <p>
-            <strong>Viewing Echoes:</strong> On the main page, you'll see a
+            <strong>Viewing Echoes:</strong> On the main page, you&apos;ll see a
             calendar visualization with wave icons indicating days where you
-            have tasks to repeat. Under the calendar, you'll find a filter
+            have tasks to repeat. Under the calendar, you&apos;ll find a filter
             section where you can view echoes based on selected day, active
             echoes, or completed echoes.
           </p>
@@ -46,7 +46,7 @@ const HowToUsePage = () => {
           </p>
           <p>
             <strong>Completing Echoes:</strong>
-            When you complete a repetition, the echo's level will increase, and
+            When you complete a repetition, the echo&apos;s level will increase, and
             new repetition dates will be scheduled. Your goal is to complete all
             repetition intervals for each echo.
           </p>
@@ -54,8 +54,8 @@ const HowToUsePage = () => {
             <strong>Notifications:</strong>
             MindEcho sends you notifications to remind you to repeat echoes. You
             can set your preferred notification time during your first use of
-            the app. If there are echoes to repeat for the day, you'll receive a
-            notification with a list of echoes. Otherwise, you'll receive a
+            the app. If there are echoes to repeat for the day, you&apos;ll receive a
+            notification with a list of echoes. Otherwise, you&apos;ll receive a
             reminder to learn something new and create a new echo.
           </p>
         </div>

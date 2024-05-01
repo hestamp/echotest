@@ -1,54 +1,47 @@
-import React, { useEffect, useState } from 'react'
-import styles from './EchoChecker.module.css'
-import {
-  useMyGuide,
-  useMyLogic,
-  useMyMainContext,
-  useMyToaster,
-  useMyUser,
-} from '../../storage'
-import { getRandomSBD } from '../../utils/textUtils'
-import CheckerBlock from '../CheckerBlock/CheckerBlock'
-import { isDayStreakDone } from '@/utils/objUtils'
-import { TourGuide } from '@/components/Tools/TourGuide/TourGuide'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styles from './EchoChecker.module.css';
+import { useMyGuide, useMyLogic, useMyMainContext } from '../../storage';
+import { getRandomSBD } from '../../utils/textUtils';
+import CheckerBlock from '../CheckerBlock/CheckerBlock';
+import { isDayStreakDone } from '@/utils/objUtils';
+import { TourGuide } from '@/components/Tools/TourGuide/TourGuide';
+import { errorToast, successToast } from '@/utils/toast';
+import { WEBAPP_URL } from '@/config/constants';
+import useAuth from '@/hooks/Auth/useAuth';
 
 const EchoChecker = () => {
-  const { uTaskArr, taskArr, setTodayMode, activeEcho } = useMyMainContext()
+  const { uTaskArr, setTodayMode, activeEcho } = useMyMainContext();
 
-  const { myUserData, uMyUserData } = useMyUser()
-  const { uEchoModal, uCrudMode, WEBAPP_URL } = useMyLogic()
+  const { userData, setUserData, taskArr } = useAuth();
+  const { uEchoModal } = useMyLogic();
 
-  const { isCheckGuide, isTourGuideCache, uIsCheckGuide } = useMyGuide()
+  const { isCheckGuide, isTourGuideCache, uIsCheckGuide } = useMyGuide();
 
-  const { successToast, errorToast } = useMyToaster()
-
-  const [renderText, setRenderText] = useState(null)
+  const [renderText, setRenderText] = useState(null);
 
   useEffect(() => {
     if (activeEcho && renderText == null) {
-      console.log(activeEcho)
-      const oneSent = getRandomSBD(activeEcho.content)
-      setRenderText(oneSent)
+      const oneSent = getRandomSBD(activeEcho.content);
+      setRenderText(oneSent);
     }
-  }, [activeEcho])
+  }, [activeEcho, renderText]);
 
   const updateStatDates = (date, isStreak) => {
-    const newDate = date || new Date().toISOString()
+    const newDate = date || new Date().toISOString();
 
-    let newStat
+    let newStat;
     if (isStreak == 0) {
-      newStat = myUserData.stats.repetitionEchoes.count
-      if (myUserData.stats.repetitionEchoes.last == null) {
-        newStat = 1
+      newStat = userData.stats.repetitionEchoes.count;
+      if (userData.stats.repetitionEchoes.last == null) {
+        newStat = 1;
       }
     } else if (isStreak == 1) {
-      newStat = myUserData.stats.repetitionEchoes.count + 1
+      newStat = userData.stats.repetitionEchoes.count + 1;
     } else {
-      newStat = 0
-      console.log('rest', isStreak)
+      newStat = 0;
     }
 
-    uMyUserData((prevUserData) => ({
+    setUserData((prevUserData) => ({
       ...prevUserData,
       stats: {
         ...prevUserData.stats,
@@ -57,73 +50,73 @@ const EchoChecker = () => {
           last: newDate,
         },
       },
-    }))
+    }));
 
-    return { newDate, newStat }
-  }
+    return { newDate, newStat };
+  };
 
   function updateObjectWithInterval(obj, finish) {
-    const intervals = [0, 1, 3, 10, 30, 60]
-    const { lvl, dates } = obj
-    const currentDate = new Date()
+    const intervals = [0, 1, 3, 10, 30, 60];
+    const { lvl, dates } = obj;
+    const currentDate = new Date();
 
     // Update the dates array
-    const updatedDates = []
+    const updatedDates = [];
 
     // Add old dates from obj.dates with indices lower than obj.lvl
     for (let i = 0; i < lvl; i++) {
-      updatedDates.push(dates[i])
+      updatedDates.push(dates[i]);
     }
 
     // Update the dates array
 
-    updatedDates.push(currentDate.toISOString())
+    updatedDates.push(currentDate.toISOString());
 
     if (lvl >= 0 && lvl + 1 < intervals.length) {
       // Update next date based on the interval
-      const interval = intervals[lvl + 1]
+      const interval = intervals[lvl + 1];
       const nextDate = new Date(
         currentDate.getTime() + interval * 24 * 60 * 60 * 1000
-      )
+      );
 
       for (let i = lvl + 1; i < dates.length; i++) {
         const date = new Date(
           currentDate.getTime() + intervals[i] * 24 * 60 * 60 * 1000
-        )
-        updatedDates.push(date.toISOString())
+        );
+        updatedDates.push(date.toISOString());
       }
 
-      obj.dates = updatedDates
+      obj.dates = updatedDates;
 
-      obj.next = nextDate.toISOString()
+      obj.next = nextDate.toISOString();
     } else if (lvl == 5 && finish) {
-      obj.completed = true
+      obj.completed = true;
     }
-    obj.lvl = lvl + 1
-    return { obj: obj, completed: finish == true ? true : false }
+    obj.lvl = lvl + 1;
+    return { obj: obj, completed: finish == true ? true : false };
   }
 
   const completeRepetition = async (finish) => {
-    const newLvl = activeEcho.lvl + 1
+    const newLvl = activeEcho.lvl + 1;
 
-    const oldArr = [...taskArr]
-    let updatedItem = null
-    let completedItem = null
+    const oldArr = [...taskArr];
+    let updatedItem = null;
+    let completedItem = null;
 
     const arrNewUpdated = oldArr.map((item) => {
       if (item.id === activeEcho.id) {
-        const { obj, completed } = updateObjectWithInterval(item, finish)
-        updatedItem = obj
+        const { obj, completed } = updateObjectWithInterval(item, finish);
+        updatedItem = obj;
         if (completed) {
-          completedItem = true
+          completedItem = true;
         }
         return {
           ...updatedItem,
-        }
+        };
       }
-      return item
-    })
-    uMyUserData((prevUserData) => ({
+      return item;
+    });
+    setUserData((prevUserData) => ({
       ...prevUserData,
       stats: {
         ...prevUserData.stats,
@@ -134,60 +127,54 @@ const EchoChecker = () => {
       },
 
       echos: arrNewUpdated,
-    }))
+    }));
 
-    const userTimezone = myUserData.timezone
+    const userTimezone = userData.timezone;
 
     const lastDate =
-      myUserData.stats.repetitionEchoes.last != null
-        ? myUserData.stats.repetitionEchoes.last
-        : new Date().toISOString()
+      userData.stats.repetitionEchoes.last != null
+        ? userData.stats.repetitionEchoes.last
+        : new Date().toISOString();
 
-    const dateNow = new Date().toISOString()
+    const dateNow = new Date().toISOString();
 
-    const resultIsStreak = isDayStreakDone(dateNow, lastDate, userTimezone)
+    const resultIsStreak = isDayStreakDone(dateNow, lastDate, userTimezone);
 
-    const { newDate, newStat } = updateStatDates(dateNow, resultIsStreak)
+    const { newDate, newStat } = updateStatDates(dateNow, resultIsStreak);
 
     if (completedItem) {
       successToast(
         `Сongratulations! \n ${activeEcho.name || 'echo was'} \n was finised!`
-      )
-      finishedItem()
+      );
+      finishedItem();
     } else {
       successToast(
         `Your ${newLvl} repetition for \n ${
           activeEcho.name || 'echo'
         } \n was completed!`
-      )
+      );
     }
-    setTodayMode('all')
-    uEchoModal(false)
-    uTaskArr(arrNewUpdated)
+    setTodayMode('all');
+    uEchoModal(false);
+    uTaskArr(arrNewUpdated);
 
     if (updatedItem != null) {
-      const goupdateOnServer = await editServerEcho(
-        updatedItem,
-        finish,
-        newDate,
-        newStat
-      )
+      await editServerEcho(updatedItem, finish, newDate, newStat);
     }
-  }
+  };
 
-  const finishedItem = () => {}
+  const finishedItem = () => {};
 
   const editServerEcho = async (newEchoData, finish, newDate, newStat) => {
     if (!newEchoData) {
-      return null
+      return null;
     }
-    const echoId = newEchoData.id
-    const updatedEchoData = newEchoData
-    const isFinish = finish || false
-    const newDateStreak = newDate
-    const newStatStreak = newStat
+    const echoId = newEchoData.id;
+    const updatedEchoData = newEchoData;
+    const isFinish = finish || false;
+    const newDateStreak = newDate;
+    const newStatStreak = newStat;
 
-    console.log(updatedEchoData)
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/echos/edit`, {
         method: 'PATCH',
@@ -195,7 +182,7 @@ const EchoChecker = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          authId: myUserData.authId,
+          authId: userData.authId,
           echoId: echoId,
           updatedEchoData: updatedEchoData,
           repeat: true,
@@ -203,102 +190,104 @@ const EchoChecker = () => {
           repDate: newDateStreak,
           repStat: newStatStreak,
         }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok.')
+        throw new Error('Network response was not ok.');
       }
 
-      const contentType = response.headers.get('content-type')
+      const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Response not JSON')
+        throw new Error('Response not JSON');
       }
 
-      const data = await response.json()
-      console.log(data)
+      const data = await response.json();
       if (data && data.userStats) {
         if (data.userStats) {
-          uMyUserData((prevUserData) => ({
+          setUserData((prevUserData) => ({
             ...prevUserData,
             stats: data.userStats,
-          }))
+          }));
         }
       }
     } catch (error) {
-      console.error()
+      // console.error()
 
-      errorToast(`Something went wrong. Please try again. ${error}`)
+      errorToast(`Something went wrong. Please try again. ${error}`);
 
       if (error?.response?.status === 429) {
-        errorToast('Too many requests. Please wait a little bit.')
+        errorToast('Too many requests. Please wait a little bit.');
       }
     }
-  }
+  };
 
   // completeRepetition(false)
 
-  const getNew = () => {
-    const oneSent = getRandomSBD(activeEcho.content, 1)
-    setRenderText(oneSent)
-  }
+  const getNew = useCallback(() => {
+    const oneSent = getRandomSBD(activeEcho.content, 1);
+    setRenderText(oneSent);
+  }, [activeEcho.content]);
 
-  const newSteps = [
-    {
-      id: 'step-1',
-      canClickTarget: false,
+  const newSteps = useMemo(
+    () => [
+      {
+        id: 'step-1',
+        canClickTarget: false,
 
-      attachTo: { element: '.quizwrap', on: 'bottom' },
-      beforeShowPromise: function () {
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            window.scrollTo(0, 0)
-            resolve()
-          }, 500)
-        })
-      },
-      when: {
-        show: () => {
-          localStorage.setItem('checktour', 'true')
-          uIsCheckGuide(true)
+        attachTo: { element: '.quizwrap', on: 'bottom' },
+        beforeShowPromise: function () {
+          return new Promise(function (resolve) {
+            setTimeout(function () {
+              window.scrollTo(0, 0);
+              resolve();
+            }, 500);
+          });
         },
-      },
-      buttons: [
-        {
-          classes: 'shepherd-button-primary',
-          text: 'Next',
-          type: 'next',
+        when: {
+          show: () => {
+            localStorage.setItem('checktour', 'true');
+            uIsCheckGuide(true);
+          },
         },
-      ],
-      title: '1/2 Start of the test',
-      text: `Here will be one piece of the text you need to recreate`,
-    },
+        buttons: [
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Next',
+            type: 'next',
+          },
+        ],
+        title: '1/2 Start of the test',
+        text: `Here will be one piece of the text you need to recreate`,
+      },
 
-    {
-      id: 'step-2',
-      attachTo: {
-        element: '.optwrap',
-        on: 'top',
-      },
-      canClickTarget: false,
-      buttons: [
-        {
-          classes: 'shepherd-button-secondary',
-          text: 'Back',
-          type: 'back',
+      {
+        id: 'step-2',
+        attachTo: {
+          element: '.optwrap',
+          on: 'top',
         },
-        {
-          classes: 'shepherd-button-primary',
-          text: 'Finish',
-          type: 'next',
+        canClickTarget: false,
+        buttons: [
+          {
+            classes: 'shepherd-button-secondary',
+            text: 'Back',
+            type: 'back',
+          },
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Finish',
+            type: 'next',
+          },
+        ],
+        when: {
+          show: () => {},
         },
-      ],
-      when: {
-        show: () => {},
+        title: '2/2 Drag and drop',
+        text: 'Pick a word an place it in appropriate place in sentence \n\n When you place correctly all of the words - press <strong>Check Answer</strong> button to finish the test',
       },
-      title: '2/2 Drag and drop',
-      text: 'Pick a word an place it in appropriate place in sentence \n\n When you place correctly all of the words - press <strong>Check Answer</strong> button to finish the test',
-    },
-  ]
+    ],
+    []
+  );
 
   return (
     <div className={styles.echochecker}>
@@ -345,8 +334,8 @@ const EchoChecker = () => {
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
 // const Word = ({ id, content, index, moveWord }) => {
 //   const [{ isDragging }, drag] = useDrag({
@@ -376,4 +365,4 @@ const EchoChecker = () => {
 //   )
 // }
 
-export default EchoChecker
+export default EchoChecker;

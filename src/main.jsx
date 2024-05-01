@@ -1,19 +1,18 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-import { Geiger } from 'react-geiger'
-
-import { BrowserRouter as Router } from 'react-router-dom'
-
-import { MyStorageProvider } from './storage/StorageContext'
+import ReactDOM from 'react-dom/client';
+import { Geiger } from 'react-geiger';
+import { BrowserRouter } from 'react-router-dom';
+import App from './App';
+import './index.css';
+import Providers from './components/Providers';
+import { Toaster } from 'react-hot-toast';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
-  <Geiger renderTimeThreshold={50}>
-    <MyStorageProvider>
-      <Router>
+  <BrowserRouter>
+    <Geiger renderTimeThreshold={50}>
+      <Providers>
         <App />
-      </Router>
-    </MyStorageProvider>
-  </Geiger>
-)
+      </Providers>
+    </Geiger>
+    <Toaster />
+  </BrowserRouter>
+);

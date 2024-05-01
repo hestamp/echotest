@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import styles from './TypingAnimation.module.css'
 const TypingAnimation = ({ text }) => {
   const [displayResponse, setDisplayResponse] = useState('')
@@ -24,12 +24,10 @@ const TypingAnimation = ({ text }) => {
   const CursorSVG = () => <p className={styles.cursor}> </p>
 
   return (
-    <>
       <span className={styles.runcursor}>
         {displayResponse}
         {!completedTyping && <CursorSVG />}
       </span>
-    </>
   )
 }
 

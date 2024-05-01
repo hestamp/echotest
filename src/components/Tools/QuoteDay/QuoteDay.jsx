@@ -1,43 +1,43 @@
-import React from 'react'
-import styles from './QuoteDay.module.css'
-import { useMyQuote, useMyToaster } from '@/storage'
+import { memo,  } from 'react';
+import styles from './QuoteDay.module.css';
+import { MdNavigateNext } from 'react-icons/md';
+import { GrFormViewHide } from 'react-icons/gr';
+import { quotesDayArray } from '@/static/quotes';
+import { copyToClipboard, getRandomQuote } from '@/utils/textUtils';
+import TypingAnimation from '../TypingAnimation/TypingAnimation';
+import { successToast } from '@/utils/toast';
+import useQuotes from '@/hooks/quotes/useQuotes';
 
-import { MdNavigateNext } from 'react-icons/md'
-import { GrFormViewHide } from 'react-icons/gr'
+const QuoteDay = memo(() => {
 
-import { quotesDayArray } from '@/static/quotes'
-import { copyToClipboard, getRandomQuote } from '@/utils/textUtils'
-import TypingAnimation from '../TypingAnimation/TypingAnimation'
-const QuoteDay = () => {
-  const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote()
-  console.log('quote rrr11111111111')
-
-  const { successToast } = useMyToaster()
+  //Quotes
+  const { myQuote, uMyQuote, setIsQuote, isQuotes } = useQuotes();
 
   const copyQuote = () => {
-    const context = myQuote.quote + ' ' + myQuote.author
+    const context = myQuote.quote + ' ' + myQuote.author;
 
     copyToClipboard(context)
       .then(() => {
-        console.log('Content copied to clipboard successfully')
-        successToast('Quote copied to clipboard')
+        // console.log('Content copied to clipboard successfully')
+        successToast('Quote copied to clipboard');
       })
       .catch((error) => {
-        console.error('Failed to copy content: ', error)
+        // console.error('Failed to copy content: ', error)
         // Handle error if necessary
-      })
-  }
+      });
+  };
 
   const nextFunc = () => {
-    const newQuote = getRandomQuote(quotesDayArray)
-    uMyQuote(newQuote)
-  }
-  const hideFunc = () => {
-    localStorage.setItem('quotes', 'false')
-    successToast('Quotes is hidden for now \n You can change it in settings')
-    uIsQuotes(false)
-  }
+    const newQuote = getRandomQuote(quotesDayArray);
+    uMyQuote(newQuote);
+  };
 
+  const hideFunc = () => {
+    setIsQuote(false);
+    successToast('Quotes is hidden for now \n You can change it in settings');
+  };
+  
+ console.log({ myQuote, isQuotes });
   return (
     <div className={`${styles.miniblock}  ${styles.justask3}`}>
       <div className={styles.minihr} />
@@ -53,9 +53,7 @@ const QuoteDay = () => {
               </div>
             </div>
             <blockquote onClick={copyQuote} className={styles.quote}>
-              <>
-                <TypingAnimation text={`${myQuote.quote} `} />
-              </>
+              <TypingAnimation text={`${myQuote.quote} `} />
             </blockquote>
             <div className={styles.bottdiv}>
               <button onClick={hideFunc} aria-label="Hide">
@@ -64,7 +62,7 @@ const QuoteDay = () => {
               <a
                 href={myQuote.link || 'https://en.wikipedia.org/'}
                 target="_blank"
-                rel="hestamp.me"
+                rel="hestamp.me noreferrer"
                 className={styles.author}
               >
                 {myQuote.author}
@@ -76,7 +74,9 @@ const QuoteDay = () => {
         )}
       </div>
     </div>
-  )
-}
+  );
+});
 
-export default React.memo(QuoteDay)
+QuoteDay.displayName = 'QuoteDay';
+
+export default QuoteDay;

@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './MyLoader.module.css'
 import MySpinner from '../MySpinner'
 

@@ -1,11 +1,9 @@
-import React, { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { ShepherdTour, ShepherdTourContext } from 'react-shepherd'
 import 'shepherd.js/dist/css/shepherd.css'
 
-const TourGuide = ({ steps, onExit, isActiveTour = false }) => {
+const TourGuide = ({ steps }) => {
   const [isMounted, setIsMounted] = useState(false)
-
-  const stepsEnabled = isActiveTour
 
   const newSteps = steps || []
 
@@ -27,7 +25,7 @@ const TourGuide = ({ steps, onExit, isActiveTour = false }) => {
         tour.start()
         setIsMounted(true)
       }
-    }, [tour, isMounted])
+    }, [tour])
 
     return <></>
   }

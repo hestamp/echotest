@@ -1,23 +1,16 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import styles from './SettingsPage.module.css'
-import { MyInput, MyToggle } from '@/components/'
-import {
-  useMyLogic,
-  useMyNotification,
-  useMyQuote,
-  useMyToaster,
-  useMyUser,
-} from '@/storage'
-
-import { telegramApp, useTelegram } from '@/hooks/useTelegram'
+import { useCallback, useEffect, useState } from 'react';
+import styles from './SettingsPage.module.css';
+import { MyInput, MyToggle } from '@/components/';
+import { useMyNotification } from '@/storage';
+import { telegramApp, useTelegram } from '@/hooks/useTelegram';
+import { errorToast, successToast } from '@/utils/toast';
+import { WEBAPP_URL } from '@/config/constants';
+import useAuth from '@/hooks/Auth/useAuth';
+import useQuotes from '@/hooks/quotes/useQuotes';
 
 const SettingsPage = () => {
-  const { myUserData, uMyUserData } = useMyUser()
-  const { uIsQuotes } = useMyQuote()
-  const { WEBAPP_URL } = useMyLogic()
-  const { successToast, errorToast } = useMyToaster()
-  const [tempName, setTempName] = useState('')
-  const [tempQuoteBool, setTempQuoteBool] = useState(true)
+  const { userData, setUserData } = useAuth();
+  const [tempName, setTempName] = useState('');
 
   const {
     getAllNotif,
@@ -28,78 +21,69 @@ const SettingsPage = () => {
     uFirstTimeNotif,
     emptyReminder,
     uEmptyReminder,
-  } = useMyNotification()
+  } = useMyNotification();
 
-  const { mountBtn } = useTelegram()
+  const { toggleMyQuote, isQuotes, setIsQuote } = useQuotes();
+
+  const { mountBtn } = useTelegram();
 
   const showTimeModal = () => {
-    uIsTimeModal(true)
-    uFirstTimeNotif(true)
-  }
+    uIsTimeModal(true);
+    uFirstTimeNotif(true);
+  };
 
-  const toggleMyQuote = () => {
-    const newStat = !tempQuoteBool
-    if (newStat == false) {
-      localStorage.setItem('quotes', 'false')
-    } else {
-      localStorage.setItem('quotes', 'true')
-    }
-    uIsQuotes(newStat)
-    setTempQuoteBool(newStat)
-  }
   const toggleMyBasicNotif = () => {
-    const newStat = !getAllNotif
+    const newStat = !getAllNotif;
 
-    uGetAllNotif(newStat)
-  }
+    uGetAllNotif(newStat);
+  };
   const toggleMyEchoNotif = () => {
-    const newStat = !getEchoNotif
+    const newStat = !getEchoNotif;
 
-    uGetEchoNotif(newStat)
-  }
+    uGetEchoNotif(newStat);
+  };
   const toggleMyEmptyReminder = () => {
-    const newStat = !emptyReminder
+    const newStat = !emptyReminder;
 
-    uEmptyReminder(newStat)
-  }
+    uEmptyReminder(newStat);
+  };
 
   useEffect(() => {
-    if (myUserData) {
-      setTempName(myUserData?.fullName || '')
+    if (userData) {
+      setTempName(userData?.fullName || '');
 
-      if (myUserData.quotes) {
-        const userQuotes = myUserData.quotes == 'false' ? false : true
-        uIsQuotes(userQuotes)
-        setTempQuoteBool(userQuotes)
+      if (userData.quotes) {
+        const userQuotes = userData.quotes == 'false' ? false : true;
+        console.log({ userQuotes });
+        setIsQuote(userQuotes);
       }
     }
-  }, [myUserData])
+  }, [userData]);
 
   const clearStorage = () => {
-    localStorage.clear()
-
+    localStorage.clear();
     if (window.location && window.location.reload) {
-      successToast('Cache was cleared! \n App reloading...')
+      successToast('Cache was cleared! \n App reloading...');
       setTimeout(() => {
-        window.location.reload()
-      }, 1000)
+        window.location.reload();
+      }, 1000);
     } else {
-      successToast('Cache was cleared! \n Please reload app')
+      successToast('Cache was cleared! \n Please reload app');
     }
-  }
+  };
 
   useEffect(() => {
-    telegramApp.BackButton.show()
-  }, [])
+    telegramApp.BackButton.show();
+  }, []);
 
   const setSettings = async () => {
-    const valueQuote = tempQuoteBool == true ? 'true' : 'false'
+    const valueQuote = isQuotes;
 
-    const newTime = myUserData.notifications.time
-      ? myUserData.notifications.time
-      : null
+    const newTime = userData.notifications.time
+      ? userData.notifications.time
+      : null;
 
-    uMyUserData((prevUserData) => ({
+    setUserData((prevUserData) => ({
       ...prevUserData,
       fullName: tempName,
       quotes: valueQuote,
@@ -109,8 +93,8 @@ const SettingsPage = () => {
         time: newTime,
         empty: emptyReminder,
       },
-    }))
-    successToast('Settings was saved')
+    }));
+    successToast('Settings was saved');
     try {
       const response = await fetch(`${WEBAPP_URL}/api/auth/setting/`, {
         method: 'PATCH',
@@ -126,59 +110,60 @@ const SettingsPage = () => {
             time: newTime,
             empty: emptyReminder,
           },
-          authId: myUserData.authId,
+          authId: userData.authId,
         }),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error('Network response was not ok.')
+        throw new Error('Network response was not ok.');
       }
 
-      const contentType = response.headers.get('content-type')
+      const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
-        throw new Error('Response not JSON')
+        throw new Error('Response not JSON');
       }
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (data?.success) {
+        // console.log(first)
       } else {
-        errorToast('Something went wrong.\nPlease try again')
+        errorToast('Something went wrong.\nPlease try again');
       }
     } catch (error) {
-      errorToast('Something went wrong.\nPlease try again')
+      errorToast('Something went wrong.\nPlease try again');
       if (error?.response?.status === 429) {
-        errorToast('Too many requests.\nWait a little bit')
+        errorToast('Too many requests.\nWait a little bit');
       } else {
-        console.error(error)
+        // console.error(error)
 
-        errorToast('Something went wrong.\nPlease reload the page')
+        errorToast('Something went wrong.\nPlease reload the page');
       }
     }
-  }
+  };
 
   const processFormButt2 = useCallback(async () => {
-    await setSettings()
+    await setSettings();
   }, [
     tempName,
-    tempQuoteBool,
+    isQuotes,
     getAllNotif,
     getEchoNotif,
     emptyReminder,
-    myUserData?.notifications?.time,
-  ])
+    userData?.notifications?.time,
+  ]);
 
   useEffect(() => {
-    mountBtn(processFormButt2, 'Save')
-  }, [])
+    mountBtn(processFormButt2, 'Save');
+  }, []);
 
   useEffect(() => {
-    mountBtn(processFormButt2, 'Save')
-  }, [processFormButt2])
+    mountBtn(processFormButt2, 'Save');
+  }, [processFormButt2]);
 
   return (
     <div className={styles.settingPage}>
-      {myUserData ? (
+      {userData ? (
         <>
           <div className={styles.paddingblock}>
             <h3>Settings</h3>
@@ -204,7 +189,6 @@ const SettingsPage = () => {
                     toggleName=""
                   />
                 </div>
-                {/* <div className={styles.somehr} /> */}
                 <div className={styles.toggleBlock}>
                   <h4>Echo repeat</h4>
                   <MyToggle
@@ -218,12 +202,12 @@ const SettingsPage = () => {
                   <>
                     <div onClick={showTimeModal} className={styles.settime}>
                       <p>
-                        {myUserData.notifications.time
-                          ? myUserData.notifications.time
+                        {userData.notifications.time
+                          ? userData.notifications.time
                           : 'No time'}
                       </p>
                       <button className={styles.editButt}>
-                        {myUserData.notifications.time ? 'Edit' : 'Set'}
+                        {userData.notifications.time ? 'Edit' : 'Set'}
                       </button>
                     </div>
                     <div className={styles.toggleBlock}>
@@ -245,14 +229,13 @@ const SettingsPage = () => {
                 <div className={styles.toggleBlock}>
                   <h4>Show quotes</h4>
                   <MyToggle
-                    toggleStatus={tempQuoteBool}
+                    toggleStatus={isQuotes}
                     toggleChange={toggleMyQuote}
                     toggleId="quote-toggle"
                     toggleName=""
                   />
                 </div>
               </div>
-              {/* <p>Name error</p> */}
             </div>
 
             <button
@@ -276,7 +259,7 @@ const SettingsPage = () => {
         </>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default SettingsPage
+export default SettingsPage;

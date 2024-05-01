@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './ProgressBar.module.css'
 const ProgressBar = ({ value, maxValue, markers, height, round }) => {
   const widthPercentage = maxValue > 0 ? (value / maxValue) * 100 : 0

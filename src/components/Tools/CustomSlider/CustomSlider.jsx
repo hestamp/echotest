@@ -4,9 +4,11 @@ import Glider from 'react-glider'
 import 'glider-js/glider.min.css'
 import styles from './CustomSlider.module.css'
 import ProgressBar from '../ProgressBar/ProgressBar'
+
 const handleChildClick = (e) => {
   e.stopPropagation()
 }
+
 const CustomSlider = ({
   array,
   fullsize,

@@ -1,39 +1,42 @@
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import styles from './MainPage.module.css'
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import styles from './MainPage.module.css';
 
-import { useNavigate } from 'react-router-dom'
-import { BsThreeDots } from 'react-icons/bs'
-import { MyCalendar, MenuDropdown, QuoteDay, SlugDiv } from '@/components/'
-import { GoDotFill } from 'react-icons/go'
-import { MdEventRepeat, MdDone, MdOutlineLink } from 'react-icons/md'
-import { FaRegCalendarCheck } from 'react-icons/fa6'
-import { useMyLogic, useMyMainContext, useMyUser } from '@/storage'
+import { useNavigate } from 'react-router-dom';
+import { BsThreeDots } from 'react-icons/bs';
+import { MyCalendar, MenuDropdown, QuoteDay, SlugDiv } from '@/components/';
+import { GoDotFill } from 'react-icons/go';
+import { MdEventRepeat, MdDone, MdOutlineLink } from 'react-icons/md';
+import { FaRegCalendarCheck } from 'react-icons/fa6';
+import { useMyLogic, useMyMainContext } from '@/storage';
 
-import { renderContentWithLineBreaks } from '@/utils/textUtils'
+import { renderContentWithLineBreaks } from '@/utils/textUtils';
 
-import { telegramApp, useTelegram } from '@/hooks/useTelegram'
+import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 
-import { isTodayMatchingLevelDate } from '@/utils/objUtils'
+import { isTodayMatchingLevelDate } from '@/utils/objUtils';
 
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
+import dayjs from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 
-import { TourGuide } from '@/components/Tools/TourGuide/TourGuide'
-import { useMyGuide } from '../../storage'
-import ToggleManu from './ToggleManu'
+import { TourGuide } from '@/components/Tools/TourGuide/TourGuide';
+import { useMyGuide } from '../../storage';
+import ToggleManu from './ToggleManu';
+import useAuth from '@/hooks/Auth/useAuth';
 
-dayjs.extend(utc)
-dayjs.extend(timezone)
+const newEchoName = 'First echo. What is spaced repetition?';
+const newEchoContext = `
+    The method of spaced repetition was first conceived of in the 1880s by German scientist Hermann Ebbinghaus. Ebbinghaus created the forgetting curve - a graph portraying the loss of learned information over time - and postulated that it can be curbed by reviewing such information at several intervals over a period of time.`;
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 const MainPage = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const { getUserData } = useMyUser()
+  const { userData, taskArr, uTaskArr } = useAuth();
 
   const {
-    taskArr,
-    uTaskArr,
     uActiveEcho,
     todayMode,
     setTodayMode,
@@ -41,220 +44,215 @@ const MainPage = () => {
     setPickedDateEchos,
     selectedDate,
     setSelectedDate,
-  } = useMyMainContext()
+  } = useMyMainContext();
 
-  const { uCrudMode, echoModal, uEchoModal, platformCheck } = useMyLogic()
-  const { isTourGuideCache, mainPageGuide, uMainPageGuide } = useMyGuide()
+  const { uCrudMode, echoModal, uEchoModal, platformCheck } = useMyLogic();
+  const { isTourGuideCache, mainPageGuide, uMainPageGuide } = useMyGuide();
 
-  const [activeTask, setActiveTask] = useState(null)
-  const { mountBtn } = useTelegram()
+  const [activeTask, setActiveTask] = useState(null);
+  const { mountBtn } = useTelegram();
 
-  const formatDate = (date) => {
-    const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone
-    return dayjs(date).tz(userLocalTz).format('YYYY-MM-DD')
-  }
+  const formatDate = useCallback((date) => {
+    const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    return dayjs(date).tz(userLocalTz).format('YYYY-MM-DD');
+  }, []);
 
-  // const stringDate = formatDate(Date.now())
   const stringDate = useCallback(() => {
-    console.log('triggered stringDate')
-    return formatDate(Date.now())
-  }, [])
+    return formatDate(Date.now());
+  }, []);
 
-  const [activeTaskDates, setActiveTaskDates] = useState([])
-  const [activeTaskDay, setActiveTaskDay] = useState(null)
+  const [activeTaskDates, setActiveTaskDates] = useState([]);
+  const [activeTaskDay, setActiveTaskDay] = useState(null);
 
   const isDateInTaskDates = () => {
     return (taskDate, clickedDate) => {
-      const formattedTaskDate = formatDate(taskDate)
-      const formattedClickedDate = formatDate(clickedDate)
-      return formattedTaskDate === formattedClickedDate
-    }
-  }
+      const formattedTaskDate = formatDate(taskDate);
+      const formattedClickedDate = formatDate(clickedDate);
+      return formattedTaskDate === formattedClickedDate;
+    };
+  };
 
   const goActiveTask = (index) => {
-    const selectedTask = filteredTasks[index]
+    const selectedTask = filteredTasks[index];
 
     if (index == activeTask) {
-      readfunc(selectedTask)
+      readfunc(selectedTask);
     } else {
-      setActiveTask(index)
-      setActiveTaskDates(selectedTask.dates)
+      setActiveTask(index);
+      setActiveTaskDates(selectedTask.dates);
     }
-  }
+  };
+
   const goActiveTaskDay = (index) => {
-    const selectedTaskDay = sortedArray[index]
+    const selectedTaskDay = sortedArray[index];
     if (index == activeTaskDay) {
-      readfunc(selectedTaskDay)
+      readfunc(selectedTaskDay);
     } else {
-      setActiveTaskDay(index)
+      setActiveTaskDay(index);
 
-      setActiveTaskDates(selectedTaskDay.dates)
+      setActiveTaskDates(selectedTaskDay.dates);
     }
-  }
+  };
 
-  const toggleMode = (param) => {
+  const toggleMode = useCallback((param) => {
     if (param) {
-      setTodayMode(param)
-      setActiveTaskDay(null)
-      setActiveTask(null)
+      setTodayMode(param);
+      setActiveTaskDay(null);
+      setActiveTask(null);
     }
-  }
+  }, []);
 
   const sortedArray = useMemo(() => {
-    const today = new Date()
-    const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone
-    console.log('sortedTz', userLocalTz)
+    const today = new Date();
+    const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
     const calculateLocalState = (task) => {
-      return isTodayMatchingLevelDate(task, today, userLocalTz)
-    }
+      return isTodayMatchingLevelDate(task, today, userLocalTz);
+    };
 
     const mappedArray = pickedDateEchos.map((task) => {
       // Calculate local state for the current task
-      const localState = calculateLocalState(task)
+      const localState = calculateLocalState(task);
 
       // Return the task object along with its local state
       return {
         ...task,
         localState: localState,
-      }
-    })
+      };
+    });
 
     // Sort the mapped array based on the local state
     return mappedArray.sort((a, b) => {
-      const isAToComplete = a.localState === 'tocomplite'
-      const isBToComplete = b.localState === 'tocomplite'
+      const isAToComplete = a.localState === 'tocomplite';
+      const isBToComplete = b.localState === 'tocomplite';
 
-      if (isAToComplete === isBToComplete) return 0
-      else if (isAToComplete) return -1
-      else return 1
-    })
-  }, [pickedDateEchos])
+      if (isAToComplete === isBToComplete) return 0;
+      else if (isAToComplete) return -1;
+      else return 1;
+    });
+  }, [pickedDateEchos]);
 
   const mappedTasks = useMemo(() => {
-    console.log('mappedTask rerendder')
-    const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone
-    console.log(userLocalTz)
-    const today = new Date()
+    const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+    const today = new Date();
 
     // Function to calculate local state for a task
     const calculateLocalState = (task) => {
-      return isTodayMatchingLevelDate(task, today, userLocalTz)
-    }
+      return isTodayMatchingLevelDate(task, today, userLocalTz);
+    };
 
     // Map through taskArr and calculate local state for each task
-    return taskArr.map((task) => {
+    return taskArr?.map((task) => {
       // Calculate local state for the current task
-      const localState = calculateLocalState(task)
+      const localState = calculateLocalState(task);
 
       // Return the task object along with its local state
       return {
         ...task,
         localState: localState,
-      }
-    })
-  }, [taskArr])
+      };
+    });
+  }, [taskArr]);
 
   const filteredTasks = useMemo(() => {
     // Filter tasks based on todayMode and local state
-    console.log('filterTask rerender')
     if (todayMode === 'all') {
-      console.log('filter task all')
-      mappedTasks.reverse()
+      mappedTasks.reverse();
       mappedTasks.sort((a, b) => {
-        const isAToComplete = a.localState === 'tocomplite'
-        const isBToComplete = b.localState === 'tocomplite'
-        if (isAToComplete === isBToComplete) return 0
-        else if (isAToComplete) return -1
-        else return 1
-      })
-      let mappedTasks2 = mappedTasks.filter((task) => !task.completed)
-      return mappedTasks2
+        const isAToComplete = a.localState === 'tocomplite';
+        const isBToComplete = b.localState === 'tocomplite';
+        if (isAToComplete === isBToComplete) return 0;
+        else if (isAToComplete) return -1;
+        else return 1;
+      });
+      let mappedTasks2 = mappedTasks.filter((task) => !task.completed);
+      return mappedTasks2;
     } else if (todayMode === 'completed') {
-      console.log('completed')
-      let tasks2 = mappedTasks.filter((task) => task.completed)
-      return tasks2
+      let tasks2 = mappedTasks.filter((task) => task.completed);
+      return tasks2;
     }
 
     // Return original tasks array if todayMode is not 'all' or 'completed'
     // return mappedTasks
-  }, [todayMode, mappedTasks])
+  }, [todayMode, mappedTasks]);
 
-  const createFunc = () => {
-    navigate('/echo/create')
-    uEchoModal(false)
-  }
+  const createFunc = useCallback(() => {
+    navigate('/echo/create');
+    uEchoModal(false);
+  }, []);
 
-  const readfunc = (obj) => {
-    uActiveEcho(obj)
-    uCrudMode('read')
-    uEchoModal(true)
-  }
-  const updateFunc = (obj) => {
-    uActiveEcho(obj)
-    uEchoModal(false)
-    navigate('/echo/edit')
-  }
+  const readfunc = useCallback((obj) => {
+    uActiveEcho(obj);
+    uCrudMode('read');
+    uEchoModal(true);
+  }, []);
 
-  const delfunc = (obj) => {
-    uCrudMode('remove')
-    uEchoModal(true)
-    uActiveEcho(obj)
-  }
+  const updateFunc = useCallback((obj) => {
+    uActiveEcho(obj);
+    uEchoModal(false);
+    navigate('/echo/edit');
+  }, []);
 
-  const arrFunc = [
-    { name: 'Open', func: readfunc },
-    { name: 'Edit', func: updateFunc },
-    { name: 'Remove', func: delfunc },
-  ]
+  const delfunc = useCallback((obj) => {
+    uCrudMode('remove');
+    uEchoModal(true);
+    uActiveEcho(obj);
+  }, []);
 
-  const activeDateFunc = (activedate) => {
-    console.log('33333333333333')
-    setActiveTask(null)
-    toggleMode('day')
-    setActiveTaskDates([])
-    const filteredTasks = taskArr.filter((task) =>
-      task.dates.some((date) => isDateInTaskDates(date, activedate))
-    )
+  const arrFunc = useMemo(
+    () => [
+      { name: 'Open', func: readfunc },
+      { name: 'Edit', func: updateFunc },
+      { name: 'Remove', func: delfunc },
+    ],
+    []
+  );
 
-    setPickedDateEchos(filteredTasks)
-  }
+  const activeDateFunc = useCallback(
+    (activedate) => {
+      setActiveTask(null);
+      toggleMode('day');
+      setActiveTaskDates([]);
+      const filteredTasks = taskArr.filter((task) =>
+        task.dates.some((date) => isDateInTaskDates(date, activedate))
+      );
+
+      setPickedDateEchos(filteredTasks);
+    },
+    [taskArr]
+  );
 
   useEffect(() => {
-    const isTourGuideMain = localStorage.getItem('maintour')
+    const isTourGuideMain = localStorage.getItem('maintour');
     if (isTourGuideMain) {
-      telegramApp.MainButton.show()
+      telegramApp.MainButton.show();
     }
-    mountBtn(createFunc, 'Create echo')
-    telegramApp.BackButton.hide()
+    mountBtn(createFunc, 'Create echo');
+    telegramApp.BackButton.hide();
 
     if (selectedDate == null) {
-      setSelectedDate(stringDate)
+      setSelectedDate(stringDate);
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (taskArr && taskArr.length && selectedDate) {
-      activeDateFunc(selectedDate)
+      activeDateFunc(selectedDate);
     }
-  }, [taskArr, selectedDate])
+  }, [taskArr, selectedDate]);
 
-  const pushFakeEcho = () => {
-    const currentDate = new Date()
-    currentDate.setDate(currentDate.getDate() - 1)
-    const intervals = [0, 1, 3, 10, 30, 60]
+  const pushFakeEcho = useCallback(() => {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() - 1);
+    const intervals = [0, 1, 3, 10, 30, 60];
 
     const dates = intervals.map((interval) => {
-      const date = new Date(currentDate)
-      date.setDate(currentDate.getDate() + interval)
-      return date.toISOString()
-    })
+      const date = new Date(currentDate);
+      date.setDate(currentDate.getDate() + interval);
+      return date.toISOString();
+    });
 
-    const newEchoName = 'First echo. What is spaced repetition?'
-    const newEchoContext = `
-    The method of spaced repetition was first conceived of in the 1880s by German scientist Hermann Ebbinghaus. Ebbinghaus created the forgetting curve - a graph portraying the loss of learned information over time - and postulated that it can be curbed by reviewing such information at several intervals over a period of time.`
-
-    const iddate = new Date().toISOString()
+    const iddate = new Date().toISOString();
 
     const newTask = {
       name: newEchoName,
@@ -266,117 +264,118 @@ const MainPage = () => {
       next: dates[1],
       completed: false,
       id: iddate,
-    }
+    };
 
-    const newArrEcho = []
-    newArrEcho.push(newTask)
-    uTaskArr(newArrEcho)
+    const newArrEcho = [];
+    newArrEcho.push(newTask);
+    uTaskArr(newArrEcho);
 
-    activeDateFunc(selectedDate)
-    setActiveTaskDay(0)
+    activeDateFunc(selectedDate);
+    setActiveTaskDay(0);
 
-    setActiveTaskDates(dates)
-  }
+    setActiveTaskDates(dates);
+  }, [selectedDate, uTaskArr]);
 
-  const newSteps = [
-    {
-      id: 'step-1',
-      canClickTarget: false,
+  const newSteps = useMemo(
+    () => [
+      {
+        id: 'step-1',
+        canClickTarget: false,
 
-      beforeShowPromise: function () {
-        return new Promise(function (resolve) {
-          setTimeout(function () {
-            window.scrollTo(0, 0)
-            resolve()
-          }, 500)
-        })
+        beforeShowPromise: function () {
+          return new Promise(function (resolve) {
+            setTimeout(function () {
+              window.scrollTo(0, 0);
+              resolve();
+            }, 500);
+          });
+        },
+        when: {
+          show: () => {
+            localStorage.setItem('maintour', 'true');
+            uMainPageGuide(true);
+            pushFakeEcho();
+          },
+        },
+        buttons: [
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Start',
+            type: 'next',
+          },
+        ],
+        title: '1/4 Quick tour',
+        text: 'Let me guide you with main functionality',
       },
-      when: {
-        show: () => {
-          localStorage.setItem('maintour', 'true')
-          uMainPageGuide(true)
-          pushFakeEcho()
-        },
-      },
-      buttons: [
-        {
-          classes: 'shepherd-button-primary',
-          text: 'Start',
-          type: 'next',
-        },
-      ],
-      title: '1/4 Quick tour',
-      text: 'Let me guide you with main functionality',
-    },
-    {
-      id: 'step-2',
-      canClickTarget: false,
-      attachTo: { element: '.tasklist', on: 'top' },
+      {
+        id: 'step-2',
+        canClickTarget: false,
+        attachTo: { element: '.tasklist', on: 'top' },
 
-      buttons: [
-        {
-          classes: 'shepherd-button-secondary',
-          text: 'Back',
-          type: 'back',
-        },
-        {
-          classes: 'shepherd-button-primary',
-          text: 'Next',
-          type: 'next',
-        },
-      ],
-      title: '2/4 Echo list',
-      text: 'Here will be all of your created echoes. \n \nYou can track if there is something to repeat for today or visit rest of them.',
-    },
-    {
-      id: 'step-3',
-      canClickTarget: false,
-      attachTo: { element: '.mycalendar', on: 'top' },
-      buttons: [
-        {
-          classes: 'shepherd-button-secondary',
-          text: 'Back',
-          type: 'back',
-        },
-        {
-          classes: 'shepherd-button-primary',
-          text: 'Next',
-          type: 'next',
-        },
-      ],
-      title: '3/4 Learning plan',
-      text: 'All of your created echoes have repetitions intervals and will be displayed on a calendar plan',
-    },
-    {
-      id: 'step-4',
-      canClickTarget: false,
-      attachTo: {
-        element: platformCheck == 'unknown' ? '.createchobutt' : '.onepix',
-        on: 'top',
+        buttons: [
+          {
+            classes: 'shepherd-button-secondary',
+            text: 'Back',
+            type: 'back',
+          },
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Next',
+            type: 'next',
+          },
+        ],
+        title: '2/4 Echo list',
+        text: 'Here will be all of your created echoes. \n \nYou can track if there is something to repeat for today or visit rest of them.',
       },
-      buttons: [
-        {
-          classes: 'shepherd-button-secondary',
-          text: 'Back',
-          type: 'back',
-        },
-        {
-          classes: 'shepherd-button-primary',
-          text: 'Finish',
-          type: 'next',
-        },
-      ],
-      when: {
-        show: () => {
-          telegramApp.MainButton.show()
-        },
+      {
+        id: 'step-3',
+        canClickTarget: false,
+        attachTo: { element: '.mycalendar', on: 'top' },
+        buttons: [
+          {
+            classes: 'shepherd-button-secondary',
+            text: 'Back',
+            type: 'back',
+          },
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Next',
+            type: 'next',
+          },
+        ],
+        title: '3/4 Learning plan',
+        text: 'All of your created echoes have repetitions intervals and will be displayed on a calendar plan',
       },
-      title: '4/4 First step',
-      text: 'Simply click Create echo and  add some information you want to learn with spaced repetition.',
-    },
-  ]
-
-  console.log('main comp RERENDER!')
+      {
+        id: 'step-4',
+        canClickTarget: false,
+        attachTo: {
+          element: platformCheck == 'unknown' ? '.createchobutt' : '.onepix',
+          on: 'top',
+        },
+        buttons: [
+          {
+            classes: 'shepherd-button-secondary',
+            text: 'Back',
+            type: 'back',
+          },
+          {
+            classes: 'shepherd-button-primary',
+            text: 'Finish',
+            type: 'next',
+          },
+        ],
+        when: {
+          show: () => {
+            telegramApp.MainButton.show();
+          },
+        },
+        title: '4/4 First step',
+        text: 'Simply click Create echo and  add some information you want to learn with spaced repetition.',
+      },
+    ],
+    [platformCheck, pushFakeEcho]
+  );
 
   return (
     <div className={styles.mainPage}>
@@ -413,7 +412,7 @@ const MainPage = () => {
             stringDate={stringDate}
           />
 
-          {getUserData == false || getUserData == null ? (
+          {!userData ? (
             <div className={styles.taskblock}>
               <SlugDiv />
               <SlugDiv />
@@ -428,18 +427,18 @@ const MainPage = () => {
                       <div className={styles.taskblock}>
                         {sortedArray.length > 0 ? (
                           sortedArray.map((item, index) => {
-                            const maxChar = 300
-                            let truncatedContent = item.content
+                            const maxChar = 300;
+                            let truncatedContent = item.content;
 
                             const isContentTooLong =
-                              item.content.length > maxChar
+                              item.content.length > maxChar;
 
                             if (item.content.length > maxChar) {
                               truncatedContent =
-                                item.content.substring(0, maxChar) + '...'
+                                item.content.substring(0, maxChar) + '...';
                             }
 
-                            const localState = item.localState
+                            const localState = item.localState;
 
                             return (
                               <div
@@ -522,7 +521,7 @@ const MainPage = () => {
                                   </div>
                                 )}
                               </div>
-                            )
+                            );
                           })
                         ) : (
                           <p>
@@ -543,17 +542,17 @@ const MainPage = () => {
                 <div className={styles.taskblock}>
                   {filteredTasks.length > 0 ? (
                     filteredTasks.map((item, index) => {
-                      const maxChar = 300
-                      let truncatedContent = item.content
+                      const maxChar = 300;
+                      let truncatedContent = item.content;
 
-                      const isContentTooLong = item.content.length > maxChar
+                      const isContentTooLong = item.content.length > maxChar;
 
                       if (item.content.length > maxChar) {
                         truncatedContent =
-                          item.content.substring(0, maxChar) + '...'
+                          item.content.substring(0, maxChar) + '...';
                       }
 
-                      const localState = item.localState
+                      const localState = item.localState;
 
                       return (
                         <div
@@ -618,7 +617,7 @@ const MainPage = () => {
                             </div>
                           )}
                         </div>
-                      )
+                      );
                     })
                   ) : (
                     <p className={styles.somep}>
@@ -651,7 +650,7 @@ const MainPage = () => {
         <></>
       )}
     </div>
-  )
-}
+  );
+};
 
-export default MainPage
+export default MainPage;

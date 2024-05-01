@@ -1,6 +1,7 @@
-import React from 'react'
-import styles from './MainPage.module.css'
-import { formatDateNow } from '@/utils/dateUtils'
+import { memo } from 'react';
+import styles from './MainPage.module.css';
+import { formatDateNow } from '@/utils/dateUtils';
+
 const ToggleManu = ({
   formatDate,
   selectedDate,
@@ -8,7 +9,7 @@ const ToggleManu = ({
   stringDate,
   todayMode,
 }) => {
-  console.log('TOOOOOOOOOOOOOOOOOOOOGLE')
+  // console.log('TOOOOOOOOOOOOOOOOOOOOGLE')
   return (
     <div className={styles.echodiv}>
       <div className={styles.echotype}>
@@ -44,7 +45,7 @@ const ToggleManu = ({
         </button>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default React.memo(ToggleManu)
+export default memo(ToggleManu);

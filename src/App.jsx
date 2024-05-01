@@ -1,99 +1,51 @@
-import { useEffect, useState } from 'react'
-import 'balloon-css'
-import styles from './App.module.css'
+import { useCallback, useEffect } from 'react';
+import 'balloon-css';
+import styles from './App.module.css';
+import { useNavigate, useRoutes } from 'react-router-dom';
 
-import { Routes, Route, useNavigate, useLocation } from 'react-router-dom'
-
-import dayjs from 'dayjs'
-import utc from 'dayjs/plugin/utc'
-import timezone from 'dayjs/plugin/timezone'
-
-dayjs.extend(utc)
-dayjs.extend(timezone)
-
-import {
-  EditEchoPage,
-  NewEchoPage,
-  EchoSystemPage,
-  NotificationPage,
-  HowToUsePage,
-  InfoPage,
-  StatPage,
-  AchivePage,
-  GuidePage,
-  SettingsPage,
-  MainPage,
-} from '@/pages'
-
-import { telegramApp, useTelegram } from './hooks/useTelegram'
+import { telegramApp, useTelegram } from './hooks/useTelegram';
 import {
   useMyGuide,
   useMyLogic,
   useMyMainContext,
   useMyNotification,
-  useMyQuote,
   useMyStats,
-  useMyToaster,
-  useMyUser,
-} from './storage'
+} from './storage';
 
-import { levelNamesBar, staticAchiveNames } from './slug/data'
-
-import { quotesDayArray } from './static/quotes'
+import { levelNamesBar } from './slug/data';
 
 import {
   EchoReader,
   EchoRemover,
-  Navbar,
   NotificationPicker,
-  MySidebar,
   MyNewModal,
   MyLoader,
-} from '@/components/'
+} from '@/components/';
 
-import { getRandomQuote } from './utils/textUtils'
-import EchoChecker from './components/EchoChecker/EchoChecker'
-import { slugData } from './utils/slugdata'
+import EchoChecker from './components/EchoChecker/EchoChecker';
+import router from './pages/router';
+import useAuth from './hooks/Auth/useAuth';
 
 function App() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const locationCheck = useLocation()
+  const { checkrunAndExpand } = useTelegram();
 
-  const isMainPage = locationCheck.pathname === '/'
-  const { myQuote, uMyQuote, isQuotes, uIsQuotes } = useMyQuote()
-  const { checkrunAndExpand } = useTelegram()
+  const { uActiveEcho } = useMyMainContext();
 
-  const { uTaskArr, uActiveEcho } = useMyMainContext()
-
-  const { myUserData, uMyUserData, uUserTz, uGetUserData } = useMyUser()
+  const { userData } = useAuth();
 
   const {
     echoModal,
-    WEBAPP_URL,
     isLoading,
-    uIsLoading,
-    backButtMounted,
-    uBackButtMounted,
-    settingButtMounted,
-    uSettingButtMounted,
-  } = useMyLogic()
-
-  const { successToast, errorToast } = useMyToaster()
-
-  const { setActiveLvl } = useMyStats()
-
-  const {
     uEchoModal,
     uCrudMode,
     crudMode,
     platformCheck,
     uPlatformCheck,
-    isSidebar,
-    uIsSidebar,
-    isSendData,
-    setIsSendData,
-  } = useMyLogic()
+  } = useMyLogic();
+
+  const { setActiveLvl } = useMyStats();
 
   const {
     isTimeModal,
@@ -101,233 +53,128 @@ function App() {
     userNotifTime,
     firstTimeNotif,
     uFirstTimeNotif,
-  } = useMyNotification()
+  } = useMyNotification();
 
   const {
-    isTourGuideCache,
     uIsCheckGuide,
     uIsTourGuideCache,
     uMainPageGuide,
     uCreateEchoGuide,
     uIsReadGuide,
-  } = useMyGuide()
+  } = useMyGuide();
 
   useEffect(() => {
-    checkrunAndExpand()
+    checkrunAndExpand();
 
-    const isGuideDone = localStorage.getItem('guide')
-    const isActiveQuote = localStorage.getItem('quotes')
-    const isTourGuideMain = localStorage.getItem('maintour')
-    const isTourGuideCreate = localStorage.getItem('createtour')
-    const isReadGuide = localStorage.getItem('readtour')
-    const isCheckGuide = localStorage.getItem('checktour')
+    const isGuideDone = localStorage.getItem('guide');
+    const isTourGuideMain = localStorage.getItem('maintour');
+    const isTourGuideCreate = localStorage.getItem('createtour');
+    const isReadGuide = localStorage.getItem('readtour');
+    const isCheckGuide = localStorage.getItem('checktour');
 
-    const localLaunch = localStorage.getItem('notif1')
+    const localLaunch = localStorage.getItem('notif1');
 
     if (localLaunch != 'true') {
-      uFirstTimeNotif(true)
+      uFirstTimeNotif(true);
     }
 
     if (isGuideDone) {
-      navigate('/main')
+      navigate('/main');
     }
 
     if (isReadGuide == 'true') {
-      uIsReadGuide(true)
+      uIsReadGuide(true);
     } else {
-      uIsReadGuide(false)
+      uIsReadGuide(false);
     }
     if (isCheckGuide == 'true') {
-      uIsCheckGuide(true)
+      uIsCheckGuide(true);
     } else {
-      uIsCheckGuide(false)
+      uIsCheckGuide(false);
     }
 
     if (isTourGuideMain == 'true') {
-      uMainPageGuide(true)
+      uMainPageGuide(true);
     } else {
-      uMainPageGuide(false)
+      uMainPageGuide(false);
     }
     if (isTourGuideCreate == 'true') {
-      uCreateEchoGuide(true)
+      uCreateEchoGuide(true);
     } else {
-      uCreateEchoGuide(false)
+      uCreateEchoGuide(false);
     }
-    uIsTourGuideCache(true)
-    if (isActiveQuote == 'false') {
-      uIsQuotes(false)
-    } else {
-      uIsQuotes(true)
-    }
-  }, [])
+    uIsTourGuideCache(true);
+  }, []);
 
   useEffect(() => {
-    const newTz = dayjs.tz.guess()
-
-    const userTimeZone =
-      newTz || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC'
-
-    localStorage.setItem('timezone', userTimeZone)
-
-    uUserTz(newTz)
-  }, [])
-
-  useEffect(() => {
-    if (echoModal && isSidebar) {
-      uIsSidebar(false)
-    }
-  }, [echoModal, isSidebar])
-
-  const authUser = async (tgid, initDataUnsafe, platform) => {
-    let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone
-
-    if (!userTimeZone || userTimeZone === 'undefined') {
-      userTimeZone = 'UTC'
-    }
-
-    try {
-      uIsLoading(true)
-      uGetUserData(false)
-      const response = await fetch(`${WEBAPP_URL}/api/auth/userdata`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tgid: tgid || null,
-          tgdata: initDataUnsafe || {},
-          platform: platform || 'unknown',
-          timezone: userTimeZone || 'UTC',
-        }),
-      })
-
-      const responseData = await response.json()
-
-      if (responseData.error) {
-        errorToast(`${responseData.message}`)
+    if (userData) {
+      if (userData.notifications?.time) {
+        localStorage.setItem('notif1', 'true');
       }
-      if (responseData.user) {
-        const userObj = responseData.user
-        console.log(userObj)
-        setIsSendData(true)
-        uTaskArr(userObj.echos)
-        uMyUserData(userObj)
-        if (userObj.notifications.time) {
-          localStorage.setItem('notif1', 'true')
-        }
-        if (userObj.guides.start) {
-          localStorage.setItem('guide', 'true')
-          navigate('/main')
-        }
-        if (userObj.guides.main) {
-          localStorage.setItem('maintour', 'true')
-          uMainPageGuide(true)
-        }
-        if (userObj.guides.create) {
-          localStorage.setItem('createtour', 'true')
-          uCreateEchoGuide(true)
-        }
+      if (userData.guides?.start) {
+        localStorage.setItem('guide', 'true');
+        navigate('/main');
       }
-      console.log(responseData)
-    } catch (error) {
-      errorToast(`Something went wrong \n Please, reload the app`)
-    } finally {
-      uIsLoading(false)
-      uGetUserData(true)
+      if (userData.guides?.main) {
+        localStorage.setItem('maintour', 'true');
+        uMainPageGuide(true);
+      }
+      if (userData.guides?.create) {
+        localStorage.setItem('createtour', 'true');
+        uCreateEchoGuide(true);
+      }
     }
-  }
-
-  const backButt = () => {
-    navigate(-1)
-    uIsSidebar(false)
-  }
-
-  const goSetting = () => {
-    navigate('/settings')
-  }
+  }, []);
 
   useEffect(() => {
-    if (telegramApp?.initDataUnsafe?.user?.id && !isSendData) {
-      const initDataUnsafe = telegramApp.initDataUnsafe
-      const tgid = telegramApp.initDataUnsafe.user.id
-      const platform = telegramApp.platform
-
-      authUser(tgid, initDataUnsafe, platform)
-      console.log('trigger auth data')
-    } else {
-      uGetUserData(true)
-      uTaskArr(slugData.echos)
-      uMyUserData(slugData)
-    }
-
-    if (!backButtMounted) {
-      telegramApp.BackButton.onClick(() => backButt())
-      uBackButtMounted(true)
-    }
-
-    if (!settingButtMounted) {
-      telegramApp.SettingsButton.onClick(() => goSetting())
-
-      uSettingButtMounted(true)
-    }
-  }, [])
-
-  useEffect(() => {
-    const localLaunchNotif = localStorage.getItem('notif1')
+    const localLaunchNotif = localStorage.getItem('notif1');
 
     if (
-      myUserData &&
-      myUserData.stats.totalEchos == 1 &&
-      myUserData.notifications.echoes == true &&
-      myUserData.notifications.time == null &&
+      userData &&
+      userData.stats.totalEchos == 1 &&
+      userData.notifications.echoes == true &&
+      userData.notifications.time == null &&
       userNotifTime == null &&
       localLaunchNotif != 'true'
     ) {
       const timeout = setTimeout(() => {
-        uIsTimeModal(true)
-        uFirstTimeNotif(true)
-      }, 3000)
+        uIsTimeModal(true);
+        uFirstTimeNotif(true);
+      }, 3000);
 
       // Clear the timeout after it triggers
-      return () => clearTimeout(timeout)
+      return () => clearTimeout(timeout);
     }
-  }, [myUserData])
+  }, [userData]);
 
   useEffect(() => {
     if (telegramApp.platform != 'unknown') {
-      uPlatformCheck(telegramApp.platform)
+      uPlatformCheck(telegramApp.platform);
     } else {
-      uPlatformCheck('unknown')
+      uPlatformCheck('unknown');
     }
-  }, [telegramApp?.platform])
+  }, [telegramApp?.platform]);
+
+  const closeFullModal = useCallback(() => {
+    uEchoModal(false);
+    uCrudMode(null);
+    uActiveEcho(null);
+  }, []);
 
   useEffect(() => {
-    if (!myQuote && quotesDayArray) {
-      const newQuote = getRandomQuote(quotesDayArray)
-      uMyQuote(newQuote)
-    }
-
-    telegramApp.SettingsButton.show()
-  }, [])
-
-  const closeFullModal = () => {
-    uEchoModal(false)
-    uCrudMode(null)
-    uActiveEcho(null)
-  }
-
-  useEffect(() => {
-    if (myUserData) {
+    if (userData) {
       const activeL = {
-        name: `Level ${myUserData.stats.level + 1}: ${
-          levelNamesBar[myUserData.stats.level]
+        name: `Level ${userData.stats.level + 1}: ${
+          levelNamesBar[userData.stats.level]
         }`,
-        current: myUserData.stats.exp,
-        goal: (myUserData.stats.level + 1) * 100,
-      }
-      setActiveLvl(activeL)
+        current: userData.stats.exp,
+        goal: (userData.stats.level + 1) * 100,
+      };
+      setActiveLvl(activeL);
     }
-  }, [myUserData?.stats])
+  }, [userData]);
+
+  const routes = useRoutes(router);
 
   return (
     <div className={styles.App}>
@@ -356,34 +203,11 @@ function App() {
           <MyNewModal noClose isOpen={isTimeModal && firstTimeNotif}>
             <NotificationPicker />
           </MyNewModal>
-          <MySidebar sidebarOpen={isSidebar} setSidebarOpen={uIsSidebar}>
-            {!isMainPage ? <Navbar /> : <></>}
-            <div className={styles.routewrap}>
-              <Routes>
-                <Route exact path="/main" element={<MainPage />} />
-                <Route exact path="/settings" element={<SettingsPage />} />
-                <Route exact path="/" element={<GuidePage />} />
-                <Route exact path="/achivements" element={<AchivePage />} />
-                <Route exact path="/stats" element={<StatPage />} />
-                <Route exact path="/info" element={<InfoPage />} />
-                <Route exact path="/info/howto" element={<HowToUsePage />} />
-                <Route exact path="/info/system" element={<EchoSystemPage />} />
-                <Route
-                  exact
-                  path="/info/notif"
-                  element={<NotificationPage />}
-                />
-                <Route exact path="/echo/create" element={<NewEchoPage />} />
-                <Route exact path="/echo/edit" element={<EditEchoPage />} />
-              </Routes>
-            </div>
-
-            <div className="onepix"></div>
-          </MySidebar>
+          {routes}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
-export default App
+export default App;

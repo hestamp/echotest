@@ -1,4 +1,3 @@
-import React from 'react'
 import styles from './MenuDropdown.module.css'
 import * as DropdownMenu from '@radix-ui/react-dropdown-menu'
 
