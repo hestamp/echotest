@@ -1,9 +1,10 @@
 import { memo } from 'react';
 import styles from './EchoRemover.module.css';
 
-import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
+import { useMyLogic, useMyMainContext } from '@/storage';
 import { errorToast, successToast } from '@/utils/toast';
 import { WEBAPP_URL } from '@/config/constants';
+import useAuth from '@/hooks/Auth/useAuth';
 
 const EchoRemover = memo(() => {
   const {
@@ -15,7 +16,7 @@ const EchoRemover = memo(() => {
     setPickedDateEchos,
   } = useMyMainContext();
 
-  const { myUserData, uMyUserData } = useMyUser();
+  const { userData, setUserData } = useAuth();
 
   const { uCrudMode, uEchoModal } = useMyLogic();
 
@@ -44,7 +45,7 @@ const EchoRemover = memo(() => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          authId: myUserData.authId,
+          authId: userData.authId,
           echoId: echoid,
         }),
       });
@@ -65,7 +66,7 @@ const EchoRemover = memo(() => {
       if (data.success) {
         successToast('Your echo was removed!');
         if (data.userStats) {
-          uMyUserData((prevUserData) => ({
+          setUserData((prevUserData) => ({
             ...prevUserData,
             stats: data.userStats,
           }));

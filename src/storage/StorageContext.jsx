@@ -1,24 +1,14 @@
 import { successToast } from '@/utils/toast';
 import { createContext, useMemo, useRef, useState } from 'react';
-import { Toaster } from 'react-hot-toast';
 
 export const StorageContext = createContext();
 
 export const MyStorageProvider = ({ children }) => {
-  //Tour guide
-
-  //Toasters
-
-
-
-
   const initialFunction = () => {
     successToast('empty func');
   };
 
   //MainPage // Array of echos
-  const [taskArr, uTaskArr] = useState([]);
-  const WEBAPP_URL = 'https://c6a0-31-144-132-209.ngrok-free.app';
 
   const [todayMode, setTodayMode] = useState('all');
   const [selectedDate, setSelectedDate] = useState(null);
@@ -35,21 +25,13 @@ export const MyStorageProvider = ({ children }) => {
   const [allAchives, uAllAchives] = useState(null);
   const [activeAchive, uActiveAchive] = useState(null);
 
-  //UserData
-  const [getUserData, uGetUserData] = useState(null);
-  const [myUserData, uMyUserData] = useState(null);
-  const [userTz, uUserTz] = useState('UTC');
-
   // Logic
-  const [isSendData, setIsSendData] = useState(false);
   const [echoModal, uEchoModal] = useState(false);
   const [isLoading, uIsLoading] = useState(false);
 
   const [crudMode, uCrudMode] = useState(null);
   const [platformCheck, uPlatformCheck] = useState('unknown');
-  const [backButtMounted, uBackButtMounted] = useState(false);
   const [settingButtMounted, uSettingButtMounted] = useState(false);
-
 
   // Notifications
   const [isTimeModal, uIsTimeModal] = useState(false);
@@ -109,21 +91,11 @@ export const MyStorageProvider = ({ children }) => {
         emptyReminder,
         uEmptyReminder,
       },
-      user: {
-        myUserData,
-        uMyUserData,
-        userTz,
-        uUserTz,
-        getUserData,
-        uGetUserData,
-      },
       mainpage: {
         todayMode,
         setTodayMode,
         selectedDate,
         setSelectedDate,
-        taskArr,
-        uTaskArr,
         activeEcho,
         uActiveEcho,
         pickedDateEchos,
@@ -136,33 +108,26 @@ export const MyStorageProvider = ({ children }) => {
         uMainButtFunc,
       },
       logic: {
-        isSendData,
-        setIsSendData,
         echoModal,
         uEchoModal,
         crudMode,
         uCrudMode,
-        WEBAPP_URL,
         isLoading,
         uIsLoading,
         platformCheck,
         uPlatformCheck,
 
-        backButtMounted,
-        uBackButtMounted,
         settingButtMounted,
         uSettingButtMounted,
       },
 
       achivements: { allAchives, uAllAchives, activeAchive, uActiveAchive },
-      // toaster: { successToast, errorToast, customToast, noteToast },
     }),
     [
       activeAchive,
       activeEcho,
       activeLevel,
       allAchives,
-      backButtMounted,
       createEchoGuide,
       crudMode,
       echoModal,
@@ -170,32 +135,27 @@ export const MyStorageProvider = ({ children }) => {
       firstTimeNotif,
       getAllNotif,
       getEchoNotif,
-      getUserData,
       isCheckGuide,
       isLoading,
       isReadGuide,
-      isSendData,
+
       isTimeModal,
       isTourGuideCache,
       mainButtFunc,
       mainPageGuide,
-      myUserData,
       pickedDateEchos,
       platformCheck,
       selectedDate,
       settingButtMounted,
       showModalTime,
-      taskArr,
       todayMode,
       userNotifMode,
       userNotifTime,
-      userTz,
     ]
   );
 
   return (
     <StorageContext.Provider value={storageContextData}>
-      <Toaster />
       <div className={`theme `}>{children}</div>
     </StorageContext.Provider>
   );

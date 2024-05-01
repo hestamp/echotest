@@ -2,12 +2,6 @@ import { useCallback, useEffect } from 'react';
 import 'balloon-css';
 import styles from './App.module.css';
 import { useNavigate, useRoutes } from 'react-router-dom';
-import dayjs from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-
-dayjs.extend(utc);
-dayjs.extend(timezone);
 
 import { telegramApp, useTelegram } from './hooks/useTelegram';
 import {
@@ -16,7 +10,6 @@ import {
   useMyMainContext,
   useMyNotification,
   useMyStats,
-  useMyUser,
 } from './storage';
 
 import { levelNamesBar } from './slug/data';
@@ -30,35 +23,26 @@ import {
 } from '@/components/';
 
 import EchoChecker from './components/EchoChecker/EchoChecker';
-import { slugData } from './utils/slugdata';
 import router from './pages/router';
-import { errorToast } from './utils/toast';
+import useAuth from './hooks/Auth/useAuth';
 
 function App() {
   const navigate = useNavigate();
 
   const { checkrunAndExpand } = useTelegram();
 
-  const { uTaskArr, uActiveEcho } = useMyMainContext();
+  const { uActiveEcho } = useMyMainContext();
 
-  const { myUserData, uMyUserData, uUserTz, uGetUserData } = useMyUser();
+  const { userData } = useAuth();
 
   const {
     echoModal,
-    WEBAPP_URL,
     isLoading,
-    uIsLoading,
-    backButtMounted,
-    uBackButtMounted,
-    settingButtMounted,
-    uSettingButtMounted,
     uEchoModal,
     uCrudMode,
     crudMode,
     platformCheck,
     uPlatformCheck,
-    isSendData,
-    setIsSendData,
   } = useMyLogic();
 
   const { setActiveLvl } = useMyStats();
@@ -123,100 +107,22 @@ function App() {
   }, []);
 
   useEffect(() => {
-    const newTz = dayjs.tz.guess();
-    const userTimeZone =
-      newTz || Intl.DateTimeFormat().resolvedOptions().timeZone || 'UTC';
-    localStorage.setItem('timezone', userTimeZone);
-    uUserTz(newTz);
-  }, []);
-
-  const authUser = async (tgid, initDataUnsafe, platform) => {
-    let userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-    if (!userTimeZone || userTimeZone === 'undefined') {
-      userTimeZone = 'UTC';
-    }
-
-    try {
-      uIsLoading(true);
-      uGetUserData(false);
-      const response = await fetch(`${WEBAPP_URL}/api/auth/userdata`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          tgid: tgid || null,
-          tgdata: initDataUnsafe || {},
-          platform: platform || 'unknown',
-          timezone: userTimeZone || 'UTC',
-        }),
-      });
-
-      const responseData = await response.json();
-
-      if (responseData.error) {
-        errorToast(`${responseData.message}`);
+    if (userData) {
+      if (userData.notifications?.time) {
+        localStorage.setItem('notif1', 'true');
       }
-      if (responseData.user) {
-        const userObj = responseData.user;
-        setIsSendData(true);
-        uTaskArr(userObj.echos);
-        uMyUserData(userObj);
-        if (userObj.notifications.time) {
-          localStorage.setItem('notif1', 'true');
-        }
-        if (userObj.guides.start) {
-          localStorage.setItem('guide', 'true');
-          navigate('/main');
-        }
-        if (userObj.guides.main) {
-          localStorage.setItem('maintour', 'true');
-          uMainPageGuide(true);
-        }
-        if (userObj.guides.create) {
-          localStorage.setItem('createtour', 'true');
-          uCreateEchoGuide(true);
-        }
+      if (userData.guides?.start) {
+        localStorage.setItem('guide', 'true');
+        navigate('/main');
       }
-    } catch (error) {
-      errorToast(`Something went wrong \n Please, reload the app`);
-    } finally {
-      uIsLoading(false);
-      uGetUserData(true);
-    }
-  };
-
-  const goSetting = () => {
-    navigate('/settings');
-  };
-
-  const backButt = () => {
-    navigate(-1);
-  };
-
-  useEffect(() => {
-    if (telegramApp?.initDataUnsafe?.user?.id && !isSendData) {
-      const initDataUnsafe = telegramApp.initDataUnsafe;
-      const tgid = telegramApp.initDataUnsafe.user.id;
-      const platform = telegramApp.platform;
-
-      authUser(tgid, initDataUnsafe, platform);
-    } else {
-      uGetUserData(true);
-      uTaskArr(slugData.echos);
-      uMyUserData(slugData);
-    }
-
-    if (!backButtMounted) {
-      telegramApp.BackButton.onClick(() => backButt());
-      uBackButtMounted(true);
-    }
-
-    if (!settingButtMounted) {
-      telegramApp.SettingsButton.onClick(() => goSetting());
-
-      uSettingButtMounted(true);
+      if (userData.guides?.main) {
+        localStorage.setItem('maintour', 'true');
+        uMainPageGuide(true);
+      }
+      if (userData.guides?.create) {
+        localStorage.setItem('createtour', 'true');
+        uCreateEchoGuide(true);
+      }
     }
   }, []);
 
@@ -224,10 +130,10 @@ function App() {
     const localLaunchNotif = localStorage.getItem('notif1');
 
     if (
-      myUserData &&
-      myUserData.stats.totalEchos == 1 &&
-      myUserData.notifications.echoes == true &&
-      myUserData.notifications.time == null &&
+      userData &&
+      userData.stats.totalEchos == 1 &&
+      userData.notifications.echoes == true &&
+      userData.notifications.time == null &&
       userNotifTime == null &&
       localLaunchNotif != 'true'
     ) {
@@ -239,7 +145,7 @@ function App() {
       // Clear the timeout after it triggers
       return () => clearTimeout(timeout);
     }
-  }, [myUserData]);
+  }, [userData]);
 
   useEffect(() => {
     if (telegramApp.platform != 'unknown') {
@@ -256,17 +162,17 @@ function App() {
   }, []);
 
   useEffect(() => {
-    if (myUserData) {
+    if (userData) {
       const activeL = {
-        name: `Level ${myUserData.stats.level + 1}: ${
-          levelNamesBar[myUserData.stats.level]
+        name: `Level ${userData.stats.level + 1}: ${
+          levelNamesBar[userData.stats.level]
         }`,
-        current: myUserData.stats.exp,
-        goal: (myUserData.stats.level + 1) * 100,
+        current: userData.stats.exp,
+        goal: (userData.stats.level + 1) * 100,
       };
       setActiveLvl(activeL);
     }
-  }, [myUserData]);
+  }, [userData]);
 
   const routes = useRoutes(router);
 

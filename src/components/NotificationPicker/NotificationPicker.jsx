@@ -1,8 +1,9 @@
 import { WEBAPP_URL } from '@/config/constants';
 import TimePicker from '../TimePicker/TimePicker';
 import styles from './NotificationPicker.module.css';
-import { useMyNotification, useMyUser } from '@/storage';
+import { useMyNotification } from '@/storage';
 import { errorToast, successToast } from '@/utils/toast';
+import useAuth from '@/hooks/Auth/useAuth';
 
 const NotificationPicker = () => {
   const {
@@ -18,7 +19,7 @@ const NotificationPicker = () => {
 
   // const [fulltime, setFulltime] = useState('');
 
-  const { myUserData, uMyUserData } = useMyUser();
+  const { userData, setUserData } = useAuth();
 
   const noThanks = () => {
     uIsTimeModal(false);
@@ -36,7 +37,7 @@ const NotificationPicker = () => {
         },
         body: JSON.stringify({
           newtime: newTime,
-          authId: myUserData.authId,
+          authId: userData.authId,
         }),
       });
 
@@ -80,7 +81,7 @@ const NotificationPicker = () => {
     const time = convertValueToTime(userNotifTime);
     const newNotifTime = `${time} ${userNotifMode}`;
 
-    uMyUserData((prevUserData) => ({
+    setUserData((prevUserData) => ({
       ...prevUserData,
       notifications: { ...prevUserData.notifications, time: newNotifTime },
     }));

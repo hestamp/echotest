@@ -3,10 +3,11 @@ import './MyCalendar.css';
 
 import { MdKeyboardArrowRight, MdKeyboardArrowLeft } from 'react-icons/md';
 import { LuWaves } from 'react-icons/lu';
-import { useMyMainContext, useMyUser } from '@/storage';
+import { useMyMainContext } from '@/storage';
 import dayjs from 'dayjs';
 import { useMyRefs } from '../../../storage';
 import { useCallback } from 'react';
+import useAuth from '@/hooks/Auth/useAuth';
 
 const MyCalendar = ({
   sunOrMon,
@@ -21,7 +22,7 @@ const MyCalendar = ({
 }) => {
   const { taskArr } = useMyMainContext();
 
-  const { userTz } = useMyUser();
+  const { userTz } = useAuth();
   const { firstRef } = useMyRefs();
 
   const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone;

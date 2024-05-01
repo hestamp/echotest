@@ -1,22 +1,18 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import styles from './EchoChecker.module.css';
-import {
-  useMyGuide,
-  useMyLogic,
-  useMyMainContext,
-  useMyUser,
-} from '../../storage';
+import { useMyGuide, useMyLogic, useMyMainContext } from '../../storage';
 import { getRandomSBD } from '../../utils/textUtils';
 import CheckerBlock from '../CheckerBlock/CheckerBlock';
 import { isDayStreakDone } from '@/utils/objUtils';
 import { TourGuide } from '@/components/Tools/TourGuide/TourGuide';
 import { errorToast, successToast } from '@/utils/toast';
 import { WEBAPP_URL } from '@/config/constants';
+import useAuth from '@/hooks/Auth/useAuth';
 
 const EchoChecker = () => {
   const { uTaskArr, taskArr, setTodayMode, activeEcho } = useMyMainContext();
 
-  const { myUserData, uMyUserData } = useMyUser();
+  const { userData, setUserData } = useAuth();
   const { uEchoModal } = useMyLogic();
 
   const { isCheckGuide, isTourGuideCache, uIsCheckGuide } = useMyGuide();
@@ -35,17 +31,17 @@ const EchoChecker = () => {
 
     let newStat;
     if (isStreak == 0) {
-      newStat = myUserData.stats.repetitionEchoes.count;
-      if (myUserData.stats.repetitionEchoes.last == null) {
+      newStat = userData.stats.repetitionEchoes.count;
+      if (userData.stats.repetitionEchoes.last == null) {
         newStat = 1;
       }
     } else if (isStreak == 1) {
-      newStat = myUserData.stats.repetitionEchoes.count + 1;
+      newStat = userData.stats.repetitionEchoes.count + 1;
     } else {
       newStat = 0;
     }
 
-    uMyUserData((prevUserData) => ({
+    setUserData((prevUserData) => ({
       ...prevUserData,
       stats: {
         ...prevUserData.stats,
@@ -120,7 +116,7 @@ const EchoChecker = () => {
       }
       return item;
     });
-    uMyUserData((prevUserData) => ({
+    setUserData((prevUserData) => ({
       ...prevUserData,
       stats: {
         ...prevUserData.stats,
@@ -133,11 +129,11 @@ const EchoChecker = () => {
       echos: arrNewUpdated,
     }));
 
-    const userTimezone = myUserData.timezone;
+    const userTimezone = userData.timezone;
 
     const lastDate =
-      myUserData.stats.repetitionEchoes.last != null
-        ? myUserData.stats.repetitionEchoes.last
+      userData.stats.repetitionEchoes.last != null
+        ? userData.stats.repetitionEchoes.last
         : new Date().toISOString();
 
     const dateNow = new Date().toISOString();
@@ -186,7 +182,7 @@ const EchoChecker = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          authId: myUserData.authId,
+          authId: userData.authId,
           echoId: echoId,
           updatedEchoData: updatedEchoData,
           repeat: true,
@@ -208,7 +204,7 @@ const EchoChecker = () => {
       const data = await response.json();
       if (data && data.userStats) {
         if (data.userStats) {
-          uMyUserData((prevUserData) => ({
+          setUserData((prevUserData) => ({
             ...prevUserData,
             stats: data.userStats,
           }));

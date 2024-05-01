@@ -3,16 +3,17 @@ import styles from './EchoEditor.module.css';
 import { useNavigate } from 'react-router-dom';
 
 import { MyTextarea, AddLinksBlock, MyInput } from '@/components/';
-import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
+import { useMyLogic, useMyMainContext } from '@/storage';
 
 import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 import { errorToast, successToast } from '@/utils/toast';
 import { WEBAPP_URL } from '@/config/constants';
+import useAuth from '@/hooks/Auth/useAuth';
 
 const EchoEditor = () => {
   const { taskArr, uTaskArr, activeEcho, uActiveEcho } = useMyMainContext();
   const navigate = useNavigate();
-  const { myUserData, uMyUserData } = useMyUser();
+  const { userData, setUserData } = useAuth();
   const { uEchoModal } = useMyLogic();
   const { mountBtn } = useTelegram();
 
@@ -53,7 +54,7 @@ const EchoEditor = () => {
       }
       navigate('/main');
       successToast('Echo updated');
-      if (myUserData?.authId) {
+      if (userData?.authId) {
         await editServerEcho(updatedEcho);
       }
 
@@ -73,7 +74,7 @@ const EchoEditor = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          authId: myUserData.authId,
+          authId: userData.authId,
           echoId: echoId,
           updatedEchoData: updatedEchoData,
         }),
@@ -91,7 +92,7 @@ const EchoEditor = () => {
       const data = await response.json();
       if (data && data.userStats) {
         if (data.userStats) {
-          uMyUserData((prevUserData) => ({
+          setUserData((prevUserData) => ({
             ...prevUserData,
             stats: data.userStats,
           }));

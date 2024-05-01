@@ -1,14 +1,15 @@
 import { useCallback, useEffect, useState } from 'react';
 import styles from './SettingsPage.module.css';
 import { MyInput, MyToggle } from '@/components/';
-import { useMyNotification, useMyUser } from '@/storage';
+import { useMyNotification } from '@/storage';
 
 import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 import { errorToast, successToast } from '@/utils/toast';
 import { WEBAPP_URL } from '@/config/constants';
+import useAuth from '@/hooks/Auth/useAuth';
 
 const SettingsPage = () => {
-  const { myUserData, uMyUserData } = useMyUser();
+  const { userData, setUserData } = useAuth();
   const [tempName, setTempName] = useState('');
   const [tempQuoteBool, setTempQuoteBool] = useState(true);
 
@@ -47,16 +48,16 @@ const SettingsPage = () => {
   };
 
   useEffect(() => {
-    if (myUserData) {
-      setTempName(myUserData?.fullName || '');
+    if (userData) {
+      setTempName(userData?.fullName || '');
 
-      if (myUserData.quotes) {
-        const userQuotes = myUserData.quotes == 'false' ? false : true;
+      if (userData.quotes) {
+        const userQuotes = userData.quotes == 'false' ? false : true;
         // uIsQuotes(userQuotes);
         setTempQuoteBool(userQuotes);
       }
     }
-  }, [myUserData]);
+  }, [userData]);
 
   const clearStorage = () => {
     localStorage.clear();
@@ -78,11 +79,11 @@ const SettingsPage = () => {
   const setSettings = async () => {
     const valueQuote = tempQuoteBool == true ? 'true' : 'false';
 
-    const newTime = myUserData.notifications.time
-      ? myUserData.notifications.time
+    const newTime = userData.notifications.time
+      ? userData.notifications.time
       : null;
 
-    uMyUserData((prevUserData) => ({
+    setUserData((prevUserData) => ({
       ...prevUserData,
       fullName: tempName,
       quotes: valueQuote,
@@ -109,7 +110,7 @@ const SettingsPage = () => {
             time: newTime,
             empty: emptyReminder,
           },
-          authId: myUserData.authId,
+          authId: userData.authId,
         }),
       });
 
@@ -149,7 +150,7 @@ const SettingsPage = () => {
     getAllNotif,
     getEchoNotif,
     emptyReminder,
-    myUserData?.notifications?.time,
+    userData?.notifications?.time,
   ]);
 
   useEffect(() => {
@@ -162,7 +163,7 @@ const SettingsPage = () => {
 
   return (
     <div className={styles.settingPage}>
-      {myUserData ? (
+      {userData ? (
         <>
           <div className={styles.paddingblock}>
             <h3>Settings</h3>
@@ -202,12 +203,12 @@ const SettingsPage = () => {
                   <>
                     <div onClick={showTimeModal} className={styles.settime}>
                       <p>
-                        {myUserData.notifications.time
-                          ? myUserData.notifications.time
+                        {userData.notifications.time
+                          ? userData.notifications.time
                           : 'No time'}
                       </p>
                       <button className={styles.editButt}>
-                        {myUserData.notifications.time ? 'Edit' : 'Set'}
+                        {userData.notifications.time ? 'Edit' : 'Set'}
                       </button>
                     </div>
                     <div className={styles.toggleBlock}>

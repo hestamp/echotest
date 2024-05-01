@@ -3,16 +3,17 @@ import styles from './AchivePage.module.css';
 
 import { ProgressBar, MySpinner, MyNewModal, AchiveModal } from '@/components/';
 import { MdDone } from 'react-icons/md';
-import { useMyAchive, useMyUser } from '@/storage';
+import { useMyAchive } from '@/storage';
 
 import { useTelegram } from '@/hooks/useTelegram';
 
 import { Link, useNavigate } from 'react-router-dom';
 import { WEBAPP_URL } from '@/config/constants';
+import useAuth from '@/hooks/Auth/useAuth';
 const AchivePage = () => {
   const { allAchives, uAllAchives } = useMyAchive();
 
-  const { myUserData } = useMyUser();
+  const { userData } = useAuth();
 
   const [notCheckedArr, setNotCheckedArr] = useState([]);
   const [notCheckedAchive, setNotCheckedAchive] = useState(null);
@@ -55,7 +56,7 @@ const AchivePage = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          authId: myUserData.authId,
+          authId: userData.authId,
           achiveId: checkId,
           checked: true,
         }),

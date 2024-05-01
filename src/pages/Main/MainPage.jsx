@@ -7,7 +7,7 @@ import { MyCalendar, MenuDropdown, QuoteDay, SlugDiv } from '@/components/';
 import { GoDotFill } from 'react-icons/go';
 import { MdEventRepeat, MdDone, MdOutlineLink } from 'react-icons/md';
 import { FaRegCalendarCheck } from 'react-icons/fa6';
-import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
+import { useMyLogic, useMyMainContext } from '@/storage';
 
 import { renderContentWithLineBreaks } from '@/utils/textUtils';
 
@@ -22,6 +22,7 @@ import timezone from 'dayjs/plugin/timezone';
 import { TourGuide } from '@/components/Tools/TourGuide/TourGuide';
 import { useMyGuide } from '../../storage';
 import ToggleManu from './ToggleManu';
+import useAuth from '@/hooks/Auth/useAuth';
 
 const newEchoName = 'First echo. What is spaced repetition?';
 const newEchoContext = `
@@ -33,7 +34,7 @@ dayjs.extend(timezone);
 const MainPage = () => {
   const navigate = useNavigate();
 
-  const { getUserData } = useMyUser();
+  const { getUserData } = useAuth();
 
   const {
     taskArr,
@@ -106,7 +107,6 @@ const MainPage = () => {
   const sortedArray = useMemo(() => {
     const today = new Date();
     const userLocalTz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-    // console.log('sortedTz', userLocalTz)
 
     const calculateLocalState = (task) => {
       return isTodayMatchingLevelDate(task, today, userLocalTz);
