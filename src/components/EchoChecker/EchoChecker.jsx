@@ -11,12 +11,13 @@ import CheckerBlock from '../CheckerBlock/CheckerBlock';
 import { isDayStreakDone } from '@/utils/objUtils';
 import { TourGuide } from '@/components/Tools/TourGuide/TourGuide';
 import { errorToast, successToast } from '@/utils/toast';
+import { WEBAPP_URL } from '@/config/constants';
 
 const EchoChecker = () => {
   const { uTaskArr, taskArr, setTodayMode, activeEcho } = useMyMainContext();
 
   const { myUserData, uMyUserData } = useMyUser();
-  const { uEchoModal, WEBAPP_URL } = useMyLogic();
+  const { uEchoModal } = useMyLogic();
 
   const { isCheckGuide, isTourGuideCache, uIsCheckGuide } = useMyGuide();
 

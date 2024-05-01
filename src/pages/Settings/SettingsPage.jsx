@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from 'react';
 import styles from './SettingsPage.module.css';
 import { MyInput, MyToggle } from '@/components/';
-import { useMyLogic, useMyNotification, useMyUser } from '@/storage';
+import { useMyNotification, useMyUser } from '@/storage';
 
 import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 import { errorToast, successToast } from '@/utils/toast';
+import { WEBAPP_URL } from '@/config/constants';
 
 const SettingsPage = () => {
   const { myUserData, uMyUserData } = useMyUser();
-  const { WEBAPP_URL } = useMyLogic();
   const [tempName, setTempName] = useState('');
   const [tempQuoteBool, setTempQuoteBool] = useState(true);
 

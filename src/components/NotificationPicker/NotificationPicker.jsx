@@ -1,15 +1,12 @@
-import { useState } from 'react';
+import { WEBAPP_URL } from '@/config/constants';
 import TimePicker from '../TimePicker/TimePicker';
-
 import styles from './NotificationPicker.module.css';
-import { useMyLogic, useMyNotification, useMyUser } from '@/storage';
+import { useMyNotification, useMyUser } from '@/storage';
 import { errorToast, successToast } from '@/utils/toast';
 
 const NotificationPicker = () => {
   const {
-    isTimeModal,
     uIsTimeModal,
-    showModalTime,
     uShowModalTime,
     userNotifTime,
     uUserNotifTime,
@@ -20,8 +17,6 @@ const NotificationPicker = () => {
   } = useMyNotification();
 
   // const [fulltime, setFulltime] = useState('');
-
-  const { WEBAPP_URL } = useMyLogic();
 
   const { myUserData, uMyUserData } = useMyUser();
 

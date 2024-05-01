@@ -3,14 +3,14 @@ import styles from './AchivePage.module.css';
 
 import { ProgressBar, MySpinner, MyNewModal, AchiveModal } from '@/components/';
 import { MdDone } from 'react-icons/md';
-import { useMyAchive, useMyLogic, useMyUser } from '@/storage';
+import { useMyAchive, useMyUser } from '@/storage';
 
 import { useTelegram } from '@/hooks/useTelegram';
 
 import { Link, useNavigate } from 'react-router-dom';
+import { WEBAPP_URL } from '@/config/constants';
 const AchivePage = () => {
   const { allAchives, uAllAchives } = useMyAchive();
-  const { WEBAPP_URL } = useMyLogic();
 
   const { myUserData } = useMyUser();
 
@@ -20,7 +20,6 @@ const AchivePage = () => {
   const navigate = useNavigate();
   const { mountBtn } = useTelegram();
 
-
   const createFunc = () => {
     navigate('/echo/create');
   };
@@ -28,7 +27,7 @@ const AchivePage = () => {
   useEffect(() => {
     mountBtn(createFunc, 'Create echo');
   }, []);
-  
+
   useEffect(() => {
     if (allAchives) {
       const firstDoneArr = allAchives.filter(

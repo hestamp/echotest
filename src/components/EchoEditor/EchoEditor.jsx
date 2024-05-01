@@ -7,12 +7,13 @@ import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
 
 import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 import { errorToast, successToast } from '@/utils/toast';
+import { WEBAPP_URL } from '@/config/constants';
 
 const EchoEditor = () => {
   const { taskArr, uTaskArr, activeEcho, uActiveEcho } = useMyMainContext();
   const navigate = useNavigate();
   const { myUserData, uMyUserData } = useMyUser();
-  const { uEchoModal, WEBAPP_URL } = useMyLogic();
+  const { uEchoModal } = useMyLogic();
   const { mountBtn } = useTelegram();
 
   const [tempName, setTempName] = useState('');

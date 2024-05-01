@@ -8,11 +8,12 @@ import { telegramApp, useTelegram } from '@/hooks/useTelegram';
 
 import { useMyLogic, useMyMainContext, useMyUser } from '@/storage';
 import { errorToast, noteToast, successToast } from '@/utils/toast';
+import { WEBAPP_URL } from '@/config/constants';
 
 const EchoCreator = () => {
   const { taskArr, uTaskArr } = useMyMainContext();
   const { myUserData, uMyUserData } = useMyUser();
-  const { uEchoModal, WEBAPP_URL, platformCheck } = useMyLogic();
+  const { uEchoModal, platformCheck } = useMyLogic();
 
   const { mountBtn } = useTelegram();
   const navigate = useNavigate();

@@ -17,21 +17,24 @@ export function useTelegram() {
       telegramApp.MainButton.setText(text);
     }
   }, []);
-  
-  const mountBtn = useCallback((callback, name) => {
-    if (telegramApp.platform != 'unknown') {
-      if (window.mainButtonFunction) {
-        telegramApp.MainButton.offClick(window.mainButtonFunction);
+
+  const mountBtn = useCallback(
+    (callback, name) => {
+      if (telegramApp.platform != 'unknown') {
+        if (window.mainButtonFunction) {
+          telegramApp.MainButton.offClick(window.mainButtonFunction);
+        }
+
+        telegramApp.MainButton.onClick(callback);
+        window.mainButtonFunction = callback;
+        telegramApp.MainButton.show();
+        telegramApp.MainButton.enable();
       }
 
-      telegramApp.MainButton.onClick(callback);
-      window.mainButtonFunction = callback;
-      telegramApp.MainButton.show();
-      telegramApp.MainButton.enable();
-    }
-
-    setMainBtnText(`${name}`);
-  }, [setMainBtnText]);
+      setMainBtnText(`${name}`);
+    },
+    [setMainBtnText]
+  );
 
   return {
     onClose,
